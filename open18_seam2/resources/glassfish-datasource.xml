@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 Resource Definitions //EN"
+  "http://www.sun.com/software/appserver/dtds/sun-resources_1_3.dtd">
+<resources>
+  <jdbc-connection-pool
+    name="open18Pool" 
+    datasource-classname="org.h2.jdbcx.JdbcDataSource"
+    res-type="javax.sql.DataSource">
+    <property name="user" value="open18"/>
+    <property name="password" value="tiger"/>
+    <property name="url"
+      value="jdbc:h2:file:/home/twoputt/databases/open18-db/h2"/>
+  </jdbc-connection-pool>
+  <jdbc-resource
+    jndi-name="open18Datasource"
+    pool-name="open18Pool"
+    enabled="true"
+    object-type="user"/>
+</resources>

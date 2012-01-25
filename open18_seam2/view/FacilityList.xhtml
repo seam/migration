@@ -1,0 +1,278 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+    
+    <h:form id="facilitySearch" styleClass="edit">
+    
+        <rich:simpleTogglePanel label="Facility search parameters" switchType="ajax">
+        
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">address</ui:define>
+                <h:inputText id="address" value="#{facilityList.facility.address}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">city</ui:define>
+                <h:inputText id="city" value="#{facilityList.facility.city}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">country</ui:define>
+                <h:inputText id="country" value="#{facilityList.facility.country}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">county</ui:define>
+                <h:inputText id="county" value="#{facilityList.facility.county}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">description</ui:define>
+                <h:inputText id="description" value="#{facilityList.facility.description}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">name</ui:define>
+                <h:inputText id="name" value="#{facilityList.facility.name}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">phone</ui:define>
+                <h:inputText id="phone" value="#{facilityList.facility.phone}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">state</ui:define>
+                <h:inputText id="state" value="#{facilityList.facility.state}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">type</ui:define>
+                <h:inputText id="type" value="#{facilityList.facility.type}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">uri</ui:define>
+                <h:inputText id="uri" value="#{facilityList.facility.uri}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">zip</ui:define>
+                <h:inputText id="zip" value="#{facilityList.facility.zip}"/>
+            </s:decorate>
+
+        
+        </rich:simpleTogglePanel>
+        
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/FacilityList.xhtml"/>
+        </div>
+        
+    </h:form>
+    
+    <rich:panel>
+        <f:facet name="header">Facility search results</f:facet>
+    <div class="results" id="facilityList">
+
+    <h:outputText value="The facility search returned no results." 
+               rendered="#{empty facilityList.resultList}"/>
+               
+    <rich:dataTable id="facilityList" 
+                var="facility"
+              value="#{facilityList.resultList}" 
+           rendered="#{not empty facilityList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="id #{facilityList.order=='id asc' ? messages.down : ( facilityList.order=='id desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='id asc' ? 'id desc' : 'id asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="address #{facilityList.order=='address asc' ? messages.down : ( facilityList.order=='address desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='address asc' ? 'address desc' : 'address asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.address}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="city #{facilityList.order=='city asc' ? messages.down : ( facilityList.order=='city desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='city asc' ? 'city desc' : 'city asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.city}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="country #{facilityList.order=='country asc' ? messages.down : ( facilityList.order=='country desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='country asc' ? 'country desc' : 'country asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.country}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="county #{facilityList.order=='county asc' ? messages.down : ( facilityList.order=='county desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='county asc' ? 'county desc' : 'county asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.county}
+        </h:column>
+        <ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="description #{facilityList.order=='description asc' ? messages.down : ( facilityList.order=='description desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='description asc' ? 'description desc' : 'description asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.description}
+        </h:column>
+        </ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="name #{facilityList.order=='name asc' ? messages.down : ( facilityList.order=='name desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='name asc' ? 'name desc' : 'name asc'}"/>
+                </s:link>
+            </f:facet>
+            <h:outputLink value="#{facility.uri}" rendered="#{not empty facility.uri}">#{facility.name}</h:outputLink>
+            <h:outputText value="#{facility.uri}" rendered="#{empty facility.uri}">#{facility.name}</h:outputText>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="phone #{facilityList.order=='phone asc' ? messages.down : ( facilityList.order=='phone desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='phone asc' ? 'phone desc' : 'phone asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.phone}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="priceRange #{facilityList.order=='priceRange asc' ? messages.down : ( facilityList.order=='priceRange desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='priceRange asc' ? 'priceRange desc' : 'priceRange asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.priceRange}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="state #{facilityList.order=='state asc' ? messages.down : ( facilityList.order=='state desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='state asc' ? 'state desc' : 'state asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.state}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="type #{facilityList.order=='type asc' ? messages.down : ( facilityList.order=='type desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='type asc' ? 'type desc' : 'type asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.type}
+        </h:column>
+        <ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="uri #{facilityList.order=='uri asc' ? messages.down : ( facilityList.order=='uri desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='uri asc' ? 'uri desc' : 'uri asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.uri}
+        </h:column>
+        </ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="zip #{facilityList.order=='zip asc' ? messages.down : ( facilityList.order=='zip desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{facilityList.order=='zip asc' ? 'zip desc' : 'zip asc'}"/>
+                </s:link>
+            </f:facet>
+            #{facility.zip}
+        </h:column>
+        <h:column>
+            <f:facet name="header">action</f:facet>
+            <s:link view="/#{empty from ? 'Facility' : from}.xhtml" 
+                   value="#{empty from ? 'View' : 'Select'}" 
+                      id="facility">
+                <f:param name="facilityId" 
+                        value="#{facility.id}"/>
+            </s:link>
+        </h:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+    
+    <div class="tableControl">
+      
+        <s:link view="/FacilityList.xhtml" 
+            rendered="#{facilityList.previousExists}" 
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/FacilityList.xhtml" 
+            rendered="#{facilityList.previousExists}" 
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{facilityList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/FacilityList.xhtml" 
+            rendered="#{facilityList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{facilityList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/FacilityList.xhtml" 
+            rendered="#{facilityList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{facilityList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/FacilityEdit.xhtml"
+                    id="create" 
+                 value="Create facility">
+            <f:param name="facilityId"/>
+        </s:button>
+    </s:div>
+    
+</ui:define>
+
+</ui:composition>
+

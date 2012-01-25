@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow-definition 
+	xmlns="http://jboss.com/products/seam/pageflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://jboss.com/products/seam/pageflow
+		http://jboss.com/products/seam/pageflow-2.0.xsd"
+	name="Course Wizard">
+
+	<!-- use <start-page> when beginning pageflow from Render Response phase -->
+	<!--
+	<start-page name="begin" view-id="/coursewizard/basicCourseInfo.xhtml">
+		<transition to="description"/>
+	</start-page>
+	-->
+
+	<start-state>
+		<transition to="basicCourseInfo"/>
+	</start-state>
+
+	<page name="basicCourseInfo" view-id="/coursewizard/basicCourseInfo.xhtml" no-conversation-view-id="/CourseList.xhtml">
+		<description>Course wizard (#{course.name == null ? 'New course' : course.name} @ #{course.facility.name}): Basic information</description>
+		<redirect /> <!-- defining redirect using attribute on <page> has same affect -->
+		<transition name="cancel" to="cancel"/>
+		<transition name="next" to="description"/>
+	</page>
+
+	<page name="description" view-id="/coursewizard/description.xhtml" back="enabled" no-conversation-view-id="/CourseList.xhtml">
+		<description>Course wizard (#{course.name} @ #{course.facility.name}): Description</description>
+		<redirect />
+		<transition name="cancel" to="cancel"/>
+		<transition name="next" to="holeData">
+			<action expression="#{courseWizard.prepareHoleData}"/>
+		</transition>
+	</page>
+	
+	<page name="holeData" view-id="/coursewizard/holeData.xhtml" no-conversation-view-id="/CourseList.xhtml">
+		<description>Course wizard (#{course.name} @ #{course.facility.name}): Hole data - #{gender}</description>
+		<redirect />
+		<transition name="cancel" to="cancel"/>
+		<!--
+		<transition name="next" to="decideHoleData">
+			<action expression="#{courseWizard.submitHoleData}"/>
+		</transition>
+		-->
+		<transition name="Men" to="decideHoleData">
+			<action expression="#{courseWizard.submitHoleData}"/>
+		</transition>
+		<transition name="Ladies" to="review">
+			<action expression="#{courseWizard.submitHoleData}"/>
+		</transition>
+	</page>
+
+	<decision name="decideHoleData" expression="#{courseWizard.ladiesHoleDataRequired}">
+		<transition name="true" to="holeData"/>
+		<transition name="false" to="review"/>
+	</decision>
+
+	<page name="review" view-id="/coursewizard/review.xhtml" no-conversation-view-id="/CourseList.xhtml">
+		<description>Course wizard (#{course.name} @ #{course.facility.name}): Review</description>
+		<redirect />
+		<transition name="cancel" to="cancel"/>
+		<transition name="success" to="end">
+			<!-- force page parameter to be used on redirect to /Course.xhtml -->
+			<action expression="#{courseHome.setCourseId(course.id)}"/>
+		</transition>
+		<!--
+		<transition name="failure" to="review"/>
+		-->
+		<transition to="review"/> <!-- no return value == failure case -->
+	</page>
+
+	<page name="end" view-id="/Course.xhtml">
+		<end-conversation/>
+		<redirect/>
+	</page>
+
+	<decision name="cancel" expression="#{course.id != null}">
+		<transition name="true" to="cancelAndReturnToCourse">
+			<!-- force page parameter to be used on redirect to /Course.xhtml -->
+			<action expression="#{courseHome.setCourseId(course.id)}"/>
+		</transition>
+		<transition name="false" to="cancelAndReturnToFacility">
+			<!-- force page parameter to be used on redirect to /Facility.xhtml -->
+			<action expression="#{facilityHome.setFacilityId(course.facility.id)}"/>
+		</transition>
+	</decision>
+
+	<page name="cancelAndReturnToCourse" view-id="/Course.xhtml">
+		<end-conversation before-redirect="true"/>
+		<redirect/>
+	</page>
+
+	<page name="cancelAndReturnToFacility" view-id="/Facility.xhtml">
+		<end-conversation before-redirect="true"/>
+		<redirect/>
+	</page>
+
+</pageflow-definition>

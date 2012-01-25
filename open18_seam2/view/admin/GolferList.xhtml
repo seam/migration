@@ -1,0 +1,59 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+
+		<rich:panel>
+			<f:facet name="header">Administer Golfers</f:facet>
+
+			<div class="results">
+
+				<h:outputText value="There are no golfers registered." rendered="#{empty golferList.resultList}"/>
+
+				<rich:dataTable id="golferList" var="_golfer" value="#{golferList.resultList}"
+					rendered="#{not empty golferList.resultList}">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						#{_golfer.id}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Name</f:facet>
+						#{_golfer.name}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Email address</f:facet>
+						#{_golfer.emailAddress}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Action</f:facet>
+						<s:link id="profile" value="View" view="/profile.xhtml" propagation="none">
+							<f:param name="golferId" value="#{_golfer.id}"/>
+						</s:link>
+						#{' '}
+						<s:link id="edit" value="Edit" view="/admin/GolferEdit.xhtml" propagation="none">
+							<f:param name="golferId" value="#{_golfer.id}"/>
+						</s:link>
+					</h:column>
+				</rich:dataTable>
+			</div>
+
+		</rich:panel>
+
+		<ui:remove>
+			<div class="actionButtons">
+				<s:button id="done" value="Create golfer" view="/GolferEdit.xhtml"/>
+			</div>
+		</ui:remove>
+
+	</ui:define>
+
+</ui:composition>

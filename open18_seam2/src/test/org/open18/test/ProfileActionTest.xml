@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+
+<suite name="ProfileAction Tests" verbose="2" parallel="false">
+   <test name="ProfileAction Test">
+     <classes>
+       <class name="org.open18.test.ProfileActionTest"/>       
+     </classes>
+   </test>	
+</suite>

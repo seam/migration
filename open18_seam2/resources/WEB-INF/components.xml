@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns="http://jboss.com/products/seam/components"
+            xmlns:core="http://jboss.com/products/seam/core"
+            xmlns:persistence="http://jboss.com/products/seam/persistence"
+            xmlns:drools="http://jboss.com/products/seam/drools"
+            xmlns:bpm="http://jboss.com/products/seam/bpm"
+            xmlns:security="http://jboss.com/products/seam/security"
+            xmlns:mail="http://jboss.com/products/seam/mail"
+            xmlns:auth="http://open18.org/components/auth"
+            xmlns:framework="http://jboss.com/products/seam/framework"
+            xmlns:web="http://jboss.com/products/seam/web"
+            xmlns:navigation="http://jboss.com/products/seam/navigation"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation=
+                "http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.0.xsd 
+                 http://jboss.com/products/seam/persistence http://jboss.com/products/seam/persistence-2.0.xsd 
+                 http://jboss.com/products/seam/drools http://jboss.com/products/seam/drools-2.0.xsd
+                 http://jboss.com/products/seam/bpm http://jboss.com/products/seam/bpm-2.0.xsd
+                 http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.0.xsd
+                 http://jboss.com/products/seam/mail http://jboss.com/products/seam/mail-2.0.xsd
+                 http://open18.org/components/auth http://open18.org/components/auth-1.0.xsd
+                 http://jboss.com/products/seam/framework http://jboss.com/products/seam/framework-2.0.xsd
+                 http://jboss.com/products/seam/web http://jboss.com/products/seam/web-2.0.xsd
+                 http://jboss.com/products/seam/navigation http://jboss.com/products/seam/navigation-2.0.xsd
+                 http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.0.xsd">
+
+   <core:init debug="@debug@" jndi-pattern="@jndiPattern@"/>
+     
+   <core:manager concurrent-request-timeout="500" 
+                 conversation-timeout="120000" 
+                 conversation-id-parameter="cid"
+                 parent-conversation-id-parameter="pid"/>
+    
+   <persistence:managed-persistence-context name="entityManager"
+                                     auto-create="true"
+                          entity-manager-factory="#{open18EntityManagerFactory}"/>
+
+   <persistence:entity-manager-factory name="open18EntityManagerFactory" 
+                      persistence-unit-name="open18"/>
+
+   <factory name="hibernateSession" value="#{entityManager.delegate}" auto-create="true"/>
+   
+   <drools:rule-base name="securityRules">
+      <drools:rule-files><value>/security.drl</value></drools:rule-files>
+   </drools:rule-base>
+
+   <security:identity authenticate-method="#{authenticationManager.authenticate}" remember-me="true"/>
+
+   <framework:entity-query name="rolesQuery"
+      ejbql="select r from Role r"
+      order="r.name">
+      <framework:hints>
+         <key>org.hibernate.comment</key>
+         <value>Query for roles used in option list on /admin/Golfer.xhtml</value>
+      </framework:hints>
+   </framework:entity-query>
+   <factory name="roles" value="#{rolesQuery.resultList}" scope="conversation"/>
+
+   <!--
+   <web:authentication-filter url-pattern="*.seam" auth-type="basic"
+      realm="#{messages['application.title']}" startup="true"/>
+   -->
+
+   <!-- Enabling digest authenticator requires that the AuthenticationManager extends DigestAuthenticator
+        and that passwords are stored unhashed -->
+   <!--
+   <web:authentication-filter url-pattern="*.seam" auth-type="digest"
+      realm="#{messages['application.title']}" key="g0!f15f#n" startup="true"/>
+   -->
+
+   <factory name="currentSession" scope="stateless"
+      value="#{facesContext.externalContext.request.session}"/>
+                              
+   <event type="org.jboss.seam.security.notLoggedIn">
+      <action execute="#{redirect.captureCurrentView}"/>
+   </event>
+   <event type="org.jboss.seam.security.loginSuccessful">
+      <action execute="#{currentSession.setMaxInactiveInterval(3600)}"/>
+      <action execute="#{redirect.returnToCapturedView}"/>
+   </event>
+
+   <navigation:pages http-port="8080" https-port="8443"/>
+
+   <!-- Only want to invalidate session if remaining in https after login -->
+   <!-- <web:session invalidate-on-scheme-change="true"/> -->
+
+   <mail:mail-session host="localhost" port="2525" username="test" password="test"/>
+        
+   <bpm:jbpm>
+      <bpm:pageflow-definitions>
+         <value>courseWizard-pageflow.jpdl.xml</value>
+      </bpm:pageflow-definitions>
+   </bpm:jbpm>
+
+   <!-- ===== Open 18 component definitions and configurations ===== -->
+
+   <import>org.open18.auth</import>
+
+   <!-- newGolfer | generic-style component *definition* -->
+   <component name="newGolfer" class="org.open18.model.Golfer" scope="event">
+      <property name="dateJoined">#{currentDatetime}</property>
+   </component>
+
+   <!-- selectedGolfer | component role to centralize scope for outjected context variable -->
+   <!--
+   <component name="selectedGolfer" class="org.open18.model.Golfer"/>
+   -->
+
+   <!-- passwordBean | generic-style component *definition* -->
+   <!--
+   <component name="passwordBean" class="org.open18.auth.PasswordBean" scope="event"/>
+   -->
+
+   <!-- passwordBean | namespace-style component *definition* -->
+   <auth:password-bean name="passwordBean" scope="event"/>
+   
+   <!-- passwordManager | generic-style component *configuration* -->
+   <!--
+   <component name="passwordManager">
+      <property name="digestAlgorithm">SHA-1</property>
+      <property name="charset">UTF-8</property>
+   </component>
+   -->
+   
+   <!-- passwordManager | partial namespace-style component *configuration* -->
+   <!--
+   <component name="passwordManager">
+      <digestAlgorithm>SHA-1</digestAlgorithm>
+      <charset>UTF-8</charset>
+   </component>
+   -->
+   
+   <!-- passwordManager | namespace-style component *configuration* (attribute variant) -->
+   <auth:password-manager digest-algorithm="SHA-1" charset="UTF-8"/>
+
+   <!-- passwordManager | namespace-style component *configuration* (element variant) -->
+   <!--
+   <auth:password-manager>
+      <auth:digest-algorithm>SHA-1</auth:digest-algorithm>
+      <auth:charset>UTF-8</auth:charset>
+   </auth:password-manager>
+   -->
+
+   <!-- registerAction | property configuration (note that property names can use either hyphenated or humpback syntax) -->
+   <component name="registerAction">
+      <property name="pro-status-types">amateur pro semi-pro</property>
+      <property name="specialtyTypes">
+         <value>#{messages['specialty.drive']}</value>
+         <value>#{messages['specialty.chip']}</value>
+         <value>#{messages['specialty.putt']}</value>
+         <value>#{messages['specialty.iron']}</value>
+         <value>#{messages['specialty.looks']}</value>
+      </property>
+   </component>
+
+   <framework:entity-home name="courseHome" class="org.open18.action.CourseHome"
+      created-message="You have successfully added #{course.name}. Thanks for contributing!"
+      updated-message="You have successfully updated #{course.name}. Your careful eye is appreciated!"
+      deleted-message="&#8205;#{course.name} has been removed. We never liked it anyway."/>
+
+   <component name="roundPrototype" class="org.open18.model.Round" scope="event">
+      <property name="golfer">#{currentGolfer}</property>
+      <property name="date">#{currentDate}</property>
+   </component>
+
+   <framework:entity-home name="roundHome" class="org.open18.action.RoundHome" new-instance="#{roundPrototype}"/>
+
+   <!-- If a round is changed, we have to assume that the result set is stale (could lead to LIE otherwise) -->
+   <event type="org.jboss.seam.afterTransactionSuccess.Round">
+      <action execute="#{roundList.refresh}"/>
+      <!-- It is necessary to fetch the result list to deal with swizzled result list (ManagedEntityIdentityInterceptor) -->
+      <action execute="#{roundList.getResultList}"/>
+   </event>
+
+   <!-- could optionally use @Role on the entity classes (requires @Name as well) -->
+   <component name="golferExample" class="org.open18.model.Golfer"/>
+   <component name="teeSetExample" class="org.open18.model.TeeSet"/>
+   <component name="roundExample" class="org.open18.model.Round">
+      <property name="golfer">#{golferExample}</property>
+      <property name="teeSet">#{teeSetExample}</property>
+   </component>
+
+   <framework:entity-query name="roundList"
+      ejbql="select r from Round r
+         join fetch r.golfer g
+         join fetch r.teeSet ts
+         join fetch ts.course c"
+      max-results="5"
+      order="r.date desc"
+      scope="conversation">
+      <framework:hints>
+         <key>org.hibernate.comment</key>
+         <value>Query for rounds as result of search on /RoundList.xhtml</value>
+      </framework:hints>
+      <framework:restrictions>
+         <value>lower(g.lastName) like concat(lower(#{roundExample.golfer.lastName}),'%')</value>
+         <value>lower(g.firstName) like concat(lower(#{roundExample.golfer.firstName}),'%')</value>
+         <!-- Uncomment the following to create a single filter that matches last name or first name -->
+         <!--
+         <value>
+            lower(golfer.lastName) like concat(lower(#{roundCriteria.golferName}),'%') or
+            lower(golfer.firstName) like concat(lower(:el1),'%')
+         </value>
+         -->
+         <value>lower(ts.color) = lower(#{roundExample.teeSet.color})</value>
+         <value>g = #{roundCriteria.self ? currentGolfer : null}</value>
+         <!--<value>lower(course.name) like concat(lower(#{roundExample.teeSet.course.name}),'%')</value>-->
+         <value>c IN(#{not empty roundCriteria.courses ? roundCriteria.courses : null})</value>
+         <!--
+         <value>r.weather = #{roundExample.weather}</value>
+         <value>r.weather IN(#{not empty roundCriteria.weather ? roundCriteria.weather : null})</value>
+         -->
+         <value>r.date &gt;= #{roundCriteria.afterDate}</value>
+         <value>r.date &lt;= #{roundCriteria.beforeDate}</value>
+         <!--
+         <value>r.totalScore &gt;= #{roundCriteria.lowScore}</value>
+         <value>r.totalScore &lt;= #{roundCritiera.highScore}</value>
+         -->
+      </framework:restrictions>
+   </framework:entity-query>
+
+   <framework:entity-query name="coursesQuery"
+      ejbql="select c from Course c join fetch c.facility f"
+      order="f.state asc, c.name asc">
+      <framework:hints>
+         <key>org.hibernate.comment</key>
+         <value>Query for courses used in search criteria on /RoundList.xhtml</value>
+      </framework:hints>
+   </framework:entity-query>
+   <factory name="courses" value="#{coursesQuery.resultList}" scope="conversation"/>
+
+   <framework:entity-query name="teeSetsQuery"
+      ejbql="select ts from TeeSet ts join fetch ts.course c"
+      order="c.name asc, ts.position asc">
+      <framework:hints>
+         <key>org.hibernate.comment</key>
+         <value>Query for tee sets as options on RoundEdit.xhtml</value>
+      </framework:hints>
+   </framework:entity-query>
+   <factory name="teeSets" value="#{teeSetsQuery.resultList}" scope="conversation"/>
+
+   <component name="courseCommentPrototype" class="org.open18.model.CourseComment" scope="event">
+      <property name="datePosted">#{currentDatetime}</property>
+      <property name="course">#{courseHome.instance}</property>
+      <property name="golfer">#{currentGolfer}</property>
+   </component>
+
+   <framework:entity-home name="courseCommentHome"
+      entity-class="org.open18.model.CourseComment"
+      new-instance="#{courseCommentPrototype}"/>
+   <factory name="courseComment" value="#{courseCommentHome.instance}"/>
+
+   <!-- instance is cleared so that the form is reset after comment is submitted -->
+   <!-- as an alternative, could scope courseCommentHome to the event context -->
+   <event type="org.jboss.seam.afterTransactionSuccess.CourseComment">
+      <action execute="#{courseCommentHome.clearInstance}"/>
+   </event>
+
+   <framework:entity-query name="courseCommentsQuery"
+      ejbql="select c from CourseComment c join fetch c.golfer"
+      order="c.datePosted desc"/>
+   <factory name="courseComments" value="#{courseCommentsQuery.resultList}"/>
+
+   <framework:entity-query name="averageScore" scope="conversation"
+      ejbql="select avg(r.totalScore) from Round r join r.golfer g">
+      <framework:restrictions>
+         <value>g = #{roundCriteria.self ? currentGolfer : null}</value>
+      </framework:restrictions>
+   </framework:entity-query>
+
+</components>

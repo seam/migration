@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN" "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+<urlrewrite>
+
+	<!-- /facility/view/1 -->
+	<rule>
+		<from>^/facility/view/([0-9]+)$</from>
+		<to last="true">/Facility.seam?facilityId=$1</to>
+	</rule>
+
+	<!-- /facility/edit/1 -->
+	<rule>
+		<from>^/facility/edit/([0-9]+)$</from>
+		<to last="true">/FacilityEdit.seam?facilityId=$1</to>
+	</rule>
+
+	<!-- /course/view/1 -->
+	<rule>
+		<from>^/course/view/([0-9]+)$</from>
+		<to last="true">/Course.seam?courseId=$1</to>
+	</rule>
+
+	<!-- /course/edit/1 -->
+	<rule>
+		<from>^/course/edit/([0-9]+)$</from>
+		<to last="true">/CourseEdit.seam?courseId=$1</to>
+	</rule>
+
+	<!-- ROOT / -->
+	<rule>
+		<from>^/$</from>
+		<to>/home.seam</to>
+	</rule>
+
+	<!-- note that these friendly URLs are knowingly discarding the cid parameter -->
+	<!-- assuming that the parameters are placed into the url in insertion order -->
+	
+	<outbound-rule>
+		<from>^(/.+)?/Facility.seam\?facilityId=(\d+)(&amp;cid=\d+)?$</from>
+		<to>$1/facility/view/$2</to>
+    </outbound-rule>
+	
+	<outbound-rule>
+		<from>^(/.+)?/FacilityEdit.seam\?facilityId=(\d+)(&amp;cid=\d+)?$</from>
+		<to>$1/facility/edit/$2</to>
+    </outbound-rule>
+	
+	<outbound-rule>
+		<from>^(/.+)?/Course.seam\?courseId=(\d+)(&amp;cid=\d+)?$</from>
+		<to>$1/course/view/$2</to>
+    </outbound-rule>
+	
+	<outbound-rule>
+		<from>^(/.+)?/CourseEdit.seam\?courseId=(\d+)(&amp;facilityId=\d+)?(&amp;cid=\d+)?$</from>
+		<to>$1/course/edit/$2</to>
+    </outbound-rule>
+
+</urlrewrite>

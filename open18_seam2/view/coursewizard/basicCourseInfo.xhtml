@@ -1,0 +1,91 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"/>
+		
+		<h:form id="courseInfo" styleClass="edit">
+			<rich:panel>
+				<f:facet name="header">Course information</f:facet>
+
+				<s:decorate id="facilityField" template="/layout/edit.xhtml">
+					<ui:define name="label">Facility</ui:define>
+					#{course.facility.name}
+				</s:decorate>
+
+				<s:decorate id="nameField" template="/layout/edit.xhtml">
+					<ui:define name="label">Name</ui:define>
+					<h:inputText id="name" required="true"
+						value="#{course.name}"/>
+				</s:decorate>
+
+				<s:decorate id="numHolesField" template="/layout/edit.xhtml">
+						<ui:define name="label"># of holes</ui:define>
+						<h:selectOneMenu id="numHoles" required="true"
+							value="#{course.numHoles}">
+							<f:selectItem itemValue="9"/>
+							<f:selectItem itemValue="18"/>
+						</h:selectOneMenu>
+				</s:decorate>
+
+				<ui:remove>
+				<s:decorate id="numTeeSetsField" template="/layout/edit.xhtml">
+						<ui:define name="label"># of tee sets</ui:define>
+						<h:inputText id="numTeeSets" required="true"
+							value="#{courseWizard.numTeeSets}">
+						</h:inputText>
+				</s:decorate>
+				</ui:remove>
+
+				<s:decorate id="fairwaysField" template="/layout/edit.xhtml">
+						<ui:define name="label">Grass type (fairways)</ui:define>
+						<h:selectOneMenu id="fairways" 
+							value="#{course.fairways}" required="true">
+							<s:selectItems var="_t" value="#{courseWizard.fairwayOptions}" label="#{_t}"/>
+						</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="greensField" template="/layout/edit.xhtml">
+						<ui:define name="label">Grass type (greens)</ui:define>
+						<h:selectOneMenu id="greens" 
+							value="#{course.greens}" required="true">
+							<s:selectItems var="_t" value="#{courseWizard.greensOptions}" label="#{_t}"/>
+						</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="designerField" template="/layout/edit.xhtml">
+						<ui:define name="label">Designer</ui:define>
+						<h:inputText id="designer" 
+							value="#{course.designer}">
+						</h:inputText>
+				</s:decorate>
+				<s:decorate id="yearBuiltField" template="/layout/edit.xhtml">
+						<ui:define name="label">Year built</ui:define>
+						<h:inputText id="yearBuilt"
+							value="#{course.yearBuilt}">
+						</h:inputText>
+				</s:decorate>
+				
+				<div style="clear: both;">
+					<span class="required">*</span> required fields
+				</div>
+			</rich:panel>
+			<div class="actionButtons">
+				<s:button id="cancel" action="cancel" value="Cancel"/>
+				<ui:remove>
+				<h:commandButton id="next" action="#{courseWizard.submitBasicInfo}" value="Next &#187;"/>
+				</ui:remove>
+				<h:commandButton id="next" action="next" value="Next &#187;"/>
+			</div>
+		</h:form>
+
+	</ui:define> 
+</ui:composition>

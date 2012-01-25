@@ -1,0 +1,258 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+
+    <h:form id="hole" styleClass="edit">
+    
+        <rich:panel>
+            <f:facet name="header">#{holeHome.managed ? 'Edit' : 'Add'} Hole</f:facet>
+
+
+
+
+            <s:decorate id="ladiesHandicapDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">ladiesHandicap</ui:define>
+                <h:inputText id="ladiesHandicap"
+                          value="#{holeHome.instance.ladiesHandicap}">
+                    <a:support event="onblur" reRender="ladiesHandicapDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="ladiesParDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">ladiesPar</ui:define>
+                <h:inputText id="ladiesPar"
+                       required="true"
+                          value="#{holeHome.instance.ladiesPar}">
+                    <a:support event="onblur" reRender="ladiesParDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="mensHandicapDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">mensHandicap</ui:define>
+                <h:inputText id="mensHandicap"
+                          value="#{holeHome.instance.mensHandicap}">
+                    <a:support event="onblur" reRender="mensHandicapDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="mensParDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">mensPar</ui:define>
+                <h:inputText id="mensPar"
+                       required="true"
+                          value="#{holeHome.instance.mensPar}">
+                    <a:support event="onblur" reRender="mensParDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="nameDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">name</ui:define>
+                <h:inputText id="name" 
+                           size="25"
+                      maxlength="25"
+                          value="#{holeHome.instance.name}">
+                    <a:support event="onblur" reRender="nameDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="numberDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">number</ui:define>
+                <h:inputText id="number"
+                       required="true"
+                          value="#{holeHome.instance.number}">
+                    <a:support event="onblur" reRender="numberDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+        
+            <div style="clear:both">
+                <span class="required">*</span> 
+                required fields
+            </div>
+            
+        </rich:panel>
+                
+        <div class="actionButtons">
+
+            <h:commandButton id="save" 
+                          value="Save" 
+                         action="#{holeHome.persist}"
+                       disabled="#{!holeHome.wired}"
+                       rendered="#{!holeHome.managed}"/>  
+                          			  
+            <h:commandButton id="update" 
+                          value="Save" 
+                         action="#{holeHome.update}"
+                       rendered="#{holeHome.managed}"/>
+                        			  
+            <h:commandButton id="delete" 
+                          value="Delete" 
+                         action="#{holeHome.remove}"
+                      immediate="true"
+                       rendered="#{holeHome.managed}"/>
+                    
+            <s:button id="done" 
+                   value="Done"
+             propagation="end"
+                    view="/Hole.xhtml"
+                rendered="#{holeHome.managed}"/>
+                
+            <s:button id="cancel" 
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty holeFrom ? 'HoleList' : holeFrom}.xhtml"
+                rendered="#{!holeHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+    
+    <rich:tab label="course *" labelClass="required">
+    <div class="association" id="courseParent">
+    
+        <h:outputText value="There is no course associated with this hole." 
+                   rendered="#{holeHome.instance.course == null}"/>
+        
+        <rich:dataTable var="course" 
+                   value="#{holeHome.instance.course}" 
+                rendered="#{holeHome.instance.course != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="courseTable">
+            <h:column>
+                <f:facet name="header">id</f:facet>
+                #{course.id}
+            </h:column>
+            <ui:remove>
+            <h:column>
+                <f:facet name="header">description</f:facet>
+                #{course.description}
+            </h:column>
+            </ui:remove>
+            <h:column>
+                <f:facet name="header">designer</f:facet>
+                #{course.designer}
+            </h:column>
+            <h:column>
+	    	    <f:facet name="header">facility id</f:facet>
+		    	#{course.facility.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">fairways</f:facet>
+                #{course.fairways}
+            </h:column>
+            <h:column>
+                <f:facet name="header">greens</f:facet>
+                #{course.greens}
+            </h:column>
+            <h:column>
+                <f:facet name="header">name</f:facet>
+                #{course.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">numHoles</f:facet>
+                #{course.numHoles}
+            </h:column>
+            <h:column>
+                <f:facet name="header">signatureHole</f:facet>
+                #{course.signatureHole}
+            </h:column>
+            <h:column>
+                <f:facet name="header">yearBuilt</f:facet>
+                #{course.yearBuilt}
+            </h:column>
+            <h:column>
+                <f:facet name="header">action</f:facet>
+                <s:link view="/Course.xhtml" 
+                         id="viewcourse" 
+                      value="View" 
+                propagation="none">
+                    <f:param name="courseId" 
+                           value="#{course.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="Select course"
+                       view="/CourseList.xhtml">
+                <f:param name="from" value="HoleEdit"/>
+            </s:button>
+        </div>
+        
+    </div>
+    </rich:tab>
+
+    <rich:tab label="tees">
+        <div class="association" id="teesChildren">
+        
+            <h:outputText value="There are no tees associated with this hole." 
+                       rendered="#{empty holeHome.tees}"/>
+        
+            <rich:dataTable value="#{holeHome.tees}" 
+                           var="tee" 
+                      rendered="#{not empty holeHome.tees}" 
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="teesTable">
+                <h:column>
+                    <f:facet name="header">holeId</f:facet>
+                    #{tee.id.holeId}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">teeSetId</f:facet>
+                    #{tee.id.teeSetId}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">distance</f:facet>
+                    <h:outputText value="#{tee.distance}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">action</f:facet>
+                    <s:link view="/Tee.xhtml" 
+                              id="selecttee" 
+                           value="View"
+                     propagation="none">
+                        <f:param name="teeHoleId" 
+                                value="#{tee.id.holeId}"/>
+                        <f:param name="teeTeeSetId" 
+                                value="#{tee.id.teeSetId}"/>
+                        <f:param name="teeFrom" value="Hole"/>
+                    </s:link>
+                </h:column>
+            </rich:dataTable>
+        
+        </div>
+          
+        <f:subview rendered="#{holeHome.managed}" id="tees">
+        <div class="actionButtons">
+            <s:button id="addtee" 
+                   value="Add tee"
+                    view="/TeeEdit.xhtml"
+             propagation="none">
+                 <f:param name="holeId" 
+                         value="#{holeHome.instance.id}"/>
+                 <f:param name="teeFrom" value="Hole"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

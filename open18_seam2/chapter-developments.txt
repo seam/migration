@@ -1,0 +1,14 @@
+Seam in Action: Chapter 11
+--------------------------
+This file details developments made to the application source code during this
+chapter. Please note that the enhancements described here my go beyond what is
+covered in the book.
+
+TODO:
+  - backport fix for preserving course search in conversation
+
+open18:
+  - add @Name("golfer") and @Role(name = "currentGolfer", scope = ScopeType.SESSION) to the Golfer entity
+  - changed all checks for currentGolfer to s:hasRole('golfer')
+  - added encoding and saltPhrase to PasswordManager
+    - prepares for Identity Management in Seam 2.1, which uses base64 rather than hex and allows for the use of a salt

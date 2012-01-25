@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+	<!-- A time/date based rolling appender -->
+	<appender name="FILE" class="org.jboss.logging.appender.DailyRollingFileAppender">
+		<errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+		<param name="File" value="${jboss.server.log.dir}/server.log"/>
+		<param name="Append" value="false"/>
+
+		<!-- Rollover at midnight each day -->
+		<param name="DatePattern" value="'.'yyyy-MM-dd"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss} %p [%c{6}] %m%n"/>
+			<!--
+			<param name="ConversionPattern" value="%d{HH:mm:ss} [%p] %c#%M@%L => %m%n"/>
+			-->
+		</layout>
+	</appender>
+
+	<!-- Console appender -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+		<param name="Target" value="System.out"/>
+		<!--
+		<param name="Threshold" value="INFO"/>
+		-->
+		<layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss} %p [%c{6}] %m%n"/>
+			<!--
+			<param name="ConversionPattern" value="%d{HH:mm:ss} [%p] %c#%M@%L => %m%n"/>
+			-->
+		</layout>
+	</appender>
+
+    <!-- digester is way too whiny -->
+    <category name="org.apache.commons.digester.Digester">
+		<priority value="WARN" />
+    </category>
+
+    <!-- log SQL queries -->
+	<!--
+    <category name="org.hibernate.SQL">
+		<priority value="DEBUG" />
+    </category>
+	-->
+
+	<category name="org.open18">
+		<priority value="DEBUG" />
+	</category>
+
+	<root>
+		<priority value="INFO"/>
+		<appender-ref ref="CONSOLE"/>
+		<!--
+		<appender-ref ref="FILE"/>
+		-->
+	</root>
+
+</log4j:configuration>

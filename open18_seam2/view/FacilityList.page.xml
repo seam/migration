@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd">
+      
+   <action execute="#{facilityList.preloadFacilities}"/>
+
+   <param name="firstResult" value="#{facilityList.firstResult}"/>
+   <param name="order" value="#{facilityList.order}"/>
+   <param name="from"/>
+   <param name="address" value="#{facilityList.facility.address}"/>
+   <param name="city" value="#{facilityList.facility.city}"/>
+   <param name="country" value="#{facilityList.facility.country}"/>
+   <param name="county" value="#{facilityList.facility.county}"/>
+   <param name="description" value="#{facilityList.facility.description}"/>
+   <param name="name" value="#{facilityList.facility.name}"/>
+   <param name="phone" value="#{facilityList.facility.phone}"/>
+   <param name="state" value="#{facilityList.facility.state}"/>
+   <param name="type" value="#{facilityList.facility.type}"/>
+   <param name="uri" value="#{facilityList.facility.uri}"/>
+   <param name="zip" value="#{facilityList.facility.zip}"/>
+
+</page>

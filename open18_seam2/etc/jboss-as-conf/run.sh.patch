@@ -1,0 +1,19 @@
+--- bin/run.sh	2008-06-18 15:44:08.973044015 -0400
++++ bin/run.sh.bindall	2008-06-18 15:44:06.972930035 -0400
+@@ -211,14 +211,14 @@
+       "$JAVA" $JAVA_OPTS \
+          -Djava.endorsed.dirs="$JBOSS_ENDORSED_DIRS" \
+          -classpath "$JBOSS_CLASSPATH" \
+-         org.jboss.Main "$@"
++         org.jboss.Main -b 0.0.0.0 "$@"
+       JBOSS_STATUS=$?
+    else
+       # Execute the JVM in the background
+       "$JAVA" $JAVA_OPTS \
+          -Djava.endorsed.dirs="$JBOSS_ENDORSED_DIRS" \
+          -classpath "$JBOSS_CLASSPATH" \
+-         org.jboss.Main "$@" &
++         org.jboss.Main -b 0.0.0.0 "$@" &
+       JBOSS_PID=$!
+       # Trap common signals and relay them to the jboss process
+       trap "kill -HUP  $JBOSS_PID" HUP

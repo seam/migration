@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	targetNamespace="http://open18.org/components/auth" xmlns:auth="http://open18.org/components/auth"
+	xmlns:components="http://jboss.com/products/seam/components" attributeFormDefault="unqualified">
+	<xs:import namespace="http://jboss.com/products/seam/components" schemaLocation="http://jboss.com/products/seam/components-2.0.xsd"/>
+
+	<xs:element name="password-manager">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="auth:digest-algorithm"/>
+					<xs:element ref="auth:charset" />
+					<xs:element ref="auth:salt-phrase" />
+					<xs:element ref="auth:encoding" />
+				</xs:choice>
+			</xs:sequence>
+			<xs:attributeGroup ref="components:attlist.component"/>
+			<xs:attributeGroup ref="auth:attlist.passwordManager"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.passwordManager">
+		<xs:attribute name="digest-algorithm" type="xs:string"/>
+		<xs:attribute name="charset" type="xs:string"/>
+		<xs:attribute name="salt-phrase" type="xs:string"/>
+		<xs:attribute name="encoding" type="auth:encodingType"/>
+	</xs:attributeGroup>
+
+	<xs:element name="digest-algorithm" type="xs:string" />
+
+	<xs:element name="charset" type="xs:string" />
+
+	<xs:element name="salt-phrase" type="xs:string" />
+
+	<xs:element name="encoding" type="auth:encodingType"/>
+
+	<xs:element name="password-bean">
+		<xs:complexType mixed="true">
+			<xs:attributeGroup ref="components:attlist.component"/>
+			<xs:attributeGroup ref="auth:attlist.passwordBean"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attributeGroup name="attlist.passwordBean">
+	</xs:attributeGroup>
+
+	<xs:simpleType name="encodingType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="base64"/>
+			<xs:enumeration value="hex"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

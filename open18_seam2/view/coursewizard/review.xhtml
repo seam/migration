@@ -1,0 +1,90 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"/>
+    
+		<h:form id="review" styleClass="edit">
+			<rich:panel>
+				<f:facet name="header">Review</f:facet>
+				<s:decorate id="facilityField" template="/layout/display.xhtml">
+					<ui:define name="label">Facility</ui:define>
+					#{course.facility.name}
+				</s:decorate>
+				<s:decorate id="nameField" template="/layout/display.xhtml">
+					<ui:define name="label">Course name</ui:define>
+					#{course.name}
+				</s:decorate>
+				<s:decorate id="fairwaysField" template="/layout/display.xhtml">
+					<ui:define name="label">Grass in fairways</ui:define>
+					#{course.fairways}
+				</s:decorate>
+				<s:decorate id="greensField" template="/layout/display.xhtml">
+					<ui:define name="label">Grass on greens</ui:define>
+					#{course.greens}
+				</s:decorate>
+				<s:decorate id="designerField" template="/layout/display.xhtml">
+					<ui:define name="label">Designer</ui:define>
+					#{course.designer}
+				</s:decorate>
+				<s:decorate id="yearBuiltField" template="/layout/display.xhtml">
+					<ui:define name="label">Year built</ui:define>
+					#{course.yearBuilt}
+				</s:decorate>
+				<div style="clear: both;"/>
+				<a:loadStyle src="resource:///css/table.xcss"/>
+				<ui:remove><!-- #{course.holes.{h|h}} --></ui:remove>
+				<table class="dr-table rich-table" style="margin-top: 3px;">
+					<tbody>
+						<tr class="dr-table-subheader rich-table-subheader">
+							<th class="dr-table-subheadercell rich-table-subheadercell">Hole</th>
+							<ui:repeat var="_hole" value="#{holes}">
+							<th class="dr-table-subheadercell rich-table-subheadercell" style="width: 2.5em;">#{_hole.number}</th>
+							</ui:repeat>
+						</tr>
+						<tr class="dr-table-firstrow rich-table-firstrow">
+							<th class="dr-table-cell rich-table-cell" style="white-space: nowrap;">Par#{courseWizard.ladiesParUnique ? ' - Mens' : ''}</th>
+							<ui:repeat var="_hole" value="#{holes}">
+							<td class="dr-table-cell rich-table-cell" style="text-align: center;">#{_hole.mensPar}</td>
+							</ui:repeat>
+						</tr>
+						<tr>
+							<th class="dr-table-cell rich-table-cell" style="white-space: nowrap;">Hcp#{courseWizard.ladiesHandicapUnique ? ' - Mens' : ''}</th>
+							<ui:repeat var="_hole" value="#{holes}">
+							<td class="dr-table-cell rich-table-cell" style="text-align: center;">#{_hole.mensHandicap}</td>
+							</ui:repeat>
+						</tr>
+						<tr jsfc="ui:repeat" value="#{1}" rendered="#{courseWizard.ladiesHandicapUnique}">
+							<th class="dr-table-cell rich-table-cell" style="white-space: nowrap;">Hcp - Ladies</th>
+							<ui:repeat var="_hole" value="#{holes}">
+							<td class="dr-table-cell rich-table-cell" style="text-align: center;">#{_hole.ladiesHandicap}</td>
+							</ui:repeat>
+						</tr>
+						<tr jsfc="ui:repeat" value="#{1}" rendered="#{courseWizard.ladiesParUnique}">
+							<th class="dr-table-cell rich-table-cell" style="white-space: nowrap;">Par - Ladies</th>
+							<ui:repeat var="_hole" value="#{holes}">
+							<td class="dr-table-cell rich-table-cell" style="text-align: center;">#{_hole.ladiesPar}</td>
+							</ui:repeat>
+						</tr>
+					</tbody>
+				</table>
+				<p style="margin-bottom: 0;"><strong>Description:</strong> #{course.description}</p>
+			</rich:panel>
+			<div class="actionButtons">
+				<s:button id="cancel" action="cancel" value="Cancel"/>
+				<!-- technically, the save button can be <s:button> since there is no form data -->
+				<h:commandButton id="save" action="#{courseWizard.save}" value="Save"/>
+			</div>
+		</h:form>
+
+	</ui:define> 
+</ui:composition>

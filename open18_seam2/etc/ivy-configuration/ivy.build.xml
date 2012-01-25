@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<project basedir="." xmlns:ivy="antlib:org.apache.ivy.ant" name="myproject-ivy">
+	<!-- At this point we cannot upgrade to 2.0.0-rc1 because of a bug regarding when the variables are loaded -->
+	<property name="ivy.install.version" value="2.0.0-beta2"/>
+	<property name="ivy.jar.dir" value="${basedir}/build-lib"/>
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
+	<property name="ivy.sync" value="false"/>
+	<property name="ivy.use.symlinks" value="false"/>
+	<property name="central.repo" value="http://repo1.maven.org/maven2"/>
+	<property name="jboss.repo" value="http://repository.jboss.org/maven2"/>
+
+	<!-- centralize some key artifact versions -->
+	<property name="seam.version" value="2.0.3.CR1"/>
+	<property name="jsf.version" value="1.2_04-p02"/>
+	<property name="richfaces.version" value="3.2.2.GA"/>
+	<property name="jboss-embedded.version" value="beta3"/>
+
+	<target name="init-ivy">
+		<available property="ivy.installed" value="true" file="${ivy.jar.file}" type="file"/>
+	</target>
+
+	<target name="load-ivy" depends="init-ivy,download-ivy">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+		<ivy:settings file="${basedir}/ivy.settings.xml"/>
+	</target>   
+
+	<target name="download-ivy" depends="init-ivy" unless="ivy.installed">
+		<mkdir dir="${ivy.jar.dir}"/>
+		<echo message="Installing ivy..."/>
+		<get src="${central.repo}/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+			 dest="${ivy.jar.file}"/>
+	</target>
+
+	<target name="inflate-core" depends="load-ivy">
+		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" type="jar" sync="${ivy.sync}" symlink="${ivy.use.symlinks}"/>
+		<move file="${lib.dir}/mvel.jar" tofile="${lib.dir}/mvel14.jar" failonerror="false"/>
+	</target>
+
+	<target name="inflate-source" depends="load-ivy">
+		<ivy:retrieve pattern="${lib.dir}/src/[artifact]-[type]s.[ext]" type="source" sync="${ivy.sync}" symlink="${ivy.use.symlinks}"/>
+	</target>
+
+	<target name="inflate-test" depends="load-ivy">
+		<ivy:retrieve pattern="${lib.dir}/test/[artifact].[ext]" type="test-jar" sync="${ivy.sync}" symlink="${ivy.use.symlinks}"/>
+	</target>
+
+	<target name="inflate" depends="inflate-core,inflate-source,inflate-test"/>
+
+	<target name="clean-ivy" depends="load-ivy">
+		<delete includeemptydirs="true" failonerror="false">
+			 <fileset dir="${lib.dir}">
+				  <include name="**/*"/>
+			 </fileset>
+		</delete>
+		<ivy:cleancache/>
+	</target>
+
+	<target name="dependency-report" depends="inflate">
+		<ivy:report todir="${dist.dir}/dependency-report"/>
+	</target>
+</project>

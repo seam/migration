@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://jboss.com/products/seam/pages"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd"
+
+       no-conversation-view-id="/home.xhtml"
+       login-view-id="/login.xhtml">
+
+    <conversation name="Course" parameter-name="courseId"
+        parameter-value="#{redirect.parameters.courseId != null ? redirect.parameters.courseId : (courseHome.instance.id != null ? courseHome.instance.id : '')}"/>
+
+    <page view-id="*" scheme="http">
+        <navigation>
+            <rule if-outcome="home">
+                <redirect view-id="/home.xhtml"/>
+            </rule>
+        </navigation>
+        <navigation from-action="#{identity.logout}">
+            <redirect/>
+        </navigation>
+        <navigation from-action="#{switcher.select}">
+            <rule if-outcome="addFacility">
+              <redirect view-id="/FacilityEdit.xhtml"/>
+            </rule>
+        </navigation>
+    </page>
+
+    <page view-id="/admin/*">
+        <restrict>#{s:hasRole('admin')}</restrict>
+    </page>
+
+    <page view-id="/Course*">
+        <action execute="#{courseHome.validateEntityFound}"
+            if="#{view.viewId == '/Course.xhtml' or
+                (view.viewId == '/CourseEdit.xhtml' and courseHome.courseId != null)}"/>
+   
+        <navigation from-action="#{courseHome.validateEntityFound}">
+            <rule if-outcome="invalid">
+                <redirect view-id="/CourseList.xhtml">
+                    <message severity="WARN">
+                        The course you requested does not exist.
+                    </message>
+                </redirect>
+            </rule>
+        </navigation>
+    </page>
+
+    <!-- === Course Wizard: Stateful model === -->
+    <!--<page view-id="/coursewizard/*" login-required="true"/>-->
+
+    <!-- === Course Wizard: Ad hoc model === -->
+
+    <!--
+    <page view-id="/coursewizard/*" login-required="true" conversation-required="true" no-conversation-view-id="/FacilityList.xhtml">
+        <navigation>
+            <rule if-outcome="cancel" if="#{course.id == null}">
+                <end-conversation before-redirect="true"/>
+                <redirect view-id="/Facility.xhtml">
+                    <param name="facilityId" value="#{course.facility.id}"/>
+                </redirect>
+            </rule>
+            <rule if-outcome="cancel" if="#{course.id != null}">
+                <end-conversation before-redirect="true"/>
+                <redirect view-id="/Course.xhtml">
+                    <param name="courseId" value="#{course.id}"/>
+                </redirect>
+            </rule>
+        </navigation>
+    </page>
+
+    <page view-id="/coursewizard/basicCourseInfo.xhtml">
+        <description>Course wizard (#{course.name == null ? 'New course' : course.name} @ #{course.facility.name}): Basic information</description>
+        <navigation from-action="#{courseWizard.submitBasicInfo}">
+            <rule if-outcome="next">
+                <redirect view-id="/coursewizard/description.xhtml"/>
+            </rule>
+        </navigation>
+    </page>
+
+    <page view-id="/coursewizard/description.xhtml">
+        <description>Course wizard (#{course.name} @ #{course.facility.name}): Description</description>
+        <navigation from-action="#{courseWizard.submitDescription}">
+            <rule if-outcome="next">
+                <redirect view-id="/coursewizard/holeData.xhtml"/>
+            </rule>
+        </navigation>
+    </page>
+
+    <page view-id="/coursewizard/holeData.xhtml">
+        <description>Course wizard (#{course.name} @ #{course.facility.name}): Hole data - #{gender}</description>
+        <navigation from-action="#{courseWizard.submitHoleData}">
+            <rule if-outcome="Ladies">
+                <redirect view-id="/coursewizard/holeData.xhtml"/>
+            </rule>
+            <rule if-outcome="next">
+                <redirect view-id="/coursewizard/review.xhtml"/>
+            </rule>
+        </navigation>
+    </page>
+
+    <page view-id="/coursewizard/review.xhtml">
+        <description>Course wizard (#{course.name} @ #{course.facility.name}): Review</description>
+        <navigation from-action="#{courseWizard.save}">
+            <rule if-outcome="success">
+                <redirect view-id="/Course.xhtml">
+                    <param name="courseId" value="#{course.id}"/>
+                </redirect>
+            </rule>
+        </navigation>
+    </page>
+    -->
+    
+    <exception class="org.jboss.seam.framework.EntityNotFoundException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Record not found</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.persistence.EntityNotFoundException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Record not found</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.persistence.OptimisticLockException">
+        <end-conversation/>
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">The record was modified by another user</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.persistence.PersistenceException">
+        <redirect view-id="/error.xhtml">
+            <message>The operation failed. Please try again.</message>
+        </redirect>
+    </exception>
+ 
+    <exception class="org.jboss.seam.security.AuthorizationException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">You've been denied access to the resource</message>
+        </redirect>
+    </exception>
+    
+    <exception class="org.jboss.seam.security.NotLoggedInException">
+        <redirect view-id="/login.xhtml">
+            <message severity="warn">#{messages['org.jboss.seam.NotLoggedIn']}</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.faces.application.ViewExpiredException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Your session has timed out, please try again</message>
+        </redirect>
+    </exception>
+     
+    <exception>
+        <redirect view-id="/error.xhtml">
+            <message severity="error">Unexpected error, please try again</message>
+        </redirect>
+    </exception>
+    
+</pages>

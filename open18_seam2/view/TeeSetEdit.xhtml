@@ -1,0 +1,267 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+
+    <h:form id="teeSet" styleClass="edit">
+    
+        <rich:panel>
+            <f:facet name="header">#{teeSetHome.managed ? 'Edit' : 'Add'} TeeSet</f:facet>
+
+
+
+            <s:decorate id="colorDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">color</ui:define>
+                <h:inputText id="color" 
+                       required="true"
+                           size="10"
+                      maxlength="10"
+                          value="#{teeSetHome.instance.color}">
+                    <a:support event="onblur" reRender="colorDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="ladiesCourseRatingDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">ladiesCourseRating</ui:define>
+                <h:inputText id="ladiesCourseRating"
+                          value="#{teeSetHome.instance.ladiesCourseRating}">
+                    <a:support event="onblur" reRender="ladiesCourseRatingDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="ladiesSlopeRatingDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">ladiesSlopeRating</ui:define>
+                <h:inputText id="ladiesSlopeRating"
+                          value="#{teeSetHome.instance.ladiesSlopeRating}">
+                    <a:support event="onblur" reRender="ladiesSlopeRatingDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="mensCourseRatingDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">mensCourseRating</ui:define>
+                <h:inputText id="mensCourseRating"
+                          value="#{teeSetHome.instance.mensCourseRating}">
+                    <a:support event="onblur" reRender="mensCourseRatingDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="mensSlopeRatingDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">mensSlopeRating</ui:define>
+                <h:inputText id="mensSlopeRating"
+                          value="#{teeSetHome.instance.mensSlopeRating}">
+                    <a:support event="onblur" reRender="mensSlopeRatingDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="nameDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">name</ui:define>
+                <h:inputText id="name" 
+                           size="25"
+                      maxlength="25"
+                          value="#{teeSetHome.instance.name}">
+                    <a:support event="onblur" reRender="nameDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="positionDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">position</ui:define>
+                <h:inputText id="position"
+                          value="#{teeSetHome.instance.position}">
+                    <a:support event="onblur" reRender="positionDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+        
+            <div style="clear:both">
+                <span class="required">*</span> 
+                required fields
+            </div>
+            
+        </rich:panel>
+                
+        <div class="actionButtons">
+
+            <h:commandButton id="save" 
+                          value="Save" 
+                         action="#{teeSetHome.persist}"
+                       disabled="#{!teeSetHome.wired}"
+                       rendered="#{!teeSetHome.managed}"/>  
+                          			  
+            <h:commandButton id="update" 
+                          value="Save" 
+                         action="#{teeSetHome.update}"
+                       rendered="#{teeSetHome.managed}"/>
+                        			  
+            <h:commandButton id="delete" 
+                          value="Delete" 
+                         action="#{teeSetHome.remove}"
+                      immediate="true"
+                       rendered="#{teeSetHome.managed}"/>
+                    
+            <s:button id="done" 
+                   value="Done"
+             propagation="end"
+                    view="/TeeSet.xhtml"
+                rendered="#{teeSetHome.managed}"/>
+                
+            <s:button id="cancel" 
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty teeSetFrom ? 'TeeSetList' : teeSetFrom}.xhtml"
+                rendered="#{!teeSetHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+    
+    <rich:tab label="course *" labelClass="required">
+    <div class="association" id="courseParent">
+    
+        <h:outputText value="There is no course associated with this teeSet." 
+                   rendered="#{teeSetHome.instance.course == null}"/>
+        
+        <rich:dataTable var="course" 
+                   value="#{teeSetHome.instance.course}" 
+                rendered="#{teeSetHome.instance.course != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="courseTable">
+            <h:column>
+                <f:facet name="header">id</f:facet>
+                #{course.id}
+            </h:column>
+            <ui:remove>
+            <h:column>
+                <f:facet name="header">description</f:facet>
+                #{course.description}
+            </h:column>
+            </ui:remove>
+            <h:column>
+                <f:facet name="header">designer</f:facet>
+                #{course.designer}
+            </h:column>
+            <h:column>
+	    	    <f:facet name="header">facility id</f:facet>
+		    	#{course.facility.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">fairways</f:facet>
+                #{course.fairways}
+            </h:column>
+            <h:column>
+                <f:facet name="header">greens</f:facet>
+                #{course.greens}
+            </h:column>
+            <h:column>
+                <f:facet name="header">name</f:facet>
+                #{course.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">numHoles</f:facet>
+                #{course.numHoles}
+            </h:column>
+            <h:column>
+                <f:facet name="header">signatureHole</f:facet>
+                #{course.signatureHole}
+            </h:column>
+            <h:column>
+                <f:facet name="header">yearBuilt</f:facet>
+                #{course.yearBuilt}
+            </h:column>
+            <h:column>
+                <f:facet name="header">action</f:facet>
+                <s:link view="/Course.xhtml" 
+                         id="viewcourse" 
+                      value="View" 
+                propagation="none">
+                    <f:param name="courseId" 
+                           value="#{course.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="Select course"
+                       view="/CourseList.xhtml">
+                <f:param name="from" value="TeeSetEdit"/>
+            </s:button>
+        </div>
+        
+    </div>
+    </rich:tab>
+
+    <rich:tab label="tees">
+        <div class="association" id="teesChildren">
+        
+            <h:outputText value="There are no tees associated with this teeSet." 
+                       rendered="#{empty teeSetHome.tees}"/>
+        
+            <rich:dataTable value="#{teeSetHome.tees}" 
+                           var="tee" 
+                      rendered="#{not empty teeSetHome.tees}" 
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="teesTable">
+                <h:column>
+                    <f:facet name="header">holeId</f:facet>
+                    #{tee.id.holeId}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">teeSetId</f:facet>
+                    #{tee.id.teeSetId}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">distance</f:facet>
+                    <h:outputText value="#{tee.distance}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">action</f:facet>
+                    <s:link view="/Tee.xhtml" 
+                              id="selecttee" 
+                           value="View"
+                     propagation="none">
+                        <f:param name="teeHoleId" 
+                                value="#{tee.id.holeId}"/>
+                        <f:param name="teeTeeSetId" 
+                                value="#{tee.id.teeSetId}"/>
+                        <f:param name="teeFrom" value="TeeSet"/>
+                    </s:link>
+                </h:column>
+            </rich:dataTable>
+        
+        </div>
+          
+        <f:subview rendered="#{teeSetHome.managed}" id="tees">
+        <div class="actionButtons">
+            <s:button id="addtee" 
+                   value="Add tee"
+                    view="/TeeEdit.xhtml"
+             propagation="none">
+                 <f:param name="teeSetId" 
+                         value="#{teeSetHome.instance.id}"/>
+                 <f:param name="teeFrom" value="TeeSet"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

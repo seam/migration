@@ -1,0 +1,39 @@
+<rich:toolBar 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich">
+    <rich:toolBarGroup>
+        <h:outputText value="#{projectName}:"/>
+        <s:link view="/home.xhtml" value="Home" propagation="none"/>
+    </rich:toolBarGroup>
+    <s:link view="/FacilityList.xhtml" 
+           value="Facilities" 
+     propagation="none"/>
+    <s:link view="/CourseList.xhtml" 
+           value="Courses" 
+     propagation="none"/>
+    <ui:remove>
+    <s:link view="/HoleList.xhtml" 
+           value="Holes" 
+     propagation="none"/>
+    <s:link view="/TeeSetList.xhtml" 
+           value="Tee Sets" 
+     propagation="none"/>
+    <s:link view="/TeeList.xhtml" 
+           value="Tees" 
+     propagation="none"/>
+    </ui:remove>
+    <s:link view="/RoundList.xhtml" value="Rounds" propagation="none"/>
+    <s:link view="/GolferList.xhtml" value="Golfers" propagation="none"/>
+    <s:link view="/admin/home.xhtml" value="Admin" propagation="none" rendered="#{s:hasRole('admin')}"/>
+    <s:link view="/workspaces.xhtml" value="Workspaces" propagation="none"/>
+    <!-- @newMenuItem@ -->
+    <rich:toolBarGroup location="right">
+        <h:outputText value="You are signed in as: #{identity.username}" rendered="#{identity.loggedIn}"/>
+        <s:link view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
+        <s:link view="/home.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
+    </rich:toolBarGroup>
+</rich:toolBar>

@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<project basedir=".">
+	<!-- This file consists of deployment targets for the GlassFish Application Server -->
+	<!-- Import it into your build using <import file="${basedir}/glassfish.build.xml"/> -->
+
+	<macrodef name="asadmin">
+		<attribute name="cmd"/>
+		<attribute name="args" default=""/>
+		<attribute name="log" default="true"/>
+		<element name="pre-conditions" optional="true"/>
+		<sequential>
+			<fail unless="glassfish.home">glassfish.home not set</fail>
+			<pre-conditions/>
+			<exec executable="${glassfish.home}/bin/asadmin">
+				<arg value="@{cmd}"/>
+				<arg line="@{args}"/>
+				<redirector outputproperty="gf.cmd.output" alwayslog="@{log}"/>
+			</exec> 
+		</sequential>
+	</macrodef>
+
+	<target name="gf-init" description="Prepare properties for GlassFish">
+		<property name="transaction_manager_lookup_class" value="org.hibernate.transaction.SunONETransactionManagerLookup"/>
+		<property name="seam_bootstrap_pu" value="false"/>
+		<property name="seam_emf" value="#{null}"/>
+		<property name="pu_jndi_name" value="java:comp/env/${project.name}/emf"/>
+	</target>
+
+	<target name="gf-start" description="Starts GlassFish">
+		<asadmin cmd="start-domain" args="${glassfish.domain}">
+			<pre-conditions>
+				<fail unless="glassfish.domain">glassfish.domain not set</fail>
+			</pre-conditions>
+		</asadmin>
+	</target>
+
+	<target name="gf-stop" description="Stops GlassFish">
+		<asadmin cmd="stop-domain" args="${glassfish.domain}">
+			<pre-conditions>
+				<fail unless="glassfish.domain">glassfish.domain not set</fail>
+			</pre-conditions>
+		</asadmin>
+	</target>
+
+	<target name="gf-restart" depends="gf-stop,gf-start" description="Restarts GlassFish"/>
+
+	<target name="gf-check-datasource" description="Check if the datasource is registered with GlassFish">
+		<asadmin cmd="list-jdbc-resources" log="false"/>
+		<condition property="gf.needs.datasource">
+			<not><contains string="${gf.cmd.output}" substring="${project.name}Datasource"/></not>
+		</condition>
+	</target>
+
+	<target name="gf-datasource" depends="gf-check-datasource" if="gf.needs.datasource"
+		description="Register the datasource in GlassFish">
+		<asadmin cmd="add-resources" args="${basedir}/resources/glassfish-resources-${profile}.xml"/>
+	</target>
+
+	<target name="gf-logging" description="Move the log4j configuration for GlassFish into place">
+		<copy tofile="${war.dir}/WEB-INF/classes/log4j.xml" file="${basedir}/resources/glassfish-log4j.xml"/>
+	</target>
+
+	<target name="gf-explode" depends="gf-init,war,gf-logging,gf-datasource"
+		description="Deploy the exploded archive to GlassFish">
+		<asadmin cmd="deploydir" args="--name ${project.name} --contextroot ${project.name} ${war.dir}"/>
+	</target>
+
+	<target name="gf-hotdeploy" depends="gf-init,war"/>
+
+	<target name="gf-deploy" depends="gf-init,archive,gf-logging,gf-datasource"
+		description="Deploy the packaged archive to GlassFish">
+		<asadmin cmd="deploy" args="--name ${project.name} --contextroot ${project.name} ${dist.dir}/${project.name}.war"/>
+	</target>
+
+	<target name="gf-unexplode" depends="gf-undeploy"/>
+
+	<target name="gf-undeploy" description="Undeploy the archive from GlassFish">
+		<asadmin cmd="undeploy" args="${project.name}"/>
+		<asadmin cmd="delete-jdbc-resource" args="${project.name}Datasource"/>
+		<asadmin cmd="delete-jdbc-connection-pool" args="${project.name}Pool"/>
+		<!-- Enable the following two commands if you are using jBPM -->
+		<!--
+		<asadmin cmd="delete-jdbc-resource" args="${project.name}JbpmDatasource"/>
+		<asadmin cmd="delete-jdbc-connection-pool" args="${project.name}JbpmPool"/>
+		-->
+	</target>
+
+	<target name="gf-prepare" depends="gf-deploy-hibernate"
+		description="Prepares GlassFish to run a Seam application"/>
+
+	<target name="gf-deploy-hibernate" description="Deploys Hibernate to be a JPA provider on GlassFish">
+		<fail unless="glassfish.home">glassfish.home not set</fail>
+		<fail unless="glassfish.domain">glassfish.domain not set</fail>
+		<copy todir="${glassfish.home}/domains/${glassfish.domain}/lib/ext">
+			<fileset dir="${basedir}/lib">
+				<include name="antlr.jar"/>
+				<include name="asm.jar"/>
+				<include name="asm-attrs.jar"/>
+				<include name="cglib.jar"/>
+				<include name="commons-collections.jar"/>
+				<include name="commons-logging.jar"/>
+				<include name="concurrent.jar"/>
+				<include name="dom4j.jar"/>
+				<include name="hibernate.jar"/>
+				<include name="hibernate-*.jar"/>
+				<exclude name="hibernate-search.jar"/>
+				<include name="javassist.jar"/>
+				<include name="jboss-common-core.jar"/>
+				<include name="jta.jar"/>
+				<!--
+				log4j is needed for if you have custom logging configuration.
+				PU is loaded by GlassFish and that calls logging -->
+				<include name="log4j.jar"/> 
+				<include name="persistence-api.jar"/>
+				<!-- Provide the JDBC driver for your database -->
+				<include name="h2.jar"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>

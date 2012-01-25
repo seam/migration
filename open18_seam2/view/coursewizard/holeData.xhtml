@@ -1,0 +1,81 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"/>
+    
+		<h:form id="holeData" styleClass="edit">
+			<rich:panel>
+				<f:facet name="header">Hole data</f:facet>
+				<h:dataTable var="_hole" value="#{holes}">
+					<h:column>
+						<f:facet name="header">Hole</f:facet>
+						#{_hole.number}
+					</h:column>
+					<h:column>
+						<f:facet name="header">Men's par</f:facet>
+						<h:selectOneMenu value="#{_hole.mensPar}" rendered="#{gender == 'Men'}">
+							<s:selectItems var="_p" value="#{courseWizard.parOptions}" label="#{_p}"/>
+						</h:selectOneMenu>
+						<h:outputText value="#{_hole.mensPar}" rendered="#{gender == 'Ladies'}"/>
+					</h:column>
+					<h:column rendered="#{gender == 'Ladies'}">
+						<f:facet name="header">Ladies' par</f:facet>
+						<h:panelGroup rendered="#{gender == 'Ladies'}"><!-- JSF chokes w/o this double check-->
+							<h:selectOneMenu value="#{_hole.ladiesPar}" rendered="#{courseWizard.ladiesParUnique}">
+								<s:selectItems var="_p" value="#{courseWizard.parOptions}" label="#{_p}"/>
+							</h:selectOneMenu>
+							<h:outputText value="#{_hole.ladiesPar}" rendered="#{not courseWizard.ladiesParUnique}"/>
+						</h:panelGroup>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Men's handicap</f:facet>
+						<h:selectOneMenu value="#{_hole.mensHandicap}" rendered="#{gender == 'Men'}">
+							<s:selectItems var="_h" value="#{courseWizard.handicapOptions}" label="#{_h}"/>
+						</h:selectOneMenu>
+						<h:outputText value="#{_hole.mensHandicap}" rendered="#{gender == 'Ladies'}"/>
+					</h:column>
+					<h:column rendered="#{gender == 'Ladies'}">
+						<f:facet name="header">Ladies' handicap</f:facet>
+						<h:panelGroup rendered="#{gender == 'Ladies'}"><!-- JSF chokes w/o this double check-->
+							<h:selectOneMenu value="#{_hole.ladiesHandicap}" rendered="#{courseWizard.ladiesHandicapUnique}">
+								<s:selectItems var="_h" value="#{courseWizard.handicapOptions}" label="#{_h}"/>
+							</h:selectOneMenu>
+							<h:outputText value="#{_hole.ladiesHandicap}" rendered="#{not courseWizard.ladiesHandicapUnique}"/>
+						</h:panelGroup>
+					</h:column>
+				</h:dataTable>
+				<s:decorate id="ladiesParUniqueField" template="/layout/edit.xhtml" rendered="#{gender == 'Men'}">
+					<ui:define name="label">Is ladies par unique?</ui:define>
+					<h:selectBooleanCheckbox id="ladiesParUnique"
+						value="#{courseWizard.ladiesParUnique}"/>
+				</s:decorate>
+				<s:decorate id="ladiesHandicapUniqueField" template="/layout/edit.xhtml" rendered="#{gender == 'Men'}">
+					<ui:define name="label">Is ladies handicap unique?</ui:define>
+					<h:selectBooleanCheckbox id="ladiesHandicapUnique"
+						value="#{courseWizard.ladiesHandicapUnique}"/>
+				</s:decorate>
+				<div style="clear: both;">
+					<span class="required">*</span> required fields
+				</div>
+			</rich:panel>
+			<div class="actionButtons">
+				<s:button id="cancel" action="cancel" value="Cancel"/>
+				<ui:remove>
+				<h:commandButton id="next" action="#{courseWizard.submitHoleData}" value="Next &#187;"/>
+				</ui:remove>
+				<h:commandButton action="Men" value="Next &#187;" rendered="#{gender == 'Men'}"/>
+				<h:commandButton action="Ladies" value="Next &#187;" rendered="#{gender == 'Ladies'}"/>
+			</div>
+		</h:form>
+
+	</ui:define> 
+</ui:composition>

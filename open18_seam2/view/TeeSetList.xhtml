@@ -1,0 +1,192 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+    
+    <h:form id="teeSetSearch" styleClass="edit">
+    
+        <rich:simpleTogglePanel label="TeeSet search parameters" switchType="ajax">
+        
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">color</ui:define>
+                <h:inputText id="color" value="#{teeSetList.teeSet.color}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">name</ui:define>
+                <h:inputText id="name" value="#{teeSetList.teeSet.name}"/>
+            </s:decorate>
+
+        
+        </rich:simpleTogglePanel>
+        
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/TeeSetList.xhtml"/>
+        </div>
+        
+    </h:form>
+    
+    <rich:panel>
+        <f:facet name="header">TeeSet search results</f:facet>
+    <div class="results" id="teeSetList">
+
+    <h:outputText value="The teeSet search returned no results." 
+               rendered="#{empty teeSetList.resultList}"/>
+               
+    <rich:dataTable id="teeSetList" 
+                var="teeSet"
+              value="#{teeSetList.resultList}" 
+           rendered="#{not empty teeSetList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="id #{teeSetList.order=='id asc' ? messages.down : ( teeSetList.order=='id desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='id asc' ? 'id desc' : 'id asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="color #{teeSetList.order=='color asc' ? messages.down : ( teeSetList.order=='color desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='color asc' ? 'color desc' : 'color asc'}"/>
+                </s:link>
+            </f:facet>
+            <div title="#{teeSet.color}" style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="course id #{teeSetList.order=='course.id asc' ? messages.down : ( teeSetList.order=='course.id desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='course.id asc' ? 'course.id desc' : 'course.id asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.course.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="ladiesCourseRating #{teeSetList.order=='ladiesCourseRating asc' ? messages.down : ( teeSetList.order=='ladiesCourseRating desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='ladiesCourseRating asc' ? 'ladiesCourseRating desc' : 'ladiesCourseRating asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.ladiesCourseRating}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="ladiesSlopeRating #{teeSetList.order=='ladiesSlopeRating asc' ? messages.down : ( teeSetList.order=='ladiesSlopeRating desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='ladiesSlopeRating asc' ? 'ladiesSlopeRating desc' : 'ladiesSlopeRating asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.ladiesSlopeRating}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="mensCourseRating #{teeSetList.order=='mensCourseRating asc' ? messages.down : ( teeSetList.order=='mensCourseRating desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='mensCourseRating asc' ? 'mensCourseRating desc' : 'mensCourseRating asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.mensCourseRating}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="mensSlopeRating #{teeSetList.order=='mensSlopeRating asc' ? messages.down : ( teeSetList.order=='mensSlopeRating desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='mensSlopeRating asc' ? 'mensSlopeRating desc' : 'mensSlopeRating asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.mensSlopeRating}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="name #{teeSetList.order=='name asc' ? messages.down : ( teeSetList.order=='name desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='name asc' ? 'name desc' : 'name asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.name}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="position #{teeSetList.order=='position asc' ? messages.down : ( teeSetList.order=='position desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{teeSetList.order=='position asc' ? 'position desc' : 'position asc'}"/>
+                </s:link>
+            </f:facet>
+            #{teeSet.position}
+        </h:column>
+        <h:column>
+            <f:facet name="header">action</f:facet>
+            <s:link view="/#{empty from ? 'TeeSet' : from}.xhtml" 
+                   value="#{empty from ? 'View' : 'Select'}" 
+                      id="teeSet">
+                <f:param name="teeSetId" 
+                        value="#{teeSet.id}"/>
+            </s:link>
+        </h:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+    
+    <div class="tableControl">
+      
+        <s:link view="/TeeSetList.xhtml" 
+            rendered="#{teeSetList.previousExists}" 
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/TeeSetList.xhtml" 
+            rendered="#{teeSetList.previousExists}" 
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{teeSetList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/TeeSetList.xhtml" 
+            rendered="#{teeSetList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{teeSetList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/TeeSetList.xhtml" 
+            rendered="#{teeSetList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{teeSetList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/TeeSetEdit.xhtml"
+                    id="create" 
+                 value="Create teeSet">
+            <f:param name="teeSetId"/>
+        </s:button>
+    </s:div>
+    
+</ui:define>
+
+</ui:composition>
+

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering SYSTEM
+  "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+
+  <table name="COURSE">
+    <meta attribute="class-code">
+@javax.persistence.Transient
+public int getMensParOut() {
+    int par = 0;
+    for (Hole hole : holes) {
+        if (hole.getNumber() &lt;= 9) {
+            par += hole.getMensPar();
+        }
+    }
+    return par;
+}
+
+@javax.persistence.Transient
+public int getMensParIn() {
+    int par = 0;
+    for (Hole hole : holes) {
+        if (hole.getNumber() > 9) {
+            par += hole.getMensPar();
+        }
+    }
+    return par;
+}
+
+@javax.persistence.Transient
+public int getTotalMensPar() {
+    return getMensParOut() + getMensParIn();
+}
+
+@javax.persistence.Transient
+public int getLadiesParOut() {
+    int par = 0;
+    for (Hole hole : holes) {
+        if (hole.getNumber() &lt;= 9) {
+            par += hole.getLadiesPar();
+        }
+    }
+    return par;
+}
+
+@javax.persistence.Transient
+public int getLadiesParIn() {
+    int par = 0;
+    for (Hole hole : holes) {
+        if (hole.getNumber() > 9) {
+            par += hole.getLadiesPar();
+        }
+    }
+    return par;
+}
+
+@javax.persistence.Transient
+public int getTotalLadiesPar() {
+    return getLadiesParOut() + getLadiesParIn();
+}
+
+@javax.persistence.Transient
+public boolean isLadiesParUnique() {
+    for (Hole hole : holes) {
+        if (hole.getMensPar() != hole.getLadiesPar()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+@javax.persistence.Transient
+public boolean isLadiesHandicapUnique() {
+    for (Hole hole : holes) {
+        if (hole.getLadiesHandicap() != null &amp;&amp;
+            !hole.getLadiesHandicap().equals(hole.getMensHandicap())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+    </meta>
+  </table>
+
+  <table name="HOLE">
+    <column name="M_PAR" property="mensPar" />
+    <column name="L_PAR" property="ladiesPar" />
+    <column name="M_HANDICAP" property="mensHandicap" />
+    <column name="L_HANDICAP" property="ladiesHandicap" />
+  </table>
+  <table name="TEE_SET">
+    <meta attribute="class-code">
+@javax.persistence.Transient
+public String getNameOrColor() {
+    return name != null ? name : color;
+}
+
+@javax.persistence.Transient
+public int getDistanceOut() {
+    int distance = 0;
+    for (Tee tee : tees) {
+        if (tee.getHole().getNumber() &lt;= 9) {
+            distance += tee.getDistance();
+        }
+    }
+    return distance;
+}
+
+@javax.persistence.Transient
+public int getDistanceIn() {
+    int distance = 0;
+    for ( Tee tee : tees ) {
+        if ( tee.getHole().getNumber() > 9 ) {
+            distance += tee.getDistance();
+        }
+    }
+    return distance;
+}
+
+@javax.persistence.Transient
+public int getTotalDistance() {
+    return getDistanceOut() + getDistanceIn();
+}
+    </meta>
+    <column name="POS" property="position" />
+    <column name="M_SLOPE_RATING" property="mensSlopeRating" />
+    <column name="M_COURSE_RATING" property="mensCourseRating" />
+    <column name="L_SLOPE_RATING" property="ladiesSlopeRating" />
+    <column name="L_COURSE_RATING" property="ladiesCourseRating" />
+  </table>
+
+</hibernate-reverse-engineering>

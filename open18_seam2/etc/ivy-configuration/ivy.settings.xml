@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
+	<settings defaultResolver="default"/>
+	<caches artifactPattern="[organisation]/[module]/[type]s/[artifact]-[revision](-[classifier]).[ext]" checkUpToDate="true"/>
+	<resolvers>
+		<filesystem name="local">
+			<ivy pattern="${ivy.cache.dir}/[module]/ivy-[revision].xml"/>
+			<artifact pattern="${ivy.cache.dir}/[module]/[artifact]-[revision](-[classifier]).[ext]"/>
+		</filesystem>
+		<ibiblio name="central" m2compatible="true" usepoms="false" root="${central.repo}" pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+		<ibiblio name="jboss" m2compatible="true" usepoms="false" root="${jboss.repo}" pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+		<chain name="default" returnFirst="true">
+			<resolver ref="local"/>
+			<!-- central has to come before jboss because jboss is missing
+			sources for some artifacts and ivy will only get the sources from
+			the same place it got the jar file (doh!) -->
+			<resolver ref="central"/>
+			<resolver ref="jboss"/>
+		</chain>
+	</resolvers>
+</ivysettings>

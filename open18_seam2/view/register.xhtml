@@ -1,0 +1,112 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<div id="banner">
+			<h1>Join the Open 18 golfer community!</h1>
+			<p>Already a member?#{' '}<s:link id="signin" value="Click Here to Sign In" view="/login.xhtml"/></p>
+		</div>
+
+		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"/>
+	
+		<h:form id="registerActionForm" styleClass="edit">
+			<rich:panel>
+				<f:facet name="header">Open 18 Member Registration</f:facet>
+
+				<s:decorate id="firstNameField" template="layout/edit.xhtml">
+					<ui:define name="label">First Name</ui:define>
+					<h:inputText id="firstName" value="#{newGolfer.firstName}" size="40" required="true"/>
+				</s:decorate>
+		
+				<s:decorate id="lastNameField" template="layout/edit.xhtml">
+					<ui:define name="label">Last Name</ui:define>
+					<h:inputText id="lastName" value="#{newGolfer.lastName}" size="40" required="true"/>
+				</s:decorate>
+		
+				<s:decorate id="emailAddressField" template="layout/edit.xhtml">
+					<ui:define name="label">Email address</ui:define>
+					<h:inputText id="emailAddress" value="#{newGolfer.emailAddress}" size="40" required="true"/>
+				</s:decorate>
+		
+				<s:decorate id="usernameField" template="layout/edit.xhtml">
+					<ui:define name="label">Username</ui:define>
+					<h:inputText id="username" value="#{newGolfer.username}" size="20" required="true"/>
+				</s:decorate>
+		
+				<s:decorate id="passwordField" template="layout/edit.xhtml">
+					<ui:define name="label">Password</ui:define>
+					<h:inputSecret id="password" value="#{passwordBean.password}" size="20" required="true" redisplay="true"/>
+				</s:decorate>
+		
+				<s:decorate id="confirmField" template="layout/edit.xhtml">
+					<ui:define name="label">Confirm password</ui:define>
+					<h:inputSecret id="confirmField" value="#{passwordBean.confirm}" size="20" required="true" redisplay="true"/>
+				</s:decorate>
+		
+				<s:decorate id="dateOfBirthField" template="layout/edit.xhtml">
+					<ui:define name="label">Date of birth</ui:define>
+					<rich:calendar id="dateOfBirth" value="#{newGolfer.dateOfBirth}"/>
+				</s:decorate>
+
+				<s:decorate id="genderField" template="layout/edit.xhtml">
+					<ui:define name="label">Gender</ui:define>
+					<h:selectOneRadio id="gender" value="#{newGolfer.gender}" styleClass="radio">
+						<s:convertEnum/>
+						<s:enumItem enumValue="MALE" label="Male"/>
+						<s:enumItem enumValue="FEMALE" label="Female"/>
+					</h:selectOneRadio>
+				</s:decorate>
+		
+				<s:decorate id="locationField" template="layout/edit.xhtml">
+					<ui:define name="label">Location</ui:define>
+					<h:inputText id="location" value="#{newGolfer.location}" size="40"/>
+				</s:decorate>
+
+				<s:decorate id="proStatusField" template="layout/edit.xhtml">
+					<ui:define name="label">Pro status</ui:define>
+					<h:selectOneRadio id="proStatus" value="#{newGolfer.proStatus}" styleClass="radio">
+						<s:selectItems var="t" label="#{t}"
+							value="#{registerAction.proStatusTypes}"/>
+					</h:selectOneRadio>
+				</s:decorate>
+
+				<s:decorate id="specialtyField" template="layout/edit.xhtml">
+					<ui:define name="label">Specialty</ui:define>
+					<h:selectOneMenu id="specialty" value="#{newGolfer.specialty}">
+						<s:selectItems var="t" label="#{t}" noSelectionLabel="-- Select --" 
+							value="#{registerAction.specialtyTypes}"/>
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="verifyCaptchaField" template="layout/edit.xhtml">
+					<ui:define name="label">Security check</ui:define>
+					<h:graphicImage id="captchaChallenge" value="/seam/resource/captcha" styleClass="captchaChallenge"/>
+					<h:inputText id="verifyCaptcha" value="#{captcha.response}" required="true" size="3"/>
+				</s:decorate>
+
+				<div style="clear:both">
+					<span class="required">*</span> required fields
+				</div>
+		
+			</rich:panel>
+
+			<div class="actionButtons">
+				<h:commandButton id="cancel" value="Cancel" action="cancel" immediate="true"/>
+				<h:commandButton id="register" value="Register" action="#{registerAction.register}">
+					<s:defaultAction/>
+				</h:commandButton>
+			</div>
+		
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
