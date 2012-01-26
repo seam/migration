@@ -38,7 +38,7 @@ Apache Maven follows a standard project layout defined below::
 
 A full explanation of Apache Maven is beyond this tutorial. More information
 about Apache Maven (probably more than you'd ever want to know) is available 
-from Sonatype at `Maven: The Complete Reference`:http://www.sonatype.com/books/mvnref-book/reference/.
+from Sonatype at `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/>`_.
 
 The pom.xml file defines all of the dependencies of the project and instructions
 for building the project. The directory structure is fairly self explanatory. 
