@@ -1,0 +1,43 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+
+<ui:define name="body">
+    <rich:jQuery selector="#login\:username" query="focus()" timing="onload"/>
+    
+    <h:messages styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"/>
+    
+    <h:form id="login">
+    
+        <rich:panel>
+            <f:facet name="header">Login to Open 18</f:facet>
+    
+            <p>Please login using the credentials from your Open 18 member account. Not a member?#{' '}<s:link id="register" value="Sign up now!" view="/register.xhtml" propagation="end"/></p>
+
+            <div class="dialog">
+                <h:panelGrid columns="2" rowClasses="prop" columnClasses="name,value">
+                    <h:outputLabel for="username">Username</h:outputLabel>
+                    <h:inputText id="username" value="#{identity.username}"/>
+                    <h:outputLabel for="password">Password</h:outputLabel>
+                    <h:inputSecret id="password" value="#{identity.password}"/>
+                    <h:outputLabel for="rememberMe">Remember me</h:outputLabel>
+                    <h:selectBooleanCheckbox id="rememberMe" value="#{identity.rememberMe}"/>
+                </h:panelGrid>
+            </div>
+
+        </rich:panel>
+            
+        <div class="actionButtons">
+            <h:commandButton value="Login" action="#{identity.login}"/>
+        </div>
+          
+    </h:form>
+
+ </ui:define> 
+</ui:composition>

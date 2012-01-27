@@ -1,28 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.jboss.seam.catch</groupId>
-    <artifactId>seam-catch-parent</artifactId>
+    <groupId>org.open18</groupId>
+    <artifactId>open18</artifactId>
     <packaging>war</packaging>
-    <version>3.1.0.Beta-SNAPSHOT</version>
+    <version>2.0.0.Beta-SNAPSHOT</version>
     <name>Open18 application from Seam in Action</name>
 
+    <!-- It's easier to set versions here thar will / could be used in multiple locations. -->
     <properties>
+        <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
+        <richfaces.version>4.1.0.Final</richfaces.version>
+        <apache.shiro.version>1.2.0</apache.shiro.version>
+        <cdi.query.version>1.0.0.Alpha2</cdi.query.version>
+        <arquillian.version>1.0.0.CR7</arquillian.version>
+        <junit.version>4.10</junit.version>
     </properties>
 
+    <!--
+      This section pulls in other poms with all the versions set. The bom artifacts
+      use versions of modules that are known to work well together, easing the burden
+      of finding all these on your own
+    -->
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>org.jboss.spec</groupId>
-                <artifactId>jboss-javaee-6.0</artifactId>
-                <version>${jboss.spec.version}</version>
+                <artifactId>jboss-javaee6-specs-bom</artifactId>
+                <version>${jboss.javaee6.version}</version>
                 <type>pom</type>
+                <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.richfaces</groupId>
+                <artifactId>richfaces-bom</artifactId>
+                <version>${richfaces.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>1.0.0.CR7</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -31,6 +56,74 @@
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.faces</groupId>
+            <artifactId>jboss-jsf-api_2.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Apache Shiro will be used to replease the security aspects of Seam 2 -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>${apache.shiro.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- CDI Query will replace the Seam 2 Query classes -->
+        <dependency>
+            <groupId>com.ctp.cdi.query</groupId>
+            <artifactId>cdi-query-api</artifactId>
+            <version>${cdi.query.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ctp.cdi.query</groupId>
+            <artifactId>cdi-query-impl</artifactId>
+            <version>${cdi.query.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>${apache.shiro.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-components-ui</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.core</groupId>
+            <artifactId>richfaces-core-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Arquillian will be used for testing instead of SeamTest -->
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

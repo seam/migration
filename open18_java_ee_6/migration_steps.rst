@@ -104,9 +104,22 @@ Migrate to JPA 2.0
 Update persistence.xml to 2.0
 ================================================================================
 
+.. todo: also take out the transaction manager -- have to double check
+
+Migrate to Bean Validation
+================================================================================
+
+.. todo: Length(max) -> Max, NotNull is a package change
+
+.. todo: Remove Seam annotations and create producers for them (golfer[session], round[also has a restrict on it, look into this a bit more based on what Dan said])
+
+.. todo: GolferValidator should be a new JSR303 Validator
+
 ********************************************************************************
 Migrate to CDI
 ********************************************************************************
+
+.. todo: There is no seam.properties but you will need beans.xml
 
 Substitute Seam 2 annotations for CDI equivalents
 ================================================================================
@@ -120,6 +133,8 @@ Migrate to  JSF 2.0
 
 Update faces-config.xml to 2.0
 ================================================================================
+
+.. todo: take out the view handler
 
 Migrate to RichFaces 4.1
 ================================================================================

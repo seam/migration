@@ -1,0 +1,66 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+						   
+	<ui:define name="body">
+		
+		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+		
+		<h:form id="golferForm">
+	
+			<rich:panel>
+				<f:facet name="header">Edit Golfer</f:facet>
+
+				<s:decorate id="usernameField" template="/layout/display.xhtml">
+					<ui:define name="label">Username</ui:define>
+					#{golferHome.instance.username}
+				</s:decorate>
+		
+				<s:decorate id="firstNameField" template="/layout/edit.xhtml">
+					<ui:define name="label">First Name</ui:define>
+					<h:inputText id="firstName" value="#{golferHome.instance.firstName}" size="40" required="true"/>
+				</s:decorate>
+		
+				<s:decorate id="lastNameField" template="/layout/edit.xhtml">
+					<ui:define name="label">Last Name</ui:define>
+					<h:inputText id="lastName" value="#{golferHome.instance.lastName}" size="40" required="true"/>
+				</s:decorate>
+		
+				<s:decorate id="emailAddressField" template="/layout/edit.xhtml">
+					<ui:define name="label">Email address</ui:define>
+					<h:inputText id="emailAddress" value="#{golferHome.instance.emailAddress}" size="40" required="true"/>
+				</s:decorate>
+
+				<s:decorate id="rolesField" template="/layout/edit.xhtml">
+					<ui:define name="label">Roles</ui:define>
+					<h:selectManyListbox id="roles" value="#{golferHome.roles}" size="5">
+						<s:selectItems var="r" label="#{r.name}" value="#{roles}"/>
+						<s:convertEntity/>
+					</h:selectManyListbox>
+				</s:decorate>
+		
+				<div style="clear:both"/>
+				
+			</rich:panel>
+	
+			<div class="actionButtons">
+				<h:commandButton id="save" value="Save" action="#{golferHome.persist}"
+					rendered="#{!golferHome.managed}"/>				   
+				<h:commandButton id="update" value="Save" action="#{golferHome.update}"
+					rendered="#{golferHome.managed}"/>				  
+				<h:commandButton id="delete" value="Delete" action="#{golferHome.remove}"
+					rendered="#{golferHome.managed}"/>
+				<s:button propagation="end" id="done" value="Done" view="/admin/GolferList.xhtml"/>
+			</div>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

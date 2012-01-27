@@ -1,0 +1,12 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<h:commandLink value="#{name}" action="#{query.setOrder(param.order)}"
+		styleClass="#{query.order == property.concat(' asc') ? 'asc' :
+		(query.order == property.concat(' desc') ? 'desc' : '')}">
+		<f:param name="order" value="#{query.order ==
+			property.concat(' asc') ? property.concat(' desc') :
+			property.concat(' asc')}"/>
+	</h:commandLink>
+</ui:composition>

@@ -1,0 +1,174 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+    
+    <rich:panel>
+        <f:facet name="header">Tee</f:facet>
+
+
+        <s:decorate id="holeId" template="layout/display.xhtml">
+            <ui:define name="label">holeId</ui:define>
+            #{teeHome.instance.id.holeId}
+        </s:decorate>
+
+        <s:decorate id="teeSetId" template="layout/display.xhtml">
+            <ui:define name="label">teeSetId</ui:define>
+            #{teeHome.instance.id.teeSetId}
+        </s:decorate>
+
+
+        <s:decorate id="distance" template="layout/display.xhtml">
+            <ui:define name="label">distance</ui:define>
+            #{teeHome.instance.distance}
+        </s:decorate>
+
+        <div style="clear:both"/>
+        
+    </rich:panel>
+    
+    <div class="actionButtons">      
+
+        <s:button view="/TeeEdit.xhtml" 
+                    id="edit" 
+                 value="Edit"/>
+
+        <s:button view="/#{empty teeFrom ? 'TeeList' : teeFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab label="hole">
+    <div class="association" id="holeParent">
+        
+        <h:outputText value="There is no hole associated with this tee." 
+                   rendered="#{teeHome.instance.hole == null}"/>
+        
+        <rich:dataTable var="hole" 
+                   value="#{teeHome.instance.hole}" 
+                rendered="#{teeHome.instance.hole != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="holeTable">
+            <h:column>
+                <f:facet name="header">id</f:facet>
+                #{hole.id}
+            </h:column>
+            <h:column>
+	    	    <f:facet name="header">course id</f:facet>
+		    	#{hole.course.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">ladiesHandicap</f:facet>
+                #{hole.ladiesHandicap}
+            </h:column>
+            <h:column>
+                <f:facet name="header">ladiesPar</f:facet>
+                #{hole.ladiesPar}
+            </h:column>
+            <h:column>
+                <f:facet name="header">mensHandicap</f:facet>
+                #{hole.mensHandicap}
+            </h:column>
+            <h:column>
+                <f:facet name="header">mensPar</f:facet>
+                #{hole.mensPar}
+            </h:column>
+            <h:column>
+                <f:facet name="header">name</f:facet>
+                #{hole.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">number</f:facet>
+                #{hole.number}
+            </h:column>
+            <h:column>
+                <f:facet name="header">action</f:facet>
+                <s:link id="viewhole" 
+                     value="View" 
+                      view="/Hole.xhtml">
+                    <f:param name="holeId" 
+                           value="#{hole.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+        
+    </div>
+    </rich:tab>
+
+    <rich:tab label="teeSet">
+    <div class="association" id="teeSetParent">
+        
+        <h:outputText value="There is no teeSet associated with this tee." 
+                   rendered="#{teeHome.instance.teeSet == null}"/>
+        
+        <rich:dataTable var="teeSet" 
+                   value="#{teeHome.instance.teeSet}" 
+                rendered="#{teeHome.instance.teeSet != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="teeSetTable">
+            <h:column>
+                <f:facet name="header">id</f:facet>
+                #{teeSet.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">color</f:facet>
+                <div title="#{teeSet.color}" style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
+            </h:column>
+            <h:column>
+	    	    <f:facet name="header">course id</f:facet>
+		    	#{teeSet.course.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">ladiesCourseRating</f:facet>
+                #{teeSet.ladiesCourseRating}
+            </h:column>
+            <h:column>
+                <f:facet name="header">ladiesSlopeRating</f:facet>
+                #{teeSet.ladiesSlopeRating}
+            </h:column>
+            <h:column>
+                <f:facet name="header">mensCourseRating</f:facet>
+                #{teeSet.mensCourseRating}
+            </h:column>
+            <h:column>
+                <f:facet name="header">mensSlopeRating</f:facet>
+                #{teeSet.mensSlopeRating}
+            </h:column>
+            <h:column>
+                <f:facet name="header">name</f:facet>
+                #{teeSet.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">position</f:facet>
+                #{teeSet.position}
+            </h:column>
+            <h:column>
+                <f:facet name="header">action</f:facet>
+                <s:link id="viewteeSet" 
+                     value="View" 
+                      view="/TeeSet.xhtml">
+                    <f:param name="teeSetId" 
+                           value="#{teeSet.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+        
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

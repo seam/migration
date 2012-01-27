@@ -1,0 +1,244 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+    
+    <h:form id="courseSearch" styleClass="edit">
+    
+        <rich:simpleTogglePanel label="Course search parameters" switchType="ajax">
+        
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">description</ui:define>
+                <h:inputText id="description" value="#{courseList.course.description}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">designer</ui:define>
+                <h:inputText id="designer" value="#{courseList.course.designer}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">fairways</ui:define>
+                <h:inputText id="fairways" value="#{courseList.course.fairways}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">greens</ui:define>
+                <h:inputText id="greens" value="#{courseList.course.greens}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">name</ui:define>
+                <h:inputText id="name" value="#{courseList.course.name}"/>
+            </s:decorate>
+
+        
+        </rich:simpleTogglePanel>
+        
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/CourseList.xhtml">
+                <s:conversationPropagation type="join"/>
+            </h:commandButton>
+        </div>
+
+        <s:fragment rendered="#{comparedCourses.rowCount gt 0}">
+            <rich:panel style="margin-bottom: 5px;">
+                <f:facet name="header">Courses marked for comparison</f:facet>
+                <ui:repeat var="_c" value="#{comparedCourses}">
+                    <div>#{_c.name}</div>
+                </ui:repeat>
+                <div style="margin-top: 5px;">
+                    <s:link value="Compare" view="/CompareCourses.xhtml" rendered="#{readyToCompare}"/>
+                    <h:outputText value="#{' '}" rendered="#{readyToCompare}"/>
+                    <s:link value="Clear selections" action="#{courseComparison.reset}"/>
+                </div>
+            </rich:panel>
+        </s:fragment>
+        
+    </h:form>
+    
+    <rich:panel>
+        <f:facet name="header">Course search results (#{courseList.resultList.size})</f:facet>
+    <div class="results" id="courseList">
+
+    <h:outputText value="The course search returned no results." 
+               rendered="#{empty courseList.resultList}"/>
+               
+    <rich:dataTable id="courseList" 
+                var="_course"
+              value="#{courseList.resultList}" 
+           rendered="#{not empty courseList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="id #{courseList.order=='id asc' ? messages.down : ( courseList.order=='id desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='id asc' ? 'id desc' : 'id asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.id}
+        </h:column>
+        <ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="description #{courseList.order=='description asc' ? messages.down : ( courseList.order=='description desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='description asc' ? 'description desc' : 'description asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.description}
+        </h:column>
+        </ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="designer #{courseList.order=='designer asc' ? messages.down : ( courseList.order=='designer desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='designer asc' ? 'designer desc' : 'designer asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.designer}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="facility id #{courseList.order=='facility.id asc' ? messages.down : ( courseList.order=='facility.id desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='facility.id asc' ? 'facility.id desc' : 'facility.id asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.facility.id}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="fairways #{courseList.order=='fairways asc' ? messages.down : ( courseList.order=='fairways desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='fairways asc' ? 'fairways desc' : 'fairways asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.fairways}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="greens #{courseList.order=='greens asc' ? messages.down : ( courseList.order=='greens desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='greens asc' ? 'greens desc' : 'greens asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.greens}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="name #{courseList.order=='name asc' ? messages.down : ( courseList.order=='name desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='name asc' ? 'name desc' : 'name asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.name}
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="numHoles #{courseList.order=='numHoles asc' ? messages.down : ( courseList.order=='numHoles desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='numHoles asc' ? 'numHoles desc' : 'numHoles asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.numHoles}
+        </h:column>
+        <ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="signatureHole #{courseList.order=='signatureHole asc' ? messages.down : ( courseList.order=='signatureHole desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='signatureHole asc' ? 'signatureHole desc' : 'signatureHole asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.signatureHole}
+        </h:column>
+        </ui:remove>
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="yearBuilt #{courseList.order=='yearBuilt asc' ? messages.down : ( courseList.order=='yearBuilt desc' ? messages.up : '' )}">
+                    <f:param name="order" value="#{courseList.order=='yearBuilt asc' ? 'yearBuilt desc' : 'yearBuilt asc'}"/>
+                </s:link>
+            </f:facet>
+            #{_course.yearBuilt}
+        </h:column>
+        <h:column>
+            <f:facet name="header">action</f:facet>
+            <s:link view="/#{empty from ? 'Course' : from}.xhtml" 
+                   value="#{empty from ? 'View' : 'Select'}"
+                      id="course">
+                <f:param name="courseId" 
+                        value="#{_course.id}"/>
+            </s:link>
+            #{' '}
+            <s:link action="#{courseComparison.mark}" value="Mark" propagation="join"
+                rendered="#{not courseComparison.isMarked(_course)}">
+                <f:param name="courseId" value="#{_course.id}"/>
+            </s:link>
+        </h:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+    
+    <div class="tableControl">
+      
+        <s:link view="/CourseList.xhtml" 
+            rendered="#{courseList.previousExists}" 
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/CourseList.xhtml" 
+            rendered="#{courseList.previousExists}" 
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{courseList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/CourseList.xhtml" 
+            rendered="#{courseList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{courseList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/CourseList.xhtml" 
+            rendered="#{courseList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{courseList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/CourseEdit.xhtml"
+                    id="create" 
+                 value="Create course">
+            <f:param name="courseId"/>
+        </s:button>
+        <ui:remove>
+        <s:button value="Compare" view="/CompareCourses.xhtml" rendered="#{readyToCompare}"/>
+        </ui:remove>
+    </s:div>
+    
+</ui:define>
+
+</ui:composition>
+

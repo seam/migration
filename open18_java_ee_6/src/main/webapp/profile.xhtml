@@ -1,0 +1,63 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j"
+	template="layout/template.xhtml">
+						 
+	<ui:define name="body">
+
+		<s:div id="banner">
+			<h1>#{selectedGolfer.name}</h1>
+			<ui:remove><p>#{selectedGolfer.status}</p></ui:remove>
+		</s:div>
+	
+		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" />
+	
+		<rich:panel>
+			<f:facet name="header">Profile</f:facet>
+
+			<s:decorate template="layout/display.xhtml" rendered="#{s:hasRole('admin')}">
+				<ui:define name="label">Email address</ui:define>
+				#{selectedGolfer.emailAddress}
+			</s:decorate>
+		
+			<s:decorate template="layout/display.xhtml">
+				<ui:define name="label">Gender</ui:define>
+				#{selectedGolfer.gender}
+			</s:decorate>
+
+			<s:decorate template="layout/display.xhtml">
+				<ui:define name="label">Birthday</ui:define>
+				<h:outputText value="#{selectedGolfer.dateOfBirth}">
+					<s:convertDateTime pattern="MMMM dd, yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate template="layout/display.xhtml">
+				<ui:define name="label">Location</ui:define>
+				#{selectedGolfer.location}
+			</s:decorate>
+
+			<s:decorate template="layout/display.xhtml">
+				<ui:define name="label">Member since</ui:define>
+				<h:outputText value="#{selectedGolfer.dateJoined}">
+					<s:convertDateTime pattern="MMMM dd, yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<div style="clear: both;"/>
+			
+		</rich:panel>
+		
+		<div class="actionButtons">
+			<s:button propagation="end" id="done" value="Done" action="home"/>
+		</div>
+	
+	</ui:define>
+
+</ui:composition>

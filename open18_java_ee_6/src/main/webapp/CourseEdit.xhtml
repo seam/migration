@@ -1,0 +1,381 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
+
+    <h:form id="course" styleClass="edit">
+    
+        <rich:panel>
+            <f:facet name="header">#{courseHome.managed ? 'Edit' : 'Add'} Course</f:facet>
+
+
+
+            <s:decorate id="descriptionDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">description</ui:define>
+                <h:inputTextarea id="description"
+                               cols="80"
+                               rows="3"
+                              value="#{courseHome.instance.description}"/>
+            </s:decorate>
+
+
+            <s:decorate id="designerDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">designer</ui:define>
+                <h:inputText id="designer" 
+                           size="50"
+                      maxlength="50"
+                          value="#{courseHome.instance.designer}">
+                    <a:support event="onblur" reRender="designerDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="fairwaysDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">fairways</ui:define>
+                <h:inputText id="fairways" 
+                       required="true"
+                           size="15"
+                      maxlength="15"
+                          value="#{courseHome.instance.fairways}">
+                    <a:support event="onblur" reRender="fairwaysDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="greensDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">greens</ui:define>
+                <h:inputText id="greens" 
+                       required="true"
+                           size="15"
+                      maxlength="15"
+                          value="#{courseHome.instance.greens}">
+                    <a:support event="onblur" reRender="greensDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="nameDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">name</ui:define>
+                <h:inputText id="name" 
+                           size="50"
+                      maxlength="50"
+                          value="#{courseHome.instance.name}">
+                    <a:support event="onblur" reRender="nameDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="numHolesDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">numHoles</ui:define>
+                <h:inputText id="numHoles"
+                       required="true"
+                          value="#{courseHome.instance.numHoles}">
+                    <a:support event="onblur" reRender="numHolesDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="signatureHoleDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">signatureHole</ui:define>
+                <h:inputText id="signatureHole"
+                          value="#{courseHome.instance.signatureHole}">
+                    <a:support event="onblur" reRender="signatureHoleDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="yearBuiltDecoration" template="layout/edit.xhtml">
+                <ui:define name="label">yearBuilt</ui:define>
+                <h:inputText id="yearBuilt"
+                          value="#{courseHome.instance.yearBuilt}">
+                    <a:support event="onblur" reRender="yearBuiltDecoration" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+        
+            <div style="clear:both">
+                <span class="required">*</span> 
+                required fields
+            </div>
+            
+        </rich:panel>
+                
+        <div class="actionButtons">
+
+            <h:commandButton id="save" 
+                          value="Save" 
+                         action="#{courseHome.persist}"
+                       disabled="#{!courseHome.wired}"
+                       rendered="#{!courseHome.managed}"/>  
+                          			  
+            <h:commandButton id="update" 
+                          value="Save" 
+                         action="#{courseHome.update}"
+                       rendered="#{courseHome.managed}"/>
+                        			  
+            <h:commandButton id="delete" 
+                          value="Delete" 
+                         action="#{courseHome.remove}"
+                      immediate="true"
+                       rendered="#{courseHome.managed}"/>
+                    
+            <s:button id="done" 
+                   value="Done"
+             propagation="end"
+                    view="/Course.xhtml"
+                rendered="#{courseHome.managed}"/>
+                
+            <s:button id="cancel" 
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty courseFrom ? 'CourseList' : courseFrom}.xhtml"
+                rendered="#{!courseHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+    
+    <rich:tab label="facility *" labelClass="required">
+    <div class="association" id="facilityParent">
+    
+        <h:outputText value="There is no facility associated with this course." 
+                   rendered="#{courseHome.instance.facility == null}"/>
+        
+        <rich:dataTable var="facility" 
+                   value="#{courseHome.instance.facility}" 
+                rendered="#{courseHome.instance.facility != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="facilityTable">
+            <h:column>
+                <f:facet name="header">id</f:facet>
+                #{facility.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">address</f:facet>
+                #{facility.address}
+            </h:column>
+            <h:column>
+                <f:facet name="header">city</f:facet>
+                #{facility.city}
+            </h:column>
+            <h:column>
+                <f:facet name="header">country</f:facet>
+                #{facility.country}
+            </h:column>
+            <h:column>
+                <f:facet name="header">county</f:facet>
+                #{facility.county}
+            </h:column>
+            <ui:remove>
+            <h:column>
+                <f:facet name="header">description</f:facet>
+                #{facility.description}
+            </h:column>
+            </ui:remove>
+            <h:column>
+                <f:facet name="header">name</f:facet>
+                #{facility.name}
+            </h:column>
+            <h:column>
+                <f:facet name="header">phone</f:facet>
+                #{facility.phone}
+            </h:column>
+            <h:column>
+                <f:facet name="header">priceRange</f:facet>
+                #{facility.priceRange}
+            </h:column>
+            <h:column>
+                <f:facet name="header">state</f:facet>
+                #{facility.state}
+            </h:column>
+            <h:column>
+                <f:facet name="header">type</f:facet>
+                #{facility.type}
+            </h:column>
+            <h:column>
+                <f:facet name="header">uri</f:facet>
+                #{facility.uri}
+            </h:column>
+            <h:column>
+                <f:facet name="header">zip</f:facet>
+                #{facility.zip}
+            </h:column>
+            <h:column>
+                <f:facet name="header">action</f:facet>
+                <s:link view="/Facility.xhtml" 
+                         id="viewfacility" 
+                      value="View" 
+                propagation="none">
+                    <f:param name="facilityId" 
+                           value="#{facility.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button value="Select facility"
+                       view="/FacilityList.xhtml">
+                <f:param name="from" value="CourseEdit"/>
+            </s:button>
+        </div>
+        
+    </div>
+    </rich:tab>
+
+    <rich:tab label="holes">
+        <div class="association" id="holesChildren">
+        
+            <h:outputText value="There are no holes associated with this course." 
+                       rendered="#{empty courseHome.holes}"/>
+        
+            <rich:dataTable value="#{courseHome.holes}" 
+                           var="hole" 
+                      rendered="#{not empty courseHome.holes}" 
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="holesTable">
+                <h:column>
+                    <f:facet name="header">id</f:facet>
+                    <h:outputText value="#{hole.id}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">ladiesHandicap</f:facet>
+                    <h:outputText value="#{hole.ladiesHandicap}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">ladiesPar</f:facet>
+                    <h:outputText value="#{hole.ladiesPar}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">mensHandicap</f:facet>
+                    <h:outputText value="#{hole.mensHandicap}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">mensPar</f:facet>
+                    <h:outputText value="#{hole.mensPar}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">name</f:facet>
+                    <h:outputText value="#{hole.name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">number</f:facet>
+                    <h:outputText value="#{hole.number}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">action</f:facet>
+                    <s:link view="/Hole.xhtml" 
+                              id="selecthole" 
+                           value="View"
+                     propagation="none">
+                        <f:param name="holeId" 
+                                value="#{hole.id}"/>
+                        <f:param name="holeFrom" value="Course"/>
+                    </s:link>
+                </h:column>
+            </rich:dataTable>
+        
+        </div>
+          
+        <f:subview rendered="#{courseHome.managed}" id="holes">
+        <div class="actionButtons">
+            <s:button id="addhole" 
+                   value="Add hole"
+                    view="/HoleEdit.xhtml"
+             propagation="none">
+                 <f:param name="courseId" 
+                         value="#{courseHome.instance.id}"/>
+                 <f:param name="holeFrom" value="Course"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="teeSets">
+        <div class="association" id="teeSetsChildren">
+        
+            <h:outputText value="There are no teeSets associated with this course." 
+                       rendered="#{empty courseHome.teeSets}"/>
+        
+            <rich:dataTable value="#{courseHome.teeSets}" 
+                           var="teeSet" 
+                      rendered="#{not empty courseHome.teeSets}" 
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="teeSetsTable">
+                <h:column>
+                    <f:facet name="header">id</f:facet>
+                    <h:outputText value="#{teeSet.id}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">color</f:facet>
+                    <div title="#{teeSet.color}" style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">ladiesCourseRating</f:facet>
+                    <h:outputText value="#{teeSet.ladiesCourseRating}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">ladiesSlopeRating</f:facet>
+                    <h:outputText value="#{teeSet.ladiesSlopeRating}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">mensCourseRating</f:facet>
+                    <h:outputText value="#{teeSet.mensCourseRating}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">mensSlopeRating</f:facet>
+                    <h:outputText value="#{teeSet.mensSlopeRating}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">name</f:facet>
+                    <h:outputText value="#{teeSet.name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">position</f:facet>
+                    <h:outputText value="#{teeSet.position}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">action</f:facet>
+                    <s:link view="/TeeSet.xhtml" 
+                              id="selectteeSet" 
+                           value="View"
+                     propagation="none">
+                        <f:param name="teeSetId" 
+                                value="#{teeSet.id}"/>
+                        <f:param name="teeSetFrom" value="Course"/>
+                    </s:link>
+                </h:column>
+            </rich:dataTable>
+        
+        </div>
+          
+        <f:subview rendered="#{courseHome.managed}" id="teeSets">
+        <div class="actionButtons">
+            <s:button id="addteeSet" 
+                   value="Add teeSet"
+                    view="/TeeSetEdit.xhtml"
+             propagation="none">
+                 <f:param name="courseId" 
+                         value="#{courseHome.instance.id}"/>
+                 <f:param name="teeSetFrom" value="Course"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>
