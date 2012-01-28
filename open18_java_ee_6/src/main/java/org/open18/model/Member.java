@@ -1,9 +1,9 @@
 package org.open18.model;
 
 import java.io.Serializable;
-
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,9 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import org.hibernate.validator.Email;
-import org.hibernate.validator.Length;
-import org.hibernate.validator.NotNull;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -45,7 +44,7 @@ public class Member implements Serializable {
 	}
 
 	@Column(name = "username", nullable = false)
-	@Length(min = 6)
+	@Max(6)
 	@NotNull
 	public String getUsername() {
 		return username;
@@ -66,7 +65,7 @@ public class Member implements Serializable {
 	}
 
 	@Column(name = "email_address", nullable = false)
-	@Email
+	//@Email TODO: add hibernate validator (provided) for this validation
 	@NotNull
 	public String getEmailAddress() {
 		return emailAddress;

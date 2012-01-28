@@ -12,6 +12,7 @@
 
     <!-- It's easier to set versions here thar will / could be used in multiple locations. -->
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
         <richfaces.version>4.1.0.Final</richfaces.version>
         <apache.shiro.version>1.2.0</apache.shiro.version>
@@ -126,5 +127,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <!-- Tells Maven this project is to use Java 6, also creates the static meta model for the entities -->
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
