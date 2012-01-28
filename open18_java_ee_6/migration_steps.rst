@@ -106,6 +106,11 @@ Update persistence.xml to 2.0
 
 .. todo: also take out the transaction manager -- have to double check
 
+Metamodel Generation
+================================================================================
+
+.. todo: explain how to create or generate the meta model classes
+
 Migrate to Bean Validation
 ================================================================================
 
@@ -124,12 +129,36 @@ Migrate to CDI
 Substitute Seam 2 annotations for CDI equivalents
 ================================================================================
 
-Migrate Query objects to CDI Query
+Migrate Query  / Home objects to CDI Query
 ================================================================================
+
+.. todo: Many have restrictions, will have to see how to recreate this.
+
+.. todo: method mapping
+  createInstance =>
+  isWired =>
+  getDefinedInstance =>
+  persist => save / saveAndFlush
+  remove => remove
+  update => refresh
+
+.. todo: Trying to use abstract classes to simply the searching and make it 
+  similar to what was done in Seam 2
+
+.. todo: CDI Query DAO objects go into a dao package, new JSF backing bean 
+  objects need to be created in the action package.
+
+.. todo: create something to replace roundList and roundCriteria
 
 ********************************************************************************
 Migrate to  JSF 2.0
 ********************************************************************************
+
+.. todo: Also will need something to replace CourseComparison
+  ProfileAction needs a replacement
+  MultiRoundAction needs a Java replacement
+  RegisterAction needs a replacement, may be part of switching to Shiro
+
 
 Update faces-config.xml to 2.0
 ================================================================================
@@ -142,7 +171,16 @@ Migrate to RichFaces 4.1
 Rework Navigation from pages.xml
 ================================================================================
 
+.. todo: also actions and params
+
+Seam Tags and equivalents in JSF and RichFaces
+================================================================================
+
+.. todo: s:div, s:fragment, s:link, s:button, s:decorate, s:label, s:span, s:message, s:validateAll, s:convertDateTime, s:convertEnum, s:enumItem, s:selectItems, s:defaultAction 
+
 ********************************************************************************
 Migrate to Apache Shiro for Security
 ********************************************************************************
 
+.. todo: AuthenticationManager goes away and uses Shiro, need to figure out how to produce the current golfer
+  The auth package goes away and uses Shiro, need to figure out what to do about captcha
