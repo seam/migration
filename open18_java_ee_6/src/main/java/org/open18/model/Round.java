@@ -18,8 +18,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.open18.model.enums.Weather;
 
@@ -66,7 +66,7 @@ public class Round implements Serializable {
 	}
 
 	@Lob
-	@Max(50000)
+	@Size(max = 50000)
 	public String getNotes() {
 		return this.notes;
 	}

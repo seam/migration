@@ -14,8 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -83,7 +83,7 @@ public class TeeSet implements java.io.Serializable {
 	}
 
 	@Column(name = "NAME", length = 25)
-	@Max(25)
+	@Size(max = 25)
 	public String getName() {
 		return this.name;
 	}
@@ -94,7 +94,7 @@ public class TeeSet implements java.io.Serializable {
 
 	@Column(name = "COLOR", nullable = false, length = 10)
 	@NotNull
-	@Max(10)
+	@Size(max = 10)
 	public String getColor() {
 		return this.color;
 	}

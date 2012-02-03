@@ -16,8 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "MEMBER_ID")
@@ -37,7 +37,7 @@ public class Golfer extends Member {
 
 	@Column(name = "last_name", nullable = false)
 	@NotNull
-	@Max(40)
+	@Size(max = 40)
 	public String getLastName() {
 		return lastName;
 	}
@@ -48,7 +48,7 @@ public class Golfer extends Member {
 
 	@Column(name = "first_name", nullable = false)
 	@NotNull
-	@Max(40)
+	@Size(max = 40)
 	public String getFirstName() {
 		return firstName;
 	}

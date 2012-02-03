@@ -1,39 +1,30 @@
-<rich:toolBar 
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:s="http://jboss.com/products/seam/taglib"
-    xmlns:rich="http://richfaces.org/rich">
-    <rich:toolBarGroup>
-        <h:outputText value="#{projectName}:"/>
-        <s:link view="/home.xhtml" value="Home" propagation="none"/>
-    </rich:toolBarGroup>
-    <s:link view="/FacilityList.xhtml" 
-           value="Facilities" 
-     propagation="none"/>
-    <s:link view="/CourseList.xhtml" 
-           value="Courses" 
-     propagation="none"/>
+<rich:toolbar
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:rich="http://richfaces.org/rich" xmlns:s="http://java.sun.com/jsf/composite">
+    <rich:toolbarGroup>
+        <h:link view="/home.xhtml" value="Home" propagation="none"/>
+    </rich:toolbarGroup>
+    <h:link outcome="/FacilityList.xhtml" value="Facilities" />
+    <h:link outcome="/CourseList.xhtml" value="Courses" />
     <ui:remove>
-    <s:link view="/HoleList.xhtml" 
-           value="Holes" 
-     propagation="none"/>
-    <s:link view="/TeeSetList.xhtml" 
-           value="Tee Sets" 
-     propagation="none"/>
-    <s:link view="/TeeList.xhtml" 
-           value="Tees" 
-     propagation="none"/>
+    <h:link outcome="/HoleList.xhtml" value="Holes" />
+    <h:link outcome="/TeeSetList.xhtml" value="Tee Sets" />
+    <h:link view="/TeeList.xhtml"  value="Tees" />
     </ui:remove>
-    <s:link view="/RoundList.xhtml" value="Rounds" propagation="none"/>
-    <s:link view="/GolferList.xhtml" value="Golfers" propagation="none"/>
-    <s:link view="/admin/home.xhtml" value="Admin" propagation="none" rendered="#{s:hasRole('admin')}"/>
-    <s:link view="/workspaces.xhtml" value="Workspaces" propagation="none"/>
+    <h:link outcome="/RoundList.xhtml" value="Rounds" />
+    <h:link outcome="/GolferList.xhtml" value="Golfers" />
+    <!-- TODO: replace with Apache Shiro (s:hasRole('admin'))
+    <h:link outcome="/admin/home.xhtml" value="Admin" propagation="none" />
+    -->
     <!-- @newMenuItem@ -->
-    <rich:toolBarGroup location="right">
+    <!-- TODO: replace with Apache Shiro
+    <rich:toolbarGroup location="right">
         <h:outputText value="You are signed in as: #{identity.username}" rendered="#{identity.loggedIn}"/>
-        <s:link view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
-        <s:link view="/home.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
-    </rich:toolBarGroup>
-</rich:toolBar>
+        <h:link view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
+        <h:link view="/home.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
+    </rich:toolbarGroup>
+    -->
+</rich:toolbar>

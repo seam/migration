@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -88,7 +89,7 @@ public class Course implements java.io.Serializable {
 	}
 
 	@Column(name = "NAME", length = 50)
-	@Max(50)
+	@Size(max = 50)
 	public String getName() {
 		return this.name;
 	}
@@ -107,7 +108,7 @@ public class Course implements java.io.Serializable {
 	}
 
 	@Column(name = "DESIGNER", length = 50)
-	@Max(50)
+	@Size(max = 50)
 	public String getDesigner() {
 		return this.designer;
 	}
@@ -118,7 +119,7 @@ public class Course implements java.io.Serializable {
 
 	@Column(name = "FAIRWAYS", nullable = false, length = 15)
 	@NotNull
-	@Max(15)
+	@Size(max = 15)
 	public String getFairways() {
 		return this.fairways;
 	}
@@ -129,7 +130,7 @@ public class Course implements java.io.Serializable {
 
 	@Column(name = "GREENS", nullable = false, length = 15)
 	@NotNull
-	@Max(15)
+	@Size(max = 15)
 	public String getGreens() {
 		return this.greens;
 	}

@@ -16,8 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -44,7 +44,7 @@ public class Member implements Serializable {
 	}
 
 	@Column(name = "username", nullable = false)
-	@Max(6)
+	@Size(max = 6)
 	@NotNull
 	public String getUsername() {
 		return username;

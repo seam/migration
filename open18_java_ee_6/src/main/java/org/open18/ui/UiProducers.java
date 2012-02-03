@@ -15,21 +15,19 @@
  * limitations under the License.
  */
 
-package org.open18.model.dao;
+package org.open18.ui;
 
-import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
-import com.ctp.cdi.query.Dao;
-import com.ctp.cdi.query.EntityDao;
-import com.ctp.cdi.query.Query;
-import org.open18.model.Golfer;
+import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
-/**
- *
- */
-@Dao(Golfer.class)
-public interface GolferDao extends EntityDao<Golfer, Long> {
-
-    @Query(value = "select g from Golfer g order by g.dateJoined desc", max = 25)
-    List<Golfer> findNewGolfers();
+public class UiProducers {
+    @Produces @Named("messages")
+    public ResourceBundle getBundle() {
+        final Locale requestLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+        return ResourceBundle.getBundle("messages", requestLocale);
+    }
 }

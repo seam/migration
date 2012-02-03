@@ -1,7 +1,6 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -13,13 +12,15 @@
 		<div id="banner">
 			<h1>#{messages['application.title']}</h1>
 			<h2>...#{messages['application.tagline']}</h2>
-			<s:fragment rendered="#{not identity.loggedIn}">
-				<p>Not a member?#{' '}<s:link id="register" value="Sign up now!" view="/register.xhtml" /></p>
-			</s:fragment>
+            <!-- TODO: fix with Apache Shiro
+			<ui:fragment rendered="#{not identity.loggedIn}">
+				<p>Not a member?#{' '}<h:link id="register" value="Sign up now!" view="/register.xhtml" /></p>
+			</ui:fragment>
+			-->
 		</div>
 
 		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"/>
-    
+
 		<h:panelGrid columns="2" styleClass="panel-layout" columnClasses="panel-column">
 			<rich:panel styleClass="main-panel">
 				<f:facet name="header">About Open 18</f:facet>
@@ -32,32 +33,21 @@
 			<h:panelGroup>
 				<rich:panel styleClass="module-box">
 					<f:facet name="header">Cool New Golfers</f:facet>
-	
-					<s:div rendered="#{empty newGolfers || newGolfers.size == 0}">
-						It's really quite around here!
-					</s:div>
+
+					<ui:fragment rendered="#{empty newGolfers || newGolfers.size == 0}">
+                        <div>
+                            It's really quite around here!
+                        </div>
+					</ui:fragment>
 
 					<h:form id="selectGolfer">
-						<rich:dataList var="_golfer" value="#{newGolfers}">
+						<rich:list var="_golfer" value="#{newGolfers}">
 							<h:commandLink action="#{profileAction.view}" value="#{_golfer.name} (#{_golfer.username})"/>
-						</rich:dataList>
-					</h:form>
-				</rich:panel>
-				<rich:panel styleClass="module-box" rendered="#{not empty conversationList}">
-					<f:facet name="header">Workspaces</f:facet>
-					<h:form id="switcher">
-						<div style="text-align: center;">
-							<h:selectOneMenu value="#{switcher.conversationIdOrOutcome}">
-								<f:selectItems value="#{switcher.selectItems}"/>
-							</h:selectOneMenu>
-						</div>
-						<div style="text-align: center;">
-							<h:commandButton action="#{switcher.select}" value="Switch workspace"/>
-						</div>
+						</rich:list>
 					</h:form>
 				</rich:panel>
 			</h:panelGroup>
 		</h:panelGrid>
-    
-	</ui:define> 
+
+	</ui:define>
 </ui:composition>

@@ -114,7 +114,7 @@ Metamodel Generation
 Migrate to Bean Validation
 ================================================================================
 
-.. todo: Length(max) -> Max, NotNull is a package change
+.. todo: Length(max) -> Size(max), NotNull is a package change
 
 .. todo: Remove Seam annotations and create producers for them (golfer[session], round[also has a restrict on it, look into this a bit more based on what Dan said])
 
@@ -126,8 +126,14 @@ Migrate to CDI
 
 .. todo: There is no seam.properties but you will need beans.xml
 
+.. todo: create a producer for messages
+
 Substitute Seam 2 annotations for CDI equivalents
 ================================================================================
+
+.. todo: Factories are a little different depending on what they need to do.
+  Sometimes a straight producer works, other times you need to have a wrapper
+  object as the thing being produced.
 
 Migrate Query  / Home objects to CDI Query
 ================================================================================
@@ -150,6 +156,11 @@ Migrate Query  / Home objects to CDI Query
 
 .. todo: create something to replace roundList and roundCriteria
 
+Changes in the conversation model
+================================================================================
+
+.. todo: let them know that there are no more nested conversations, no workspace, etc
+
 ********************************************************************************
 Migrate to  JSF 2.0
 ********************************************************************************
@@ -159,6 +170,7 @@ Migrate to  JSF 2.0
   MultiRoundAction needs a Java replacement
   RegisterAction needs a replacement, may be part of switching to Shiro
 
+.. todo: add h:head and h:body
 
 Update faces-config.xml to 2.0
 ================================================================================
@@ -168,6 +180,10 @@ Update faces-config.xml to 2.0
 Migrate to RichFaces 4.1
 ================================================================================
 
+.. todo: point https://community.jboss.org/wiki/RichFacesMigrationGuide33x-4xMigration for migration
+
+.. todo: a:loadStyle => h:outputStylesheet
+
 Rework Navigation from pages.xml
 ================================================================================
 
@@ -176,7 +192,11 @@ Rework Navigation from pages.xml
 Seam Tags and equivalents in JSF and RichFaces
 ================================================================================
 
+.. todo: remove the seam namespace
+
 .. todo: s:div, s:fragment, s:link, s:button, s:decorate, s:label, s:span, s:message, s:validateAll, s:convertDateTime, s:convertEnum, s:enumItem, s:selectItems, s:defaultAction 
+
+.. todo: s:link remove propegation and change view to outcome
 
 ********************************************************************************
 Migrate to Apache Shiro for Security

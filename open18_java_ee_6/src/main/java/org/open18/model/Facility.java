@@ -13,8 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -80,7 +80,7 @@ public class Facility implements java.io.Serializable {
 
 	@Column(name = "NAME", nullable = false, length = 50)
 	@NotNull
-	@Max(50)
+	@Size(max = 50)
 	public String getName() {
 		return this.name;
 	}
@@ -100,7 +100,7 @@ public class Facility implements java.io.Serializable {
 
 	@Column(name = "TYPE", nullable = false, length = 15)
 	@NotNull
-	@Max(15)
+	@Size(max = 15)
 	public String getType() {
 		return this.type;
 	}
@@ -110,7 +110,7 @@ public class Facility implements java.io.Serializable {
 	}
 
 	@Column(name = "ADDRESS", length = 50)
-	@Max(50)
+	@Size(max = 50)
 	public String getAddress() {
 		return this.address;
 	}
@@ -120,7 +120,7 @@ public class Facility implements java.io.Serializable {
 	}
 
 	@Column(name = "CITY", length = 30)
-	@Max(30)
+	@Size(max = 30)
 	public String getCity() {
 		return this.city;
 	}
@@ -130,7 +130,7 @@ public class Facility implements java.io.Serializable {
 	}
 
 	@Column(name = "STATE", length = 2)
-	@Max(2)
+	@Size(max = 2)
 	public String getState() {
 		return this.state;
 	}
@@ -140,7 +140,7 @@ public class Facility implements java.io.Serializable {
 	}
 
 	@Column(name = "ZIP", length = 5)
-	@Max(5)
+	@Size(max = 5)
 	public String getZip() {
 		return this.zip;
 	}
@@ -150,7 +150,7 @@ public class Facility implements java.io.Serializable {
 	}
 
 	@Column(name = "COUNTY", length = 30)
-	@Max(30)
+	@Size(max = 30)
 	public String getCounty() {
 		return this.county;
 	}
@@ -160,7 +160,7 @@ public class Facility implements java.io.Serializable {
 	}
 
 	@Column(name = "COUNTRY", length = 30)
-	@Max(30)
+	@Size(max = 30)
 	public String getCountry() {
 		return this.country;
 	}
@@ -170,7 +170,7 @@ public class Facility implements java.io.Serializable {
 	}
 
 	@Column(name = "PHONE", length = 10)
-	@Max(10)
+	@Size(max = 10)
 	public String getPhone() {
 		return this.phone;
 	}
