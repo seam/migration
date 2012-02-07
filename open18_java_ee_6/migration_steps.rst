@@ -124,6 +124,17 @@ Migrate to Bean Validation
 Migrate to CDI
 ********************************************************************************
 
+With JEE6, JSR 330 came up bringing some specifications about Dependency Injection. By that time, there were several frameworks that could handle with DI into java world, such as Spring, Guice, PicoContainer and Seam 2. With the new JSR, the main idea of all these frameworks finally got registered, but all the implementation became out of standards.
+
+Unfortunately, DI spec had some big missing points. To handle that and complement some topics, a new specification was released - JSR 299 - CDI - Contexts and Dependency Injection. Now scopes could be given to injected resources and so on.
+
+So Seam2 lost one of its main reasons to exists as a framework out of JSRs - Dependency Injection was now documented. So, migrating from Seam 2 to Seam 3 brings you from JEE5 to JEE6 - and this last one includes both DI and CDI specs.
+
+*Injecting resources
+Seam 2 had the annotation @In for injecting resources. Now the JSR standards have the annotation @Injection. We shall replace them.
+
+*The scopes
+
 .. todo: There is no seam.properties but you will need beans.xml
 
 .. todo: create a producer for messages
