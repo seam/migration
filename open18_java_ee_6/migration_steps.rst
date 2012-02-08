@@ -134,6 +134,17 @@ So Seam2 lost one of its main reasons to exists as a framework out of JSRs - Dep
 Seam 2 had the annotation @In for injecting resources. Now the JSR standards have the annotation @Injection. We shall replace them.
 
 *The scopes
+Use @Inject basically makes your container instantiate (use new) a new resource for you. But for how long should this resource live? To answer that, we need a context. Basically, CDI has some specified contexts:
+
+- Application
+- Requested
+- Session
+- Conversation
+- Dependent
+
+If you don not specify any scope, by default you have Dependent scope, which means that injected resource assumes the scope of the component it's injected in.
+
+All the scopes can be specified using their respective annotations. Notice that conversation scope is basically Seam 2 Conversation scope, so now you have a standard. 
 
 .. todo: There is no seam.properties but you will need beans.xml
 
