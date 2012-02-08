@@ -114,7 +114,7 @@ img.errors {
 
 .rich-stglpanel-body {
 	overflow: auto;
-} 
+}
 
 /** Open 18 style overrides **/
 
@@ -236,7 +236,7 @@ a img {
 /* maybe going to go with this */
 /*
 a {
-	text-decoration: none;	
+	text-decoration: none;
 }
 a:hover {
 	text-decoration: underline;
@@ -280,7 +280,7 @@ a:hover {
 	height: 1em;
 	width: 1em;
 	outline: 1px solid black;
-	margin: 0 auto;	
+	margin: 0 auto;
 }
 
 th a.asc {
@@ -297,4 +297,23 @@ th a.desc {
 	vertical-align: middle;
 	margin-bottom: 2px;
 	margin-right: 2px;
+}
+
+/* inputs */
+div.entry {
+    clear: both;
+    padding-top: .5em;
+    width: 35em;
+}
+
+div.entry span.label {
+    float: left;
+    width: 12em;
+    text-align: right;
+}
+
+div.entry span.input {
+    float: right;
+    width: 20em;
+    text-align: left;
 }

@@ -1,4 +1,4 @@
-package org.open18.model.meta;
+package org.open18.model;
 
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;

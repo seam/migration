@@ -1,4 +1,4 @@
-package org.open18.model.meta;
+package org.open18.model;
 
 import java.util.Date;
 import javax.persistence.metamodel.SingularAttribute;

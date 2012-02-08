@@ -1,14 +1,9 @@
-package org.open18.model.meta;
+package org.open18.model;
 
 import java.util.Date;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
-
-import org.open18.model.CourseComment;
-import org.open18.model.Gender;
-import org.open18.model.Golfer;
-import org.open18.model.Round;
 
 @StaticMetamodel(Golfer.class)
 public abstract class Golfer_ extends Member_ {
