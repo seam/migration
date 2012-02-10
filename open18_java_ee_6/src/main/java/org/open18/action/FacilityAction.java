@@ -19,11 +19,13 @@ package org.open18.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateful;
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -31,6 +33,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.metamodel.SingularAttribute;
 
+import org.open18.model.Course;
 import org.open18.model.Facility;
 import org.open18.model.Facility_;
 import org.open18.model.dao.FacilityDao;
@@ -46,19 +49,20 @@ public class FacilityAction implements Serializable {
     private static final long serialVersionUID = 6201511634440442162L;
 
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
-    private EntityManager em;
+    private transient EntityManager em;
 
     @Inject
     private transient FacilityDao dao;
 
+    private Long facilityId;
+
     private Facility facility;
 
-    private String from;
+    private boolean managed;
+
+    private boolean enterCourse;
 
     private List<Facility> resultList;
-
-    @Inject
-    private Conversation conversation;
 
     @Inject
     private void init() {
@@ -77,11 +81,29 @@ public class FacilityAction implements Serializable {
     }
 
     public void search() {
-        if (conversation.isTransient()) {
-            conversation.begin();
-        }
-
         loadResults();
+    }
+
+    public String save() {
+        dao.save(facility);
+
+        if (!enterCourse) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Please enter course information for " + facility.getName(), null));
+            return "/CourseEdit.xhtml?facilityId=" + facility.getId();
+        } else {
+            return "/FacilityList.xhtml";
+        }
+    }
+
+    public String update() {
+        dao.save(facility);
+        return "/Facility.xhtml";
+    }
+
+    public String remove() {
+        dao.remove(facility);
+        return "/FacilityList.xhtml";
     }
 
     @SuppressWarnings("unchecked")
@@ -139,12 +161,23 @@ public class FacilityAction implements Serializable {
         return filledAttribs.toArray(new SingularAttribute[0]);
     }
 
-    public String getFrom() {
-        return from;
+    public Long getFacilityId() {
+        return facilityId;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setFacilityId(Long facilityId) {
+        if (!facilityId.equals(facility.getId())) {
+            this.facilityId = facilityId;
+            facility = dao.findBy(facilityId);
+            managed = true;
+
+            if (facility == null) {
+                managed = false;
+                facility = new Facility();
+                final FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Facility found with id " + facilityId, ""));
+            }
+        }
     }
 
     public List<Facility> getResultList() {
@@ -161,5 +194,22 @@ public class FacilityAction implements Serializable {
 
     public void setFacility(Facility facility) {
         this.facility = facility;
+    }
+
+    public List<Course> getCourses() {
+        return (facility == null || facility.getCourses() == null) ? Collections.<Course>emptyList()
+                : new ArrayList<Course>(facility.getCourses());
+    }
+
+    public boolean isManaged() {
+        return managed;
+    }
+
+    public boolean isEnterCourse() {
+        return enterCourse;
+    }
+
+    public void setEnterCourse(boolean enterCourse) {
+        this.enterCourse = enterCourse;
     }
 }

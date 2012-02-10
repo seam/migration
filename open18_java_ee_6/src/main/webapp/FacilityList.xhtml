@@ -10,12 +10,6 @@
                 xmlns:open18="http://java.sun.com/jsf/composite/components"
                 template="layout/template.xhtml">
 
-    <ui:define name="metadata">
-        <f:metadata>
-            <f:viewParam name="from"/>
-        </f:metadata>
-    </ui:define>
-
     <ui:define name="body">
 
         <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
@@ -182,7 +176,7 @@
             <h:button outcome="/FacilityEdit.xhtml"
                       id="create"
                       value="Create facility">
-                <f:param name="facilityId"/>
+                <f:param name="facilityId" value="#{facility.id}"/>
             </h:button>
         </div>
 

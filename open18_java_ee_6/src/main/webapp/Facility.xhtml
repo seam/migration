@@ -1,121 +1,101 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                              "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.com/products/seam/taglib"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:rich="http://richfaces.org/rich"
+                xmlns:open18="http://java.sun.com/jsf/composite/components"
                 template="layout/template.xhtml">
-                       
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="facilityId" value="#{facilityAction.facilityId}" />
+    </f:metadata>
+</ui:define>
+
 <ui:define name="body">
-    
+
     <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
-    
+
     <rich:panel>
         <f:facet name="header">Facility</f:facet>
 
+        <open18:input id="address" label="address">
+            #{facilityAction.facility.address}
+        </open18:input>
 
+        <open18:input id="city" label="city">
+            #{facilityAction.facility.city}
+        </open18:input>
 
-        <s:decorate id="address" template="layout/display.xhtml">
-            <ui:define name="label">address</ui:define>
-            #{facilityHome.instance.address}
-        </s:decorate>
+        <open18:input id="country" label="country">
+            #{facilityAction.facility.country}
+        </open18:input>
 
+        <open18:input id="county" label="county">
+            #{facilityAction.facility.county}
+        </open18:input>
 
-        <s:decorate id="city" template="layout/display.xhtml">
-            <ui:define name="label">city</ui:define>
-            #{facilityHome.instance.city}
-        </s:decorate>
+        <open18:input id="description" label="description">
+            #{facilityAction.facility.description}
+        </open18:input>
 
+        <open18:input id="name" label="name">
+            #{facilityAction.facility.name}
+        </open18:input>
 
-        <s:decorate id="country" template="layout/display.xhtml">
-            <ui:define name="label">country</ui:define>
-            #{facilityHome.instance.country}
-        </s:decorate>
+        <open18:input id="phone" label="phone">
+            #{facilityAction.facility.phone}
+        </open18:input>
 
+        <open18:input id="priceRange" label="priceRange">
+            #{facilityAction.facility.priceRange}
+        </open18:input>
 
-        <s:decorate id="county" template="layout/display.xhtml">
-            <ui:define name="label">county</ui:define>
-            #{facilityHome.instance.county}
-        </s:decorate>
+        <open18:input id="state" label="state">
+            #{facilityAction.facility.state}
+        </open18:input>
 
+        <open18:input id="type" label="type">
+            #{facilityAction.facility.type}
+        </open18:input>
 
-        <s:decorate id="description" template="layout/display.xhtml">
-            <ui:define name="label">description</ui:define>
-            #{facilityHome.instance.description}
-        </s:decorate>
+        <open18:input id="uri" label="uri">
+            #{facilityAction.facility.uri}
+        </open18:input>
 
+        <open18:input id="zip" label="zip">
+            #{facilityAction.facility.zip}
+        </open18:input>
 
-        <s:decorate id="name" template="layout/display.xhtml">
-            <ui:define name="label">name</ui:define>
-            #{facilityHome.instance.name}
-        </s:decorate>
+        <div style="clear:both"></div>
 
-
-        <s:decorate id="phone" template="layout/display.xhtml">
-            <ui:define name="label">phone</ui:define>
-            #{facilityHome.instance.phone}
-        </s:decorate>
-
-
-        <s:decorate id="priceRange" template="layout/display.xhtml">
-            <ui:define name="label">priceRange</ui:define>
-            #{facilityHome.instance.priceRange}
-        </s:decorate>
-
-
-        <s:decorate id="state" template="layout/display.xhtml">
-            <ui:define name="label">state</ui:define>
-            #{facilityHome.instance.state}
-        </s:decorate>
-
-
-        <s:decorate id="type" template="layout/display.xhtml">
-            <ui:define name="label">type</ui:define>
-            #{facilityHome.instance.type}
-        </s:decorate>
-
-
-        <s:decorate id="uri" template="layout/display.xhtml">
-            <ui:define name="label">uri</ui:define>
-            #{facilityHome.instance.uri}
-        </s:decorate>
-
-
-        <s:decorate id="zip" template="layout/display.xhtml">
-            <ui:define name="label">zip</ui:define>
-            #{facilityHome.instance.zip}
-        </s:decorate>
-
-        <div style="clear:both"/>
-        
     </rich:panel>
-    
-    <div class="actionButtons">      
 
-        <s:button view="/FacilityEdit.xhtml" 
-                    id="edit" 
+    <div class="actionButtons">
+
+        <h:button outcome="/FacilityEdit.xhtml"
+                    id="edit"
+                    includeViewParams="true"
                  value="Edit"/>
 
-        <s:button view="/#{empty facilityFrom ? 'FacilityList' : facilityFrom}.xhtml"
+        <h:button outcome="/FacilityList.xhtml"
                     id="done"
-                 value="Done"/>
+                 value="Done back to list"/>
 
     </div>
 
-    <rich:tabPanel switchType="ajax">
+    <rich:panel id="viewPanel">
 
-    <rich:tab label="courses">
     <div class="association" id="coursesChildren">
-        
+
         <h:outputText value="There are no courses associated with this facility."
-                   rendered="#{empty facilityHome.courses}"/>
-        
-        <rich:dataTable value="#{facilityHome.courses}" 
-                       var="course" 
-                  rendered="#{not empty facilityHome.courses}" 
+                   rendered="#{empty facilityAction.courses}"/>
+
+        <rich:dataTable value="#{facilityAction.courses}"
+                       var="course"
+                  rendered="#{not empty facilityAction.courses}"
                 rowClasses="rvgRowOne,rvgRowTwo"
                         id="coursesTable">
             <h:column>
@@ -158,33 +138,32 @@
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link id="selectcourse" 
-                     value="View" 
-                      view="/Course.xhtml" propagation="none">
-                    <f:param name="courseId" 
-                            value="#{course.id}"/>
-                    <f:param name="courseFrom" value="Facility"/>
-                </s:link>
+                <h:link id="selectcourse"
+                     value="View"
+                      outcome="/Course.xhtml">
+                    <f:param name="courseId" value="#{course.id}"/>
+                </h:link>
             </h:column>
         </rich:dataTable>
-        
+
     </div>
-    
+
     <div class="actionButtons">
-        <s:button 
+        <h:button
                value="Add course"
-                view="/CourseEdit.xhtml">
-            <f:param name="facilityId" 
-                    value="#{facilityHome.instance.id}"/>
+                outcome="/CourseEdit.xhtml">
+            <f:param name="facilityId"
+                    value="#{facilityAction.facility.id}"/>
             <f:param name="courseFrom" value="Facility"/>
-        </s:button>
-        <s:button id="courseWizard" action="#{courseWizard.addCourse}"
-          value="Add course..." propagation="none">
-          <f:param name="facilityId" value="#{facilityHome.instance.id}"/>
-        </s:button>
-    </div>        
-    </rich:tab>
-</rich:tabPanel>
+        </h:button>
+        <!--
+        <h:button id="courseWizard" outcome="/Course.xhtml"
+          value="Add course...">
+          <f:param name="facilityId" value="#{facilityAction.facility.id}"/>
+        </h:button>
+        -->
+    </div>
+</rich:panel>
 </ui:define>
 
 </ui:composition>
