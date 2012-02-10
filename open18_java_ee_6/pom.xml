@@ -16,7 +16,7 @@
         <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
         <richfaces.version>4.1.0.Final</richfaces.version>
         <apache.shiro.version>1.2.0</apache.shiro.version>
-        <cdi.query.version>1.0.0.Alpha3-SNAPSHOT</cdi.query.version>
+        <cdi.query.version>1.0.0.Alpha3</cdi.query.version>
         <arquillian.version>1.0.0.CR7</arquillian.version>
         <junit.version>4.10</junit.version>
     </properties>
@@ -96,24 +96,12 @@
             <artifactId>cdi-query-api</artifactId>
             <version>${cdi.query.version}</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.weld</groupId>
-                    <artifactId>weld-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.ctp.cdi.query</groupId>
             <artifactId>cdi-query-impl</artifactId>
             <version>${cdi.query.version}</version>
             <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.weld</groupId>
-                    <artifactId>weld-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
