@@ -389,7 +389,7 @@ enumerated many times throughout the years. These backing beans are annotated
 with one of the scope annotations mentioned earlier and also with ``@Named``
 so they can be used in EL.
 
-.. tip: It is best not to directly use JPA entities created by CDI, unless
+.. note: It is best not to directly use JPA entities created by CDI, unless
   they are created by a producer. If CDI manages the life cycle of an entity, JPA
   functionality is lost and the entire object will have to be cloned into a new
   object to be persisted.
