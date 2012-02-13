@@ -211,6 +211,8 @@ API, ordering of collections, eviction control, access to a second level cache,
 and locking improvements. Setup and configuration is the same as the initial JPA
 specification, as is usage.
 
+Additional information can be found at the `migration guide to AS7 <https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-UpdateyourHibernate3applicationtouseHibernate4>`_.
+
 Update persistence.xml to 2.0
 ================================================================================
 
@@ -233,14 +235,21 @@ US/html_single/>`_.
 For this migration, the annotation processor was used once and then removed from
 the pom.xml file.
 
-Migrate to Bean Validation
+Migrate to Bean Validation from Hibernate Validator 3
 ================================================================================
 
-.. todo: Length(max) -> Size(max), NotNull is a package change
+Java EE 6 contains another specification which standardized validation: JSR 303
+- Bean Validation. Hibernate Validator 4 (4.2.0 is shipped with AS7) is the
+reference implementation. This is a completely different code base and
+includes all new package, validations and ways of interacting with those
+validations. If the application is only using the annotations, these are
+typically a package change and at times an annotation change. For example, the
+``@org.hibernate.validator.Length`` validation becomes the
+``@javax.validation.constraints.Size`` annotation. In some cases, such as the
+GolferValidator in Open18, this can become a custom constraint. Information
+about custom constraints can be found at the `Hibernate Validator documentation <http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-customconstraints.html>`_.
 
-.. todo: Remove Seam annotations and create producers for them (golfer[session], round[also has a restrict on it, look into this a bit more based on what Dan said])
-
-.. todo: GolferValidator should be a new JSR303 Validator
+For more information about migrating from Hibernate Validator 3, please see `the migration documentation <https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-MigratetoHibernate4Validator>`_.
 
 ********************************************************************************
 Migrate to CDI
@@ -398,18 +407,8 @@ so they can be used in EL.
 
 .. todo: Many have restrictions, will have to see how to recreate this.
 
-.. todo: method mapping
-  createInstance =>
-  isWired =>
-  getDefinedInstance =>
-  persist => save / saveAndFlush
-  remove => remove
-  update => refresh
-
 .. todo: Trying to use abstract classes to simplify the searching and make it 
   similar to what was done in Seam 2
-
-.. todo: create something to replace roundList and roundCriteria
 
 Changes in the conversation model
 ================================================================================
@@ -422,8 +421,6 @@ directly to JSF and cannot be used outside of JSF and still remain portable.
 There is also no annotation control over the conversation. Instead the
 conversation must be injected and then managed (started, ended, timeout
 configured, etc.).
-
-.. todo: let them know that there are no more nested conversations, no workspace, etc
 
 ********************************************************************************
 Migrate to  JSF 2.0
