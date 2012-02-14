@@ -416,48 +416,148 @@ Changes in the conversation model
 CDI has a conversation state similar to Seam 2, however, there are some major
 differences. The largest being that only one conversation can be active at a
 time per session. This means no nested conversations or multiple conversations
-via different browser tabs. The conversation, until CDI 1.1, is also tied
-directly to JSF and cannot be used outside of JSF and still remain portable.
-There is also no annotation control over the conversation. Instead the
-conversation must be injected and then managed (started, ended, timeout
-configured, etc.).
+via different browser tabs and also no workspace manager. The conversation,
+until CDI 1.1, is also tied directly to JSF and cannot be used outside of JSF
+and still remain portable. There is also no annotation control over the
+conversation. Instead the conversation must be injected and then managed
+(started, ended, timeout configured, etc.).
+
+The conversation can still be tracked by using a query parameter for JSF GET
+requests, the name is `conversationId`. However, using a conversation outside of
+JSF will require additional work, and non portable changes to an application,
+unless a new scope is created for the application which behaves like the
+conversation from Seam 2.
 
 ********************************************************************************
 Migrate to  JSF 2.0
 ********************************************************************************
 
-.. todo: Also will need something to replace CourseComparison
-  ProfileAction needs a replacement
-  MultiRoundAction needs a Java replacement
-  RegisterAction needs a replacement, may be part of switching to Shiro
+Seam 2 contained many enhancements to JSF 1.2. Many of these enhancements made
+it into the official JSF 2 (JSR 314) specification! Some of these enhancements
+include `h:link` and `h:button`, `f:metadata` and `f:viewparam`. Also included
+in JSF 2 is facelets as the preferred view description language. All of the
+power of facelets which was use in Seam 2 applications is now available
+standard. Composite Components also made their debut in JSR 314 as an easier way
+to create JSF components and reusable templates.
 
-.. todo: add h:head and h:body
+Because there are many JSF related enhancements in Seam 2, there are a number of
+actions needed to happen to migrate successfully to JSF 2.
+
+.. todo: Also will need something to replace CourseComparison
+  ProfileAction needs a replacement possibly from Shiro
+  MultiRoundAction needs a Java replacement, or we could just update it CDI
+  RegisterAction needs a replacement, may be part of switching to Shiro
 
 Update faces-config.xml to 2.0
 ================================================================================
 
-.. todo: take out the view handler
+Similar to Seam 2, the faces-config.xml file is very sparse, and essentially
+becomes a marker file to include JSF support. Below is a typical JSF 2 faces-
+config.xml file::
+
+  <?xml version='1.0' encoding='UTF-8'?>
+  <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+
+  </faces-config>
+
+In the Open18 application, there were multiple languages supported. That part
+will need to remain::
+
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>bg</supported-locale>
+            <supported-locale>de</supported-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>fr</supported-locale>
+            <supported-locale>tr</supported-locale>
+        </locale-config>
+    </application>
+
+The main changes, as listed above in the example are an update for the schema,
+the version and the removal of the view handler declaration.
 
 Migrate to RichFaces 4.1
 ================================================================================
 
-.. todo: point https://community.jboss.org/wiki/RichFacesMigrationGuide33x-4xMigration for migration
-
-.. todo: a:loadStyle => h:outputStylesheet
+Migrating to JSF 2 also involves an update to the component library. Open18 made
+use of RichFaces. True JSF 2 support in RichFaces came out with version
+4.0.0.Final. Currently RichFaces 4.1.0.Final is out and 4.2.0.CR1 is also
+available. For many components the switch is change of JAR files, however, some
+components have not yet been migrated, or others have been combined. Information
+about component migration can be found on the `RichFaces wiki <https://community.jboss.org/wiki/RichFacesMigrationGuide33x-4xMigration>`_.
 
 Rework Navigation from pages.xml
 ================================================================================
 
-.. todo: also actions and params
+Two changes in JSF 2 which Seam influenced are in navigation. Navigation
+enhancements include implicit navigation and also conditional navigation,
+similar to conditions in pages.xml from Seam 2. These two features have been
+covered `in <http://java.dzone.com/articles/fluent-navigation-jsf-2>`_ `many <http://mkblog.exadel.com/2009/09/learning-jsf2-navigation/>`_ 
+`places <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#navigation>`_. 
+While slightly more work in some cases, using a combination of these two
+features navigation from pages.xml should be fairly straight forward.
+
+While not directly related to navigation, page actions and params also have
+`corresponding solutions <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#get>`_ 
+in JSF 2. Any number of view parameters can be assigned to a view. They also can
+participate in conversion and validation, which is more powerful than what Seam
+2 offered in pages.xml. A view action in JSF 2 can be done by creating a
+listener for the ``preRenderView`` event within an ``f:metadata`` section.
 
 Seam Tags and equivalents in JSF and RichFaces
 ================================================================================
 
-.. todo: remove the seam namespace
+Seam 2 introduced some useful JSF components, some which made navigation easier, others which are useful for conversation. The navigation components are simple to migration, while some of the others are a little more difficult and a small collection do not have any replacement.
 
-.. todo: s:div, s:fragment, s:link, s:button, s:decorate, s:label, s:span, s:message, s:validateAll, s:convertDateTime, s:convertEnum, s:enumItem, s:selectItems, s:defaultAction 
+The first step for migrating these tags is to remove the seam namespace from the view. Below is a table of the tags in Seam 2 and replacements either in JSF 2 or RichFaces.
 
-.. todo: s:link remove propegation and change view to outcome
+.. list-table::
+   :widths: 15 40
+   :header-rows: 1
+
+   * - Seam 2 Tag
+     - JSF 2 or RichFaces
+   * - ``s:div``
+     - No direct mapping. Could be done with an ``h:panelGroup layout="block``
+       or a ``ui:fragment`` containing a div.
+   * - ``s:fragment``
+     - ``ui:fragment``
+   * - ``s:link``
+     - ``h:link`` action maps to outcome, and there is no propagation attribute.
+   * - ``s:button``
+     - ``h:button`` same conditions as ``h:link``
+   * - ``s:decorate``
+     - There is no direct mapping for this, however the same functionality can
+       be achieved with the ``UIInputContainer`` and a composite container, both of
+       which are in the Open18 migration example.
+   * - ``s:label``
+     - No direct mapping, but ``h:outputLabel`` is similar.
+   * - ``s:span``
+     - No direct mapping, but similar output can be achieved by ``h:panelGroup``
+       or a ``ui:fragment`` with a ``span`` element
+   * - ``s:message``
+     - No direct mapping for the same functionality, though ``rich:message``
+       could be used instead.
+   * - ``s:validateAll``
+     - f:validateBean or rich:validator can achieve similar affects.
+   * - s:convertDateTime
+     - A similar affect can be achieved by using the standard
+       ``f:convertDateTime`` and setting the locale, or setting the context-param
+       ``javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE`` to
+       true, as defined in the spec in section 11.1.3. Dan Allen `blogged
+       <http://in.relation.to/Bloggers/StepRightUpAndSelectYourTimeZone>`_ about
+       this before the spec was final, however, nothing was changed.
+   * - ``s:convertEnum``
+     - No direct mapping. A custom converter is recommended.
+   * - ``s:enumItem``
+     - No direct mapping
+   * - ``s:selectItems``
+     - ``h:selectItems``
+   * - ``s:defaultAction``
+     - No direct mapping
 
 ********************************************************************************
 Migrate to Apache Shiro for Security
