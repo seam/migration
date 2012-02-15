@@ -239,15 +239,16 @@ Migrate to Bean Validation from Hibernate Validator 3
 ================================================================================
 
 Java EE 6 contains another specification which standardized validation: JSR 303
-- Bean Validation. Hibernate Validator 4 (4.2.0 is shipped with AS7) is the
-reference implementation. This is a completely different code base and
-includes all new package, validations and ways of interacting with those
-validations. If the application is only using the annotations, these are
-typically a package change and at times an annotation change. For example, the
-``@org.hibernate.validator.Length`` validation becomes the
-``@javax.validation.constraints.Size`` annotation. In some cases, such as the
-GolferValidator in Open18, this can become a custom constraint. Information
-about custom constraints can be found at the `Hibernate Validator documentation <http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-customconstraints.html>`_.
+- Bean Validation. `Hibernate Validator 4 <http://hibernate.org/subprojects/validator.html`_ 
+(4.2.0 is shipped with AS7) is the reference implementation. This is a
+completely different code base and includes all new package, validations and
+ways of interacting with those validations. If the application is only using
+the annotations, these are typically a package change and at times an
+annotation change. For example, the ``@org.hibernate.validator.Length``
+validation becomes the ``@javax.validation.constraints.Size`` annotation. In
+some cases, such as the GolferValidator in Open18, this can become a custom
+constraint. Information about custom constraints can be found at the 
+`Hibernate Validator documentation <http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-customconstraints.html>`_.
 
 For more information about migrating from Hibernate Validator 3, please see `the migration documentation <https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-MigratetoHibernate4Validator>`_.
 
@@ -257,12 +258,13 @@ Migrate to CDI
 
 Java EE 6 had a few new additions to the platform, two of them combining to
 formally standardize dependency injection for the Enterprise Edition of Java.
-These two JSRs are JSR 330, which defines the annotations used for injection,
-and JSR 299 which defines how dependency resolution and injection works, scopes
-for the platform similar to what Seam 2 provided, and possibly the most
-important of all: extensibility for the platform. These two specifications were
-developed with input from authors of other dependency injection solutions in
-Java such as Spring, Guice, and Seam
+These two JSRs are `JSR 330 <http://jcp.org/en/jsr/summary?id=330>`_, which 
+defines the annotations used for injection, and `JSR 299
+<http://jcp.org/en/jsr/summary?id=299>`_ which defines how dependency resolution
+and injection works, scopes for the platform similar to what Seam 2 provided,
+and possibly the most important of all: extensibility for the platform. These
+two specifications were developed with input from authors of other dependency
+injection solutions in Java such as Spring, Guice, and Seam
 
 With these specifications at least two features of Seam 2 had become part of the
 platform. Also many of the features Seam 2 had for working JSF also became part
@@ -321,10 +323,12 @@ Producing resources
 Seam 2 had a feature called factories which allowed a resource to be created and
 outjected. It allowed for a more custom creation than what Seam could do by
 calling the no-args constructor. CDI a similar feature called producers. There
-are two big differences between factories and producers
+are two big differences between factories and producers and the way both
+platforms handle proxies.
 
-* Factories are called each time a resource is requested. Producers can
-  be scoped.
+* Producers are called once for the scope, similar to scoping a factory, 
+  however, they cannot be changed and "re-produced" similar to some approaches
+  that have been done with Seam 2.
 * Factories do not support injection. With a producer, each parameter is an
   injected resource.
 
@@ -378,12 +382,12 @@ However, what it does have is the ability to extend the platform with portable
 CDI extensions! This migration turns to a portable extension called CDI Query to
 fill the gap.
 
-CDI works similar to the Home and Query classes of Seam 2 and DAO classes of the
-past, and quite neatly couples some of the features of JPA 2 with it. Creating a
-DAO, as per `the documentation <http://ctpconsulting.github.com/query>`_ is very
-easy. It involves an annotation and extending an interface. Additional queries
-can be added as well if needed. It's use of the Static Metamodel objects from
-JPA 2 make an excellent replacement for the Query object. CDI Query also
+CDI Query works similar to the Home and Query classes of Seam 2 and DAO classes
+of the past, and quite neatly couples some of the features of JPA 2 with it.
+Creating a DAO, as per `the documentation <http://ctpconsulting.github.com/query>`_ 
+is very easy. It involves an annotation and extending an interface. Additional
+queries can be added as well if needed. It's use of the Static Metamodel objects
+from JPA 2 make an excellent replacement for the Query object. CDI Query also
 supports using named queries, native queries and simple auditing. All wonder
 features out of the box.
 
@@ -423,8 +427,8 @@ conversation. Instead the conversation must be injected and then managed
 (started, ended, timeout configured, etc.).
 
 The conversation can still be tracked by using a query parameter for JSF GET
-requests, the name is `conversationId`. However, using a conversation outside of
-JSF will require additional work, and non portable changes to an application,
+requests, the name is ``conversationId``. However, using a conversation outside 
+of JSF will require additional work, and non portable changes to an application,
 unless a new scope is created for the application which behaves like the
 conversation from Seam 2.
 
@@ -434,9 +438,9 @@ Migrate to  JSF 2.0
 
 Seam 2 contained many enhancements to JSF 1.2. Many of these enhancements made
 it into the official JSF 2 (JSR 314) specification! Some of these enhancements
-include `h:link` and `h:button`, `f:metadata` and `f:viewparam`. Also included
-in JSF 2 is facelets as the preferred view description language. All of the
-power of facelets which was use in Seam 2 applications is now available
+include ``h:link`` and ``h:button``, ``f:metadata`` and ``f:viewparam``. Also 
+included in JSF 2 is facelets as the preferred view description language. All of
+the power of facelets which was use in Seam 2 applications is now available
 standard. Composite Components also made their debut in JSR 314 as an easier way
 to create JSF components and reusable templates.
 
@@ -565,3 +569,25 @@ Migrate to Apache Shiro for Security
 
 .. todo: AuthenticationManager goes away and uses Shiro, need to figure out how to produce the current golfer
   The auth package goes away and uses Shiro, need to figure out what to do about captcha
+
+********************************************************************************
+Further Information
+********************************************************************************
+
+More information about migrating from Seam 2:
+
+* `Jozef Hartinger's Diploma Thesis (PDF) <http://is.muni.cz/th/207788/fi_m/jharting-thesis.pdf?lang=en>`_
+* `Classic module mentioned in the above thesis <https://github.com/jharting/classic>`_
+* `Some comparison of Seam 2 and Java EE 6 <https://github.com/seam/migration/wiki>`_
+
+Additional CDI documentation:
+
+* `Weld, the Reference Implementation of CDI by JBoss <http://seamframework.org/Weld>`_
+* `OpenWebBeans, a CDI Implementation done by Apache <http://openwebbeans.apache.org/owb/index.html>`_
+* `CanDI, another CDI Implementation done by Caucho <http://www.caucho.com/resin-application-server/candi-java-dependency-injection/>`_
+
+Subsitute technologies:
+
+* `CDI Query, replacement for Home / Query <http://ctpconsulting.github.com/query>`_
+* `DataValve, replacement for Home / Query <http://www.andygibson.net/files/datavalve/docs/html/index.html>`_
+* `Seam3-persistence-framework, replacement for Home / Query <http://it-crowd.com.pl/blog/seam3_persistence_framework_comes_to_town.html>`_
