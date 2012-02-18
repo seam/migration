@@ -17,13 +17,31 @@
 
 package org.open18.model.dao;
 
-import com.ctp.cdi.query.Dao;
-import com.ctp.cdi.query.EntityDao;
+import javax.persistence.EntityManager;
+
 import org.open18.model.Facility;
 
 /**
  *
  */
-@Dao(Facility.class)
-public interface FacilityDao extends EntityDao<Facility, Long> {
+public class FacilityDao extends BaseDao<Facility, Long> {
+
+    private static final long serialVersionUID = -6686681098583584460L;
+
+    private EntityManager em;
+
+    public FacilityDao() {
+        this.entityType = Facility.class;
+        this.idType = Long.class;
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return this.em;
+    }
+
+    @Override
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
 }

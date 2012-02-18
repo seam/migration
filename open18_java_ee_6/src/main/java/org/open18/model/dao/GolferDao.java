@@ -19,17 +19,37 @@ package org.open18.model.dao;
 
 import java.util.List;
 
-import com.ctp.cdi.query.Dao;
-import com.ctp.cdi.query.EntityDao;
-import com.ctp.cdi.query.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
 import org.open18.model.Golfer;
 
 /**
  *
  */
-@Dao(Golfer.class)
-public interface GolferDao extends EntityDao<Golfer, Long> {
+public class GolferDao extends BaseDao<Golfer, Long> {
 
-    @Query(value = "select g from Golfer g order by g.dateJoined desc", max = 25)
-    List<Golfer> findNewGolfers();
+    private EntityManager em;
+
+    public GolferDao() {
+        this.entityType = Golfer.class;
+        this.idType = Long.class;
+    }
+
+    @Override
+    protected EntityManager getEntityManager() {
+        return this.em;
+    }
+
+    @Override
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
+
+    public List<Golfer> findNewGolfers() {
+        final TypedQuery<Golfer> query = this.em.createQuery("select g from Golfer g order by g.dateJoined desc", Golfer.class);
+        query.setMaxResults(25);
+
+        return query.getResultList();
+    }
 }

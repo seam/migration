@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.open18.model.Golfer;
 
@@ -17,7 +18,9 @@ public class NewGolfersList {
     private int poolSize = 25;
     private int displaySize = 5;
 
-    @Inject protected EntityManager entityManager;
+    @PersistenceContext
+    protected EntityManager entityManager;
+
     protected List<Golfer> newGolfers;
 
     public void setPoolSize(int poolSize) {

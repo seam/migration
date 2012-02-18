@@ -74,15 +74,17 @@
     </rich:panel>
 
     <div class="actionButtons">
+        <h:form id="actionButtonForm">
+            <h:button
+                      id="edit"
+                      outcome="/FacilityEdit.xhtml"
+                      includeViewParams="true"
+                      value="Edit"/>
 
-        <h:button outcome="/FacilityEdit.xhtml"
-                    id="edit"
-                    includeViewParams="true"
-                 value="Edit"/>
-
-        <h:button outcome="/FacilityList.xhtml"
-                    id="done"
-                 value="Done back to list"/>
+            <h:button outcome="/FacilityList.xhtml"
+                      id="done"
+                      value="Done back to list"/>
+        </h:form>
 
     </div>
 
@@ -91,11 +93,11 @@
     <div class="association" id="coursesChildren">
 
         <h:outputText value="There are no courses associated with this facility."
-                   rendered="#{empty facilityAction.courses}"/>
+                   rendered="#{empty facilityCourses}"/>
 
-        <rich:dataTable value="#{facilityAction.courses}"
+        <rich:dataTable value="#{facilityCourses}"
                        var="course"
-                  rendered="#{not empty facilityAction.courses}"
+                  rendered="#{not empty facilityCourses}"
                 rowClasses="rvgRowOne,rvgRowTwo"
                         id="coursesTable">
             <h:column>

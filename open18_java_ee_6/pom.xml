@@ -83,6 +83,11 @@
             <artifactId>jboss-ejb-api_3.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- Apache Shiro will be used to replease the security aspects of Seam 2 -->
         <dependency>
             <groupId>org.apache.shiro</groupId>

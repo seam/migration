@@ -13,12 +13,13 @@
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="facilityId" value="#{facilityAction.facilityId}"/>
+        <f:event type="preRenderView" listener="#{facilityAction.beginConversation}" />
     </f:metadata>
 </ui:define>
 
 <ui:define name="body">
 
-<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
+<h:messages globalOnly="false" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
             id="globalMessages"/>
 
 <h:form id="facility" styleClass="edit">
@@ -127,7 +128,7 @@
                          rendered="#{!facilityAction.managed}"/>
 
         <h:commandButton id="update"
-                         value="Save"
+                         value="Update"
                          action="#{facilityAction.update}"
                          rendered="#{facilityAction.managed}"/>
 
@@ -137,14 +138,10 @@
                          immediate="true"
                          rendered="#{facilityAction.managed}"/>
 
-        <h:button id="done"
-                  value="Done"
-                  outcome="/Facility.xhtml"
-                  rendered="#{facilityAction.managed}" includeViewParams="true"/>
-
-        <h:button id="cancel"
+        <h:commandButton id="cancel"
                   value="Cancel"
-                  outcome="/FacilityList.xhtml"
+                  action="/FacilityList.xhtml"
+                  actionListener="#{facilityAction.endConversation}"
                   rendered="#{!facilityAction.managed}"/>
 
     </div>
@@ -154,11 +151,11 @@
     <div class="association" id="coursesChildren">
 
         <h:outputText value="There are no courses associated with this facility."
-                      rendered="#{empty facilityAction.courses}"/>
+                      rendered="#{empty facilityCourses}"/>
 
-        <rich:dataTable value="#{facilityAction.courses}"
+        <rich:dataTable value="#{facilityCourses}"
                         var="course"
-                        rendered="#{not empty facilityAction.courses}"
+                        rendered="#{not empty facilityCourses}"
                         rowClasses="rvgRowOne,rvgRowTwo"
                         id="coursesTable">
             <h:column>

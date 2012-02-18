@@ -23,7 +23,12 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -54,6 +59,9 @@ public class FacilityAction implements Serializable {
     @Inject
     private transient FacilityDao dao;
 
+    @Inject
+    private transient Conversation conversation;
+
     private Long facilityId;
 
     private Facility facility;
@@ -67,6 +75,7 @@ public class FacilityAction implements Serializable {
     @Inject
     private void init() {
         facility = new Facility();
+        this.dao.setEntityManager(this.em);
         this.loadResults();
     }
 
@@ -84,26 +93,44 @@ public class FacilityAction implements Serializable {
         loadResults();
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String save() {
-        dao.save(facility);
+        dao.saveAndFlush(facility);
 
         if (!enterCourse) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Please enter course information for " + facility.getName(), null));
             return "/CourseEdit.xhtml?facilityId=" + facility.getId();
         } else {
+            this.endConversation();
             return "/FacilityList.xhtml";
         }
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String update() {
-        dao.save(facility);
-        return "/Facility.xhtml";
+        dao.saveAndFlush(facility);
+        this.endConversation();
+        return "/Facility.xhtml?facilityId=" + facility.getId();
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String remove() {
         dao.remove(facility);
+        this.endConversation();
         return "/FacilityList.xhtml";
+    }
+
+    public void beginConversation() {
+        if (this.conversation.isTransient()) {
+            this.conversation.begin();
+        }
+    }
+
+    public void endConversation() {
+        if (!this.conversation.isTransient()) {
+            this.conversation.end();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -166,14 +193,14 @@ public class FacilityAction implements Serializable {
     }
 
     public void setFacilityId(Long facilityId) {
-        if (!facilityId.equals(facility.getId())) {
+        if (!facilityId.equals(this.facility.getId())) {
             this.facilityId = facilityId;
-            facility = dao.findBy(facilityId);
+            this.facility = dao.findBy(facilityId);
             managed = true;
 
-            if (facility == null) {
+            if (this.facility == null) {
                 managed = false;
-                facility = new Facility();
+                this.facility = new Facility();
                 final FacesContext fc = FacesContext.getCurrentInstance();
                 fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Facility found with id " + facilityId, ""));
             }
@@ -196,9 +223,17 @@ public class FacilityAction implements Serializable {
         this.facility = facility;
     }
 
+    @Produces @Named("facilityCourses") @RequestScoped
     public List<Course> getCourses() {
-        return (facility == null || facility.getCourses() == null) ? Collections.<Course>emptyList()
-                : new ArrayList<Course>(facility.getCourses());
+        if (!this.dao.isManaged(facility)) {
+            facility = this.dao.findBy(facility.getId());
+        }
+
+        if (facility == null || facility.getCourses() == null || facility.getCourses().isEmpty()) {
+            return Collections.<Course>emptyList();
+        } else {
+            return new ArrayList<Course>(facility.getCourses());
+        }
     }
 
     public boolean isManaged() {

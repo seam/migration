@@ -33,6 +33,11 @@ public class ProfileAction implements Serializable {
 
 	private int newGolferDisplaySize = 5;
 
+    @Inject
+    private void init() {
+        this.golferDao.setEntityManager(entityManager);
+    }
+
 	public String view() {
 		assert selectedGolfer != null && selectedGolfer.getId() != null;
 		return "/profile.xhtml";
