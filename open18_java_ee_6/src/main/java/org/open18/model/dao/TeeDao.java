@@ -17,14 +17,11 @@
 
 package org.open18.model.dao;
 
-import com.ctp.cdi.query.Dao;
-import com.ctp.cdi.query.EntityDao;
 import org.open18.model.Tee;
 import org.open18.model.TeeId;
 
 /**
  *
  */
-@Dao(Tee.class)
-public interface TeeDao extends EntityDao<Tee, TeeId> {
+public class TeeDao extends BaseDao<Tee, TeeId> {
 }

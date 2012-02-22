@@ -17,8 +17,6 @@
 
 package org.open18.model.dao;
 
-import javax.persistence.EntityManager;
-
 import org.open18.model.Facility;
 
 /**
@@ -28,20 +26,9 @@ public class FacilityDao extends BaseDao<Facility, Long> {
 
     private static final long serialVersionUID = -6686681098583584460L;
 
-    private EntityManager em;
-
     public FacilityDao() {
         this.entityType = Facility.class;
         this.idType = Long.class;
     }
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return this.em;
-    }
-
-    @Override
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
-    }
 }

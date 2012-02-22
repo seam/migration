@@ -17,13 +17,21 @@
 
 package org.open18.model.dao;
 
-import com.ctp.cdi.query.Dao;
-import com.ctp.cdi.query.EntityDao;
+import javax.persistence.EntityManager;
+
 import org.open18.model.Course;
 
 /**
  *
  */
-@Dao(Course.class)
-public interface CourseDao extends EntityDao<Course, Long> {
+public class CourseDao extends BaseDao<Course, Long> {
+
+
+    protected EntityManager getEntityManager() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setEntityManager(EntityManager em) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

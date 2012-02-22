@@ -17,26 +17,15 @@
 
 package org.open18.model.dao;
 
-import java.util.List;
-
-import javax.persistence.TypedQuery;
-
-import org.open18.model.Golfer;
+import javax.enterprise.inject.Produces;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  */
-public class GolferDao extends BaseDao<Golfer, Long> {
-
-    public GolferDao() {
-        this.entityType = Golfer.class;
-        this.idType = Long.class;
-    }
-
-    public List<Golfer> findNewGolfers() {
-        final TypedQuery<Golfer> query = em.createQuery("select g from Golfer g order by g.dateJoined desc", Golfer.class);
-        query.setMaxResults(25);
-
-        return query.getResultList();
-    }
+public class EntityManagerProducer {
+    @PersistenceContext
+    @Produces
+    private EntityManager em;
 }

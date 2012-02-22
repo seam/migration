@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
@@ -12,7 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 
 import org.open18.model.Golfer;
 import org.open18.model.dao.GolferDao;
@@ -21,7 +21,7 @@ import org.open18.model.dao.GolferDao;
 @ConversationScoped
 @Stateful
 public class ProfileAction implements Serializable {
-	@PersistenceContext(type = PersistenceContextType.EXTENDED)
+	@PersistenceContext
     protected EntityManager entityManager;
 
     @Inject
@@ -33,10 +33,10 @@ public class ProfileAction implements Serializable {
 
 	private int newGolferDisplaySize = 5;
 
-    @Inject
-    private void init() {
-        this.golferDao.setEntityManager(entityManager);
-    }
+//    @Inject
+//    private void init() {
+//        this.golferDao.setEntityManager(entityManager);
+//    }
 
 	public String view() {
 		assert selectedGolfer != null && selectedGolfer.getId() != null;
@@ -57,7 +57,7 @@ public class ProfileAction implements Serializable {
 //		}
 //	}
 //
-    @Produces @RequestScoped @Named("newGolfers")
+    @Produces @RequestScoped @Named("newGolfers") @TransactionAttribute
 	public List<Golfer> findNewGolfers() {
         final List<Golfer> newGolfers = golferDao.findNewGolfers();
 

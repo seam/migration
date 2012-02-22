@@ -20,8 +20,11 @@ package org.open18.model.dao;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -32,7 +35,9 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.SingularAttribute;
 
 /**
- * Base DAO class.
+ * Base DAO class. This replaces the Seam 2 Home / Query classes.
+ * Functionality of the searches can be replicated using the criteria API from JPA or a simple
+ * query by example
  *
  * @param <E>  Entity type.
  * @param <PK> Primary key type.
@@ -40,6 +45,9 @@ import javax.persistence.metamodel.SingularAttribute;
 public abstract class BaseDao<E, PK extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 1845865757364398127L;
+
+    @Inject
+    protected EntityManager em;
 
     protected Class<E> entityType;
     protected Class<PK> idType;
@@ -53,9 +61,9 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
     public E save(E entity) {
         checkProperInit();
         if (isPkSet(entity)) {
-            return getEntityManager().merge(entity);
+            return em.merge(entity);
         } else {
-            getEntityManager().persist(entity);
+            em.persist(entity);
             return entity;
         }
     }
@@ -81,7 +89,7 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
      */
     public void remove(E entity) {
         checkProperInit();
-        getEntityManager().remove(entity);
+        em.remove(entity);
     }
 
     /**
@@ -91,7 +99,7 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
      */
     public void refresh(E entity) {
         checkProperInit();
-        getEntityManager().refresh(entity);
+        em.refresh(entity);
     }
 
     /**
@@ -99,7 +107,7 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
      */
     public void flush() {
         checkProperInit();
-        getEntityManager().flush();
+        em.flush();
     }
 
     /**
@@ -110,7 +118,7 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
      */
     public E findBy(PK primaryKey) {
         checkProperInit();
-        return getEntityManager().find(this.entityType, primaryKey);
+        return em.find(this.entityType, primaryKey);
     }
 
     /**
@@ -120,29 +128,39 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
      */
     public List<E> findAll() {
         checkProperInit();
-        final String entityName = getEntityManager().getMetamodel().entity(this.entityType).getName();
-        final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        final String entityName = em.getMetamodel().entity(this.entityType).getName();
+        final CriteriaBuilder cb = em.getCriteriaBuilder();
 
         final CriteriaQuery<E> query = cb.createQuery(this.entityType);
-        final TypedQuery<E> typedQuery = getEntityManager().createQuery(query.select(query.from(this.entityType)));
+        final TypedQuery<E> typedQuery = em.createQuery(query.select(query.from(this.entityType)));
         return typedQuery.getResultList();
+    }
+
+    /**
+     * Query by example - for a given object and all filled SingularAttribute fields.
+     *
+     * @param example Sample entity. Query all like, joined by "and".
+     * @return List of entities matching the example, or empty if none found.
+     */
+    public List<E> findBy(E example) {
+        return findBy(example, getFilledSingularAttributes(example));
     }
 
     /**
      * Query by example - for a given object and a specific set of properties.
      *
-     * @param example    Sample entity. Query all like.
+     * @param example    Sample entity. Query all like, joined by "and".
      * @param attributes Which attributes to consider for the query.
      * @return List of entities matching the example, or empty if none found.
      */
     public List<E> findBy(E example, SingularAttribute<E, ?>... attributes) {
         checkProperInit();
-        final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        final CriteriaBuilder cb = em.getCriteriaBuilder();
         final CriteriaQuery<E> query = cb.createQuery(this.entityType);
         final Root<E> root = query.from(this.entityType);
 
         query.select(root).where(cb.and(getAndPredicates(cb, root, example, attributes)));
-        final TypedQuery<E> typedQuery = getEntityManager().createQuery(query);
+        final TypedQuery<E> typedQuery = em.createQuery(query);
         return typedQuery.getResultList();
     }
 
@@ -153,24 +171,20 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
      */
     public Long count() {
         checkProperInit();
-        final CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        final CriteriaBuilder cb = em.getCriteriaBuilder();
         final CriteriaQuery<Long> query = cb.createQuery(Long.class);
         query.select(cb.count(query.from(this.entityType)));
 
-        return getEntityManager().createQuery(query).getSingleResult();
+        return em.createQuery(query).getSingleResult();
     }
 
     public boolean isManaged(E entity) {
-        return getEntityManager().contains(entity);
+        return em.contains(entity);
     }
-
-    protected abstract EntityManager getEntityManager();
-
-    public abstract void setEntityManager(EntityManager em);
 
     private boolean isPkSet(E entity) {
         checkProperInit();
-        final EntityType<?> entityType = getEntityManager().getMetamodel().entity(this.entityType);
+        final EntityType<?> entityType = em.getMetamodel().entity(this.entityType);
         // Cheating as we know there are no entities in this example with @IdClass
         // also cheating here as for this example we know these will all be Methods
         final Method idMember = (Method) entityType.getDeclaredId(this.idType).getJavaMember();
@@ -184,7 +198,7 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
             // eat it
         }
 
-        return idValue == null;
+        return idValue != null;
     }
 
     private void checkProperInit() {
@@ -196,11 +210,67 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
     private Predicate[] getAndPredicates(CriteriaBuilder cb, Root<E> root, E example, SingularAttribute<E, ?>... attributes) {
         final Predicate[] allPredicates = new Predicate[attributes.length];
 
-        for (int i = 0; i < attributes.length; i++) {
-            allPredicates[i] = cb.equal(root.get(attributes[i]), getActualValueOfAttribute(example, attributes[i]));
+        if (attributes.length > 0) {
+            for (int i = 0; i < attributes.length; i++) {
+                allPredicates[i] = cb.equal(root.get(attributes[i]), getActualValueOfAttribute(example, attributes[i]));
+            }
         }
 
         return allPredicates;
+    }
+
+    @SuppressWarnings("unchecked")
+    private SingularAttribute<E, ?>[] getFilledSingularAttributes(E example) {
+        final EntityType<E> entity = em.getMetamodel().entity((Class<E>) example.getClass());
+        final Set<SingularAttribute<E, ?>> allSingularAttributes = entity.getDeclaredSingularAttributes();
+        SingularAttribute<E, ?>[] filledAttributes = new SingularAttribute[allSingularAttributes.size()];
+
+        try {
+            final E newInstance = (E) example.getClass().newInstance();
+            final Iterator<SingularAttribute<E, ?>> allAttributeIterator = allSingularAttributes.iterator();
+
+            while (allAttributeIterator.hasNext()) {
+                final SingularAttribute<E, ?> attribute = allAttributeIterator.next();
+
+                // Cheating as we know for this example they will always be methods
+                final Object exampleValue = ((Method) attribute.getJavaMember()).invoke(example);
+                final Object defaultValue = ((Method) attribute.getJavaMember()).invoke(newInstance);
+
+                if (exampleValue == null || exampleValue.equals(defaultValue) || (exampleValue instanceof String && "".equals(exampleValue))) {
+                    allAttributeIterator.remove();
+                }
+            }
+            filledAttributes = allSingularAttributes.toArray(new SingularAttribute[allSingularAttributes.size()]);
+        } catch (InvocationTargetException e) {
+            // Eating the exception as it doesn't matter
+        } catch (InstantiationException e) {
+            // eating the exception as it doesn't matter
+        } catch (IllegalAccessException e) {
+            // eating the exception as it doesn't matter
+        }
+        return filledAttributes;
+    }
+
+    private boolean isDefault(Class<?> type, Object value) {
+        if (value == null) {
+            return true;
+        } else if (type.equals(String.class) && value instanceof String) {
+            return "".equals(((String) value).trim());
+        } else if (type.isPrimitive()) {
+            // TODO: all primitive values
+        } else {
+            try {
+                final Object newInstance = type.newInstance();
+                return newInstance.equals(value);
+            } catch (InstantiationException e) {
+                throw new RuntimeException("Error trying to search", e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Error trying to search", e);
+            }
+        }
+
+        // Can't imagine we'd get here
+        return true;
     }
 
     private Object getActualValueOfAttribute(E example, SingularAttribute<E, ?> attribute) {

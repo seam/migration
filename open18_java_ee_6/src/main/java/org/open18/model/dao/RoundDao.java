@@ -17,13 +17,10 @@
 
 package org.open18.model.dao;
 
-import com.ctp.cdi.query.Dao;
-import com.ctp.cdi.query.EntityDao;
 import org.open18.model.Round;
 
 /**
  *
  */
-@Dao(Round.class)
-public interface RoundDao extends EntityDao<Round, Long>{
+public class RoundDao extends BaseDao<Round, Long>{
 }

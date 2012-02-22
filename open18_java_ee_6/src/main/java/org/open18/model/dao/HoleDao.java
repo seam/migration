@@ -17,13 +17,10 @@
 
 package org.open18.model.dao;
 
-import com.ctp.cdi.query.Dao;
-import com.ctp.cdi.query.EntityDao;
 import org.open18.model.Hole;
 
 /**
  *
  */
-@Dao(Hole.class)
-public interface HoleDao extends EntityDao<Hole, Long> {
+public class HoleDao extends BaseDao<Hole, Long> {
 }

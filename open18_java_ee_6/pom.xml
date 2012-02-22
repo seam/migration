@@ -16,7 +16,6 @@
         <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
         <richfaces.version>4.1.0.Final</richfaces.version>
         <apache.shiro.version>1.2.0</apache.shiro.version>
-        <cdi.query.version>1.0.0.Alpha3</cdi.query.version>
         <arquillian.version>1.0.0.CR7</arquillian.version>
         <junit.version>4.10</junit.version>
     </properties>
@@ -94,19 +93,6 @@
             <artifactId>shiro-core</artifactId>
             <version>${apache.shiro.version}</version>
             <scope>compile</scope>
-        </dependency>
-        <!-- CDI Query will replace the Seam 2 Query classes -->
-        <dependency>
-            <groupId>com.ctp.cdi.query</groupId>
-            <artifactId>cdi-query-api</artifactId>
-            <version>${cdi.query.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.ctp.cdi.query</groupId>
-            <artifactId>cdi-query-impl</artifactId>
-            <version>${cdi.query.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.shiro</groupId>
