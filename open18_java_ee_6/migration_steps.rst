@@ -75,7 +75,6 @@ actual file::
           <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
           <richfaces.version>4.1.0.Final</richfaces.version>
           <apache.shiro.version>1.2.0</apache.shiro.version>
-          <cdi.query.version>1.0.0.Alpha3</cdi.query.version>
           <arquillian.version>1.0.0.CR7</arquillian.version>
           <junit.version>4.10</junit.version>
       </properties>
@@ -144,18 +143,6 @@ actual file::
               <scope>compile</scope>
           </dependency>
           <dependency>
-              <groupId>com.ctp.cdi.query</groupId>
-              <artifactId>cdi-query-api</artifactId>
-              <version>${cdi.query.version}</version>
-              <scope>compile</scope>
-          </dependency>
-          <dependency>
-              <groupId>com.ctp.cdi.query</groupId>
-              <artifactId>cdi-query-impl</artifactId>
-              <version>${cdi.query.version}</version>
-              <scope>runtime</scope>
-          </dependency>
-          <dependency>
               <groupId>org.apache.shiro</groupId>
               <artifactId>shiro-web</artifactId>
               <version>${apache.shiro.version}</version>
@@ -212,6 +199,16 @@ and locking improvements. Setup and configuration is the same as the initial JPA
 specification, as is usage.
 
 Additional information can be found at the `migration guide to AS7 <https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-UpdateyourHibernate3applicationtouseHibernate4>`_.
+
+There have been issues in the past with Seam 2 when using a Seam Managed
+Persistence Context and having entities become detached or issues with
+transactions. This migration recommends using a transaction scoped Persistence
+Context and using EJBs as backing beans. This allows declarative transaction
+control and a familiar Persistence Context injection strategy. Due to this
+change, use of the ``EntityManager.merge()`` function is required when using
+entities which may have become detached from a previous transaction (or
+request). Also recommended is the use of the ``@Version`` annotation and column
+in the entities to allow for optimistic locking.
 
 Update persistence.xml to 2.0
 ================================================================================
@@ -369,7 +366,7 @@ If the need arises for additional scopes, such as a business process scope, CDI
 allows for additional scopes to be created. Please refer to the JSR 299 spec or
 CDI implementation documentation for defining scopes.
 
-Migrate Query  / Home objects to CDI Query
+Migrate Query  / Home objects
 ================================================================================
 
 The application framework within Seam 2 consisting of Home and Query objects has
@@ -378,29 +375,23 @@ rivals that of other frameworks such as Grails, Ruby on Rails and the like.
 There were some glaring holes with it though. Using inheritance instead of
 composition, lack of being able to search for null fields, inability to perform
 joins, etc. Java EE 6 doesn't have anything ready to use to fill this gap.
-However, what it does have is the ability to extend the platform with portable
-CDI extensions! This migration turns to a portable extension called CDI Query to
-fill the gap.
+Fortunately a little creativity and the JPA Criteria API can go a long way.
 
-CDI Query works similar to the Home and Query classes of Seam 2 and DAO classes
-of the past, and quite neatly couples some of the features of JPA 2 with it.
-Creating a DAO, as per `the documentation <http://ctpconsulting.github.com/query>`_ 
-is very easy. It involves an annotation and extending an interface. Additional
-queries can be added as well if needed. It's use of the Static Metamodel objects
-from JPA 2 make an excellent replacement for the Query object. CDI Query also
-supports using named queries, native queries and simple auditing. All wonder
-features out of the box.
+In this example a base dao abstract class has been created to keep things DRY. A
+similar approach could be done with composition, however, some of the type
+safety would be lost. This base class contains all of the functionality for the
+DAO, including a dynamic search similar to the Seam 2 Query search idea.
 
 To fill the Home object from Seam 2, simple backing beans which manage an
-instance of the entity work nicely, and little code is needed to create a
-full replacement, when using a CDI Query DAO to perform all the needed
-functions. For this migration each entity has a CDI Query DAO created, and
-also a backing bean for each entity to act as the buffer between the view and
-the backend. These backing beans also happen to be Stateful Session beans in
-this instance. It's not required, but the advantages of SFSBs have been
-enumerated many times throughout the years. These backing beans are annotated
-with one of the scope annotations mentioned earlier and also with ``@Named``
-so they can be used in EL.
+instance of the entity work nicely, and little code is needed to create a full
+replacement when using the DAO to perform all the needed functions. For this
+migration each entity has a simple (no code in the child class unless needed for
+queries) DAO created, and also a backing bean for each entity to act as the
+buffer between the view and the backend. These backing beans also happen to be
+Stateful Session beans in this instance. It's not required, but the advantages
+of SFSBs have been enumerated many times throughout the years. These backing
+beans are annotated with one of the scope annotations mentioned earlier and also
+with ``@Named`` so they can be used in EL.
 
 .. sidebar:: WARNING
 
