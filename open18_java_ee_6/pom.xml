@@ -14,7 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
-        <richfaces.version>4.1.0.Final</richfaces.version>
+        <richfaces.version>4.2.0.Final</richfaces.version>
         <apache.shiro.version>1.2.0</apache.shiro.version>
         <arquillian.version>1.0.0.CR7</arquillian.version>
         <junit.version>4.10</junit.version>

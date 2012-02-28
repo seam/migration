@@ -179,7 +179,7 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
     }
 
     public boolean isManaged(E entity) {
-        return em.contains(entity);
+        return isPkSet(entity) && em.contains(entity);
     }
 
     private boolean isPkSet(E entity) {

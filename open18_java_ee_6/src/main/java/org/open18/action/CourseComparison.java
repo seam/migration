@@ -1,32 +1,55 @@
 package org.open18.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-//@Name("courseComparison")
-//@Scope(ScopeType.CONVERSATION)
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.open18.model.Course;
+import org.open18.model.dao.CourseDao;
+
+@Named
+@ConversationScoped
 public class CourseComparison implements Serializable {
-/*
-	@In protected EntityManager entityManager;
+    private static final long serialVersionUID = -4881060214215467731L;
 
-	@RequestParameter protected Long courseId;
+    @Inject
+    private CourseDao courseDao;
 
-	@Out("readyToCompare")
-	protected boolean ready = false;
+    @Inject
+    private transient Conversation conversation;
 
-	@DataModel("comparedCourses")
+	private boolean ready = false;
+
 	protected Set<Course> courses = new HashSet<Course>();
 
-	public void mark() {
-		Course course = entityManager.find(Course.class, courseId);
+	public void mark(Long courseId) {
+		Course course = courseDao.findBy(courseId);
 		if (course == null) {
 			return;
 		}
 		courses.add(course);
 		ready = courses.size() >= 2;
+
+        if (conversation.isTransient()) {
+            conversation.begin();
+        }
 	}
 
-	// NOTE: cannot use @BypassInterceptors because
-	// @DataModel field is cleared by ManagedEntityIdentityInterceptor
+    @Produces
+    @Named("comparedCourses")
+    @ConversationScoped
+    public List<Course> getCourses() {
+        return new ArrayList<Course>(courses);
+    }
+
 	public boolean isMarked(Course course) {
 		return courses.contains(course);
 	}
@@ -36,25 +59,15 @@ public class CourseComparison implements Serializable {
 		ready = false;
 	}
 
-	@BypassInterceptors
 	public String validate() {
 		return ready ? "valid" : "invalid";
 	}
 
-	// NOTE: cannot use @BypassInterceptors because
-	// @DataModel field is cleared by ManagedEntityIdentityInterceptor
-	public String getCourseNames() {
-		System.out.println("here");
-		String names = "";
-		int i = 0;
-		for (Course course : courses) {
-			if (i++ > 0) {
-				names += ", ";
-			}
-			names += course.getName();
-		}
+    public boolean isReady() {
+        return ready;
+    }
 
-		return names;
-	}
-*/
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
 }

@@ -17,21 +17,16 @@
 
 package org.open18.model.dao;
 
-import javax.persistence.EntityManager;
-
 import org.open18.model.Course;
 
 /**
  *
  */
 public class CourseDao extends BaseDao<Course, Long> {
+    private static final long serialVersionUID = -2800409908144944901L;
 
-
-    protected EntityManager getEntityManager() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void setEntityManager(EntityManager em) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public CourseDao() {
+        this.entityType = Course.class;
+        this.idType = Long.class;
     }
 }

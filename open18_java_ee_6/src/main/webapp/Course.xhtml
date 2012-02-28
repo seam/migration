@@ -1,101 +1,87 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                              "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:s="http://jboss.com/products/seam/taglib"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:a="http://richfaces.org/a4j"
                 xmlns:rich="http://richfaces.org/rich"
+                xmlns:open18="http://java.sun.com/jsf/composite/components"
                 template="layout/template.xhtml">
-                       
+
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="courseId" value="#{courseAction.courseId}"/>
+    </f:metadata>
+</ui:define>
+
 <ui:define name="body">
-    
+
     <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
-    
+
     <rich:panel>
         <f:facet name="header">Course</f:facet>
 
+        <open18:input id="description" label="description">
+            #{courseAction.course.description}
+        </open18:input>
 
+        <open18:input id="designer" label="designer">
+            #{courseAction.course.designer}
+        </open18:input>
 
-        <s:decorate id="description" template="layout/display.xhtml">
-            <ui:define name="label">description</ui:define>
-            #{courseHome.instance.description}
-        </s:decorate>
+        <open18:input id="fairways" label="fairways">
+            #{courseAction.course.fairways}
+        </open18:input>
 
+        <open18:input id="greens" label="greens">
+            #{courseAction.course.greens}
+        </open18:input>
 
-        <s:decorate id="designer" template="layout/display.xhtml">
-            <ui:define name="label">designer</ui:define>
-            #{courseHome.instance.designer}
-        </s:decorate>
+        <open18:input id="name" label="name">
+            #{courseAction.course.name}
+        </open18:input>
 
+        <open18:input id="numHoles" label="numHoles">
+            #{courseAction.course.numHoles}
+        </open18:input>
 
-        <s:decorate id="fairways" template="layout/display.xhtml">
-            <ui:define name="label">fairways</ui:define>
-            #{courseHome.instance.fairways}
-        </s:decorate>
+        <open18:input id="signatureHole" label="signatureHole">
+            #{courseAction.course.signatureHole}
+        </open18:input>
 
+        <open18:input id="yearBuilt" label="yearBuilt">
+            #{courseAction.course.yearBuilt}
+        </open18:input>
 
-        <s:decorate id="greens" template="layout/display.xhtml">
-            <ui:define name="label">greens</ui:define>
-            #{courseHome.instance.greens}
-        </s:decorate>
+        <div style="clear:both"></div>
 
-
-        <s:decorate id="name" template="layout/display.xhtml">
-            <ui:define name="label">name</ui:define>
-            #{courseHome.instance.name}
-        </s:decorate>
-
-
-        <s:decorate id="numHoles" template="layout/display.xhtml">
-            <ui:define name="label">numHoles</ui:define>
-            #{courseHome.instance.numHoles}
-        </s:decorate>
-
-
-        <s:decorate id="signatureHole" template="layout/display.xhtml">
-            <ui:define name="label">signatureHole</ui:define>
-            #{courseHome.instance.signatureHole}
-        </s:decorate>
-
-
-        <s:decorate id="yearBuilt" template="layout/display.xhtml">
-            <ui:define name="label">yearBuilt</ui:define>
-            #{courseHome.instance.yearBuilt}
-        </s:decorate>
-
-        <div style="clear:both"/>
-        
     </rich:panel>
-    
-    <div class="actionButtons">      
 
-        <s:button view="/CourseEdit.xhtml" 
-                    id="edit" 
+    <div class="actionButtons">
+
+        <h:button outcome="/CourseEdit.xhtml"
+                    id="edit"
+                    includeViewParams="true"
                  value="Edit"/>
-        <s:button action="#{courseWizard.editCourse(courseHome.instance.id)}"
-                    id="courseWizard" 
-                 value="Edit..."/>
 
-        <s:button view="/#{empty courseFrom ? 'CourseList' : courseFrom}.xhtml"
+        <h:button outcome="/CourseList.xhtml"
                     id="done"
                  value="Done"/>
-
     </div>
 
-    <rich:tabPanel switchType="ajax">
+    <rich:panel id="facilityPanel">
 
     <rich:tab label="facility">
     <div class="association" id="facilityParent">
-        
-        <h:outputText value="There is no facility associated with this course." 
-                   rendered="#{courseHome.instance.facility == null}"/>
-        
-        <rich:dataTable var="facility" 
-                   value="#{courseHome.instance.facility}" 
-                rendered="#{courseHome.instance.facility != null}"
+
+        <h:outputText value="There is no facility associated with this course."
+                   rendered="#{courseAction.course.facility == null}"/>
+
+        <rich:dataTable var="facility"
+                   value="#{courseAction.course.facility}"
+                rendered="#{courseAction.course.facility != null}"
               rowClasses="rvgRowOne,rvgRowTwo"
                       id="facilityTable">
             <h:column>
@@ -154,27 +140,27 @@
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link id="viewfacility" 
-                     value="View" 
-                      view="/Facility.xhtml">
-                    <f:param name="facilityId" 
+                <h:link id="viewfacility"
+                     value="View"
+                      outcome="/Facility.xhtml">
+                    <f:param name="facilityId"
                            value="#{facility.id}"/>
-                </s:link>
+                </h:link>
             </h:column>
         </rich:dataTable>
-        
+
     </div>
     </rich:tab>
 
     <rich:tab label="holes">
     <div class="association" id="holesChildren">
-        
+
         <h:outputText value="There are no holes associated with this course."
-                   rendered="#{empty courseHome.holes}"/>
-        
-        <rich:dataTable value="#{courseHome.holes}" 
-                       var="hole" 
-                  rendered="#{not empty courseHome.holes}" 
+                   rendered="#{empty courseAction.holes}"/>
+
+        <rich:dataTable value="#{courseAction.holes}"
+                       var="hole"
+                  rendered="#{not empty courseAction.holes}"
                 rowClasses="rvgRowOne,rvgRowTwo"
                         id="holesTable">
             <h:column>
@@ -207,38 +193,37 @@
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link id="selecthole" 
-                     value="View" 
-                      view="/Hole.xhtml">
-                    <f:param name="holeId" 
+                <h:link id="selecthole"
+                     value="View"
+                      outcome="/Hole.xhtml">
+                    <f:param name="holeId"
                             value="#{hole.id}"/>
-                    <f:param name="holeFrom" value="Course"/>
-                </s:link>
+                </h:link>
             </h:column>
         </rich:dataTable>
-        
+
     </div>
-    
+
     <div class="actionButtons">
-        <s:button 
+        <h:button
                value="Add hole"
                 view="/HoleEdit.xhtml">
-            <f:param name="courseId" 
-                    value="#{courseHome.instance.id}"/>
+            <f:param name="courseId"
+                    value="#{courseAction.course.id}"/>
             <f:param name="holeFrom" value="Course"/>
-        </s:button>
-    </div>        
+        </h:button>
+    </div>
     </rich:tab>
 
     <rich:tab label="teeSets">
     <div class="association" id="teeSetsChildren">
-        
+
         <h:outputText value="There are no teeSets associated with this course."
-                   rendered="#{empty courseHome.teeSets}"/>
-        
-        <rich:dataTable value="#{courseHome.teeSets}" 
-                       var="teeSet" 
-                  rendered="#{not empty courseHome.teeSets}" 
+                   rendered="#{empty courseAction.teeSets}"/>
+
+        <rich:dataTable value="#{courseAction.teeSets}"
+                       var="teeSet"
+                  rendered="#{not empty courseAction.teeSets}"
                 rowClasses="rvgRowOne,rvgRowTwo"
                         id="teeSetsTable">
             <h:column>
@@ -247,7 +232,7 @@
             </h:column>
             <h:column>
                 <f:facet name="header">color</f:facet>
-                <div title="#{teeSet.color}" style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
+                <div title="#{teeSet.color}" style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" ></div>
             </h:column>
             <h:column>
                 <f:facet name="header">ladiesCourseRating</f:facet>
@@ -275,61 +260,60 @@
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link id="selectteeSet" 
-                     value="View" 
-                      view="/TeeSet.xhtml">
-                    <f:param name="teeSetId" 
+                <h:link id="selectteeSet"
+                     value="View"
+                      outcome="/TeeSet.xhtml">
+                    <f:param name="teeSetId"
                             value="#{teeSet.id}"/>
                     <f:param name="teeSetFrom" value="Course"/>
-                </s:link>
+                </h:link>
             </h:column>
         </rich:dataTable>
-        
+
     </div>
-    
+
     <div class="actionButtons">
-        <s:button 
+        <h:button
                value="Add teeSet"
                 view="/TeeSetEdit.xhtml">
-            <f:param name="courseId" 
-                    value="#{courseHome.instance.id}"/>
+            <f:param name="courseId"
+                    value="#{courseAction.course.id}"/>
             <f:param name="teeSetFrom" value="Course"/>
-        </s:button>
-    </div>        
+        </h:button>
+    </div>
     </rich:tab>
-</rich:tabPanel>
-<rich:tabPanel id="comments" switchType="client" style="margin-top: 5px;">
+</rich:panel>
+<rich:panel id="comments" style="margin-top: 5px;">
 	<rich:tab id="commentslist" label="Comments (#{courseComments.size})">
 		<h:outputText value="No one has commented on this course." rendered="#{courseComments.size == 0}"/>
 		<a:repeat var="_comment" value="#{courseComments}" rowKeyVar="index">
 			<div class="comment">
-				<s:link view="/profile.xhtml" value="#{_comment.golfer.username}" propagation="none">
+				<h:link outcome="/profile.xhtml" value="#{_comment.golfer.username}" propagation="none">
 					<f:param name="golferId" value="#{_comment.golfer.id}"/>
-				</s:link>
+				</h:link>
 				#{' '}said on#{' '}
-				<h:outputText value="#{_comment.datePosted}">
-					<s:convertDateTime pattern="dd MMM yyyy"/>
+				<h:outputText value="#{_comment.datePosted} UTC">
+                    <f:convertDateTime pattern="dd MMM yyyy" timeZone="Etc/UTC"/>
 				</h:outputText>:
 				<em>#{_comment.text}</em>
 			</div>
-			<rich:separator height="1" rendered="#{index + 1 != courseComments.size}" lineType="dashed" style="height: 20px;"/>
+			<!-- some sort of separator -->
 		</a:repeat>
 	</rich:tab>
 	<rich:tab id="postcomment" label="Leave a comment" rendered="#{s:hasRole('golfer')}">
 		<h:form id="commentForm">
 			<!-- hidden field required to keep natural conversation going -->
 			<input type="hidden" name="courseId" value="#{courseHome.courseId}"/>
-			<s:decorate id="textField" template="layout/edit.xhtml">
-				<ui:define name="label">Comment:</ui:define>
+			<open18:input id="textField" label="Comment:">
 				<h:inputTextarea id="text" value="#{courseComment.text}" required="true"/>
-			</s:decorate>
+			</open18:input>
 			<div style="clear: both;"/>
 			<div class="actionButtons">
 				<h:commandButton id="save" value="Post" action="#{courseCommentHome.persist}"/>
 			</div>
 		</h:form>
 	</rich:tab>
-</rich:tabPanel>
+</rich:panel>
 </ui:define>
 
 </ui:composition>

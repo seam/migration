@@ -10,6 +10,10 @@
                 xmlns:open18="http://java.sun.com/jsf/composite/components"
                 template="layout/template.xhtml">
 
+    <ui:define name="metadata">
+        <f:event type="preRenderView" listener="#{facilityAction.endConversation}"/>
+    </ui:define>
+
     <ui:define name="body">
 
         <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
@@ -81,7 +85,7 @@
                     <rich:dataTable id="facilityListTable"
                                     var="facility"
                                     value="#{facilityAction.resultList}"
-                                    rows="15"
+                                    rows="10"
                                     rendered="#{not empty facilityAction.resultList}">
                         <rich:column sortBy="#{facility.id}">
                             <f:facet name="header">
@@ -163,21 +167,17 @@
                                 <f:param name="facilityId" value="#{facility.id}"/>
                             </h:link>
                         </rich:column>
+                        <f:facet name="footer">
+                            <rich:dataScroller for="facilityListTable" maxPages="5"/>
+                        </f:facet>
                     </rich:dataTable>
-
-                    <div style="margin-right: auto; margin-left: auto">
-                        <rich:dataScroller for="facilityListTable" maxPages="5"/>
-                    </div>
-
                 </div>
             </rich:panel>
 
             <div class="actionButtons">
                 <h:button outcome="/FacilityEdit.xhtml"
                           id="create"
-                          value="Create facility">
-                    <f:param name="facilityId" value="#{facility.id}"/>
-                </h:button>
+                          value="Create facility" />
             </div>
 
         </h:form>
