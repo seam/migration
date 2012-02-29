@@ -18,7 +18,6 @@
 package org.open18.action;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.ejb.Stateful;
 import javax.enterprise.context.Conversation;
@@ -29,6 +28,7 @@ import javax.inject.Named;
 
 import org.open18.model.Course;
 import org.open18.model.dao.CourseDao;
+import org.richfaces.event.DataScrollEvent;
 
 /**
  *
@@ -46,27 +46,26 @@ public class CourseAction implements Serializable {
     @Inject
     private transient Conversation conversation;
 
+    @Inject
+    private CourseResultList resultList;
+
     private Long courseId;
 
     private Course course;
 
     private boolean managed;
 
-    private List<Course> resultList;
-
     @Inject
     private void init() {
         course = new Course();
 
         if (!FacesContext.getCurrentInstance().isPostback()) {
-            resultList = dao.findAll();
+            resultList.setResults(dao.findAll());
         }
-
-        beginConversation();
     }
 
     public void search() {
-        resultList = dao.findBy(course);
+        resultList.setResults(dao.findBy(course));
     }
 
     public void beginConversation() {
@@ -79,6 +78,10 @@ public class CourseAction implements Serializable {
         if (!conversation.isTransient()) {
             conversation.end();
         }
+    }
+
+    public void scrollListener(DataScrollEvent event) {
+        beginConversation();
     }
 
     public Long getCourseId() {
@@ -103,13 +106,5 @@ public class CourseAction implements Serializable {
 
     public void setManaged(boolean newManaged) {
         managed = newManaged;
-    }
-
-    public List<Course> getResultList() {
-        return resultList;
-    }
-
-    public void setResultList(List<Course> newResultList) {
-        resultList = newResultList;
     }
 }

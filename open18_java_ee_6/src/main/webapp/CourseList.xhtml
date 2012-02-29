@@ -11,10 +11,6 @@
                 xmlns:open18="http://java.sun.com/jsf/composite/components"
                 template="layout/template.xhtml">
 
-    <ui:define name="metadata">
-        <f:event type="preRenderView" listener="#{facilityAction.endConversation}"/>
-    </ui:define>
-
     <ui:define name="body">
 
         <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
@@ -59,9 +55,13 @@
                     </ui:repeat>
 
                     <div style="margin-top: 5px;">
-                        <h:link value="Compare" outcome="/CompareCourses.xhtml" rendered="#{courseComparison.ready}"/>
+                        <h:link value="Compare" outcome="/CompareCourses.xhtml" rendered="#{courseComparison.ready}">
+                            <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
+                        </h:link>
                         <h:outputText value="#{' '}" rendered="#{courseComparison.ready}"/>
-                        <h:link value="Clear selections" outcome="#{courseComparison.reset}"/>
+                        <h:link value="Clear selections" outcome="#{courseComparison.reset}">
+                            <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
+                        </h:link>
                     </div>
                 </rich:panel>
                 <br clear="all"/>
@@ -73,12 +73,12 @@
                 <div class="results" id="courseAction">
 
                     <h:outputText value="The course search returned no results."
-                                  rendered="#{empty courseAction.resultList}"/>
+                                  rendered="#{empty courseResultList.results}"/>
 
                     <rich:dataTable id="courseListTable"
                                     var="_course"
-                                    value="#{courseAction.resultList}"
-                                    rendered="#{not empty courseAction.resultList}"
+                                    value="#{courseResultList.results}"
+                                    rendered="#{not empty courseResultList.results}"
                                     rows="10">
                         <rich:column sortBy="#{_course.id}">
                             <f:facet name="header">
@@ -151,6 +151,7 @@
                                     id="courseViewLink">
                                 <f:param name="courseId"
                                          value="#{_course.id}"/>
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                             </h:link>
                             #{' | '}
                             <h:link outcome="/CourseEdit.xhtml"
@@ -158,17 +159,18 @@
                                     id="courseEditLink">
                                 <f:param name="courseId"
                                          value="#{_course.id}"/>
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                             </h:link>
                             #{' | '}
                             <a:commandLink id="markLink"
                                     action="#{courseComparison.mark(_course.id)}" value="Mark"
                                     execute="@this" render="@form"
                                     rendered="#{not courseComparison.isMarked(_course)}">
-
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                             </a:commandLink>
                         </rich:column>
                         <f:facet name="footer">
-                            <rich:dataScroller for="courseListTable" maxPages="5"/>
+                            <rich:dataScroller for="courseListTable" maxPages="5" scrollListener="#{courseAction.scrollListener}"/>
                         </f:facet>
                     </rich:dataTable>
 
