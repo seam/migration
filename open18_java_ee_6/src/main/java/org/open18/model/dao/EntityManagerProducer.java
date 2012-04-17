@@ -17,6 +17,7 @@
 
 package org.open18.model.dao;
 
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,6 +27,10 @@ import javax.persistence.PersistenceContext;
  */
 public class EntityManagerProducer {
     @PersistenceContext
-    @Produces
     private EntityManager em;
+
+    @Produces @RequestScoped
+    public EntityManager getEntityManager() {
+        return em;
+    }
 }

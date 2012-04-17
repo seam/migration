@@ -7,12 +7,9 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:rich="http://richfaces.org/rich"
+                xmlns:a="http://richfaces.org/a4j"
                 xmlns:open18="http://java.sun.com/jsf/composite/components"
                 template="layout/template.xhtml">
-
-    <ui:define name="metadata">
-        <f:event type="preRenderView" listener="#{facilityAction.endConversation}"/>
-    </ui:define>
 
     <ui:define name="body">
 
@@ -83,88 +80,90 @@
                                   rendered="#{empty facilityAction.resultList}"/>
 
                     <rich:dataTable id="facilityListTable"
-                                    var="facility"
+                                    var="_facility"
                                     value="#{facilityAction.resultList}"
                                     rows="10"
                                     rendered="#{not empty facilityAction.resultList}">
-                        <rich:column sortBy="#{facility.id}">
+                        <rich:column sortBy="#{_facility.id}">
                             <f:facet name="header">
-                                <h:outputText styleClass="columnHeader" value="id"/>
+                                <a:commandLink styleClass="columnHeader" value="id"/>
                             </f:facet>
-                            #{facility.id}
+                            #{_facility.id}
                         </rich:column>
-                        <rich:column sortBy="#{facility.address}">
+                        <rich:column sortBy="#{_facility.address}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="address"/>
                             </f:facet>
-                            #{facility.address}
+                            #{_facility.address}
                         </rich:column>
-                        <rich:column sortBy="#{facility.city}">
+                        <rich:column sortBy="#{_facility.city}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="city"/>
                             </f:facet>
-                            #{facility.city}
+                            #{_facility.city}
                         </rich:column>
-                        <rich:column sortBy="#{facility.country}">
+                        <rich:column sortBy="#{_facility.country}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="country"/>
                             </f:facet>
-                            #{facility.country}
+                            #{_facility.country}
                         </rich:column>
-                        <rich:column sortBy="#{facility.county}">
+                        <rich:column sortBy="#{_facility.county}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="county"/>
                             </f:facet>
-                            #{facility.county}
+                            #{_facility.county}
                         </rich:column>
-                        <rich:column sortBy="#{facility.name}">
+                        <rich:column sortBy="#{_facility.name}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="name"/>
                             </f:facet>
-                            <h:outputLink value="#{facility.uri}"
-                                          rendered="#{not empty facility.uri}">#{facility.name}</h:outputLink>
-                            <h:outputText value="#{facility.uri}"
-                                          rendered="#{empty facility.uri}">#{facility.name}</h:outputText>
+                            <h:outputLink value="#{_facility.uri}"
+                                          rendered="#{not empty _facility.uri}">#{_facility.name}</h:outputLink>
+                            <h:outputText value="#{_facility.uri}"
+                                          rendered="#{empty _facility.uri}">#{_facility.name}</h:outputText>
                         </rich:column>
-                        <rich:column sortBy="#{facility.phone}">
+                        <rich:column sortBy="#{_facility.phone}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="phone"/>
                             </f:facet>
-                            #{facility.phone}
+                            #{_facility.phone}
                         </rich:column>
-                        <rich:column sortBy="#{facility.priceRange}">
+                        <rich:column sortBy="#{_facility.priceRange}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="priceRange"/>
                             </f:facet>
-                            #{facility.priceRange}
+                            #{_facility.priceRange}
                         </rich:column>
-                        <rich:column sortBy="#{facility.state}">
+                        <rich:column sortBy="#{_facility.state}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="state"/>
                             </f:facet>
-                            #{facility.state}
+                            #{_facility.state}
                         </rich:column>
-                        <rich:column sortBy="#{facility.type}">
+                        <rich:column sortBy="#{_facility.type}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="type"/>
                             </f:facet>
-                            #{facility.type}
+                            #{_facility.type}
                         </rich:column>
-                        <rich:column sortBy="#{facility.zip}">
+                        <rich:column sortBy="#{_facility.zip}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="zip"/>
                             </f:facet>
-                            #{facility.zip}
+                            #{_facility.zip}
                         </rich:column>
                         <rich:column>
                             <f:facet name="header">action</f:facet>
                             <h:link outcome="/Facility.xhtml" value="View">
-                                <f:param name="facilityId" value="#{facility.id}"/>
+                                <f:param name="facilityId" value="#{_facility.id}"/>
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
                             </h:link>
                             |
                             <h:link id="selectLink" outcome="/FacilityEdit.xhtml"
-                                           value="Select">
-                                <f:param name="facilityId" value="#{facility.id}"/>
+                                    value="Select">
+                                <f:param name="facilityId" value="#{_facility.id}"/>
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
                             </h:link>
                         </rich:column>
                         <f:facet name="footer">
@@ -177,7 +176,9 @@
             <div class="actionButtons">
                 <h:button outcome="/FacilityEdit.xhtml"
                           id="create"
-                          value="Create facility" />
+                          value="Create facility">
+                    <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
+                </h:button>
             </div>
 
         </h:form>

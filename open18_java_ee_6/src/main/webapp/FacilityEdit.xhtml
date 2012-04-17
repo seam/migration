@@ -13,7 +13,6 @@
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="facilityId" value="#{facilityAction.facilityId}"/>
-        <f:event type="preRenderView" listener="#{facilityAction.beginConversation}" />
     </f:metadata>
 </ui:define>
 
@@ -139,11 +138,10 @@
                          rendered="#{facilityAction.managed}"/>
 
         <h:commandButton id="cancel"
-                  value="Cancel"
-                  action="/FacilityList.xhtml"
-                  actionListener="#{facilityAction.endConversation}"
-                  immediate="true"
-                  rendered="#{!facilityAction.managed}"/>
+                         value="Cancel"
+                         action="/FacilityList.xhtml"
+                         actionListener="#{facilityAction.endConversation}"
+                         immediate="true" />
 
     </div>
 </h:form>

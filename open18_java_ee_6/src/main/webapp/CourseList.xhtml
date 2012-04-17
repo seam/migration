@@ -21,27 +21,27 @@
             <rich:collapsiblePanel header="Course search parameters" switchType="client" expanded="true">
 
                 <open18:input label="description">
-                    <h:inputText id="description" value="#{courseAction.course.description}"/>
+                    <h:inputText id="description" value="#{courseSearch.course.description}"/>
                 </open18:input>
 
                 <open18:input label="designer">
-                    <h:inputText id="designer" value="#{courseAction.course.designer}"/>
+                    <h:inputText id="designer" value="#{courseSearch.course.designer}"/>
                 </open18:input>
 
                 <open18:input label="fairways">
-                    <h:inputText id="fairways" value="#{courseAction.course.fairways}"/>
+                    <h:inputText id="fairways" value="#{courseSearch.course.fairways}"/>
                 </open18:input>
 
                 <open18:input label="greens">
-                    <h:inputText id="greens" value="#{courseAction.course.greens}"/>
+                    <h:inputText id="greens" value="#{courseSearch.course.greens}"/>
                 </open18:input>
 
                 <open18:input label="name">
-                    <h:inputText id="name" value="#{courseAction.course.name}"/>
+                    <h:inputText id="name" value="#{courseSearch.course.name}"/>
                 </open18:input>
 
                 <div class="actionButtons">
-                    <h:commandButton id="search" value="Search" action="#{courseAction.search}"/>
+                    <h:commandButton id="search" value="Search" action="#{courseSearch.search}"/>
                 </div>
             </rich:collapsiblePanel>
 
@@ -70,15 +70,15 @@
             <rich:panel>
                 <f:facet name="header">Course search results</f:facet>
 
-                <div class="results" id="courseAction">
+                <div class="results" id="courseSearchDiv">
 
                     <h:outputText value="The course search returned no results."
-                                  rendered="#{empty courseResultList.results}"/>
+                                  rendered="#{empty courseSearch.resultList}"/>
 
                     <rich:dataTable id="courseListTable"
                                     var="_course"
-                                    value="#{courseResultList.results}"
-                                    rendered="#{not empty courseResultList.results}"
+                                    value="#{courseSearch.resultList}"
+                                    rendered="#{not empty courseSearch.resultList}"
                                     rows="10">
                         <rich:column sortBy="#{_course.id}">
                             <f:facet name="header">
@@ -170,7 +170,7 @@
                             </a:commandLink>
                         </rich:column>
                         <f:facet name="footer">
-                            <rich:dataScroller for="courseListTable" maxPages="5" scrollListener="#{courseAction.scrollListener}"/>
+                            <rich:dataScroller for="courseListTable" maxPages="5"/>
                         </f:facet>
                     </rich:dataTable>
 
@@ -180,7 +180,10 @@
             <div class="actionButtons">
                 <h:button outcome="/CourseEdit.xhtml"
                           id="create"
-                          value="Create course"/>
+                          value="Create course">
+                    <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
+                          </h:button>
+
             </div>
 
         </h:form>

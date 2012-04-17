@@ -26,8 +26,8 @@ import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -42,7 +42,7 @@ import org.open18.model.dao.FacilityDao;
  *
  */
 @Stateful
-@SessionScoped
+@ConversationScoped
 @Named
 public class FacilityAction implements Serializable {
 
@@ -68,15 +68,12 @@ public class FacilityAction implements Serializable {
     private void init() {
         facility = new Facility();
 
-        if (!FacesContext.getCurrentInstance().isPostback()) {
-            resultList = dao.findAll();
-        }
-
-        beginConversation();
+        resultList = Collections.emptyList();
     }
 
     public void search() {
         resultList = dao.findBy(facility);
+        beginConversation();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -96,7 +93,6 @@ public class FacilityAction implements Serializable {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String update() {
         dao.saveAndFlush(facility);
-        endConversation();
         return "/Facility.xhtml?facilityId=" + facility.getId();
     }
 

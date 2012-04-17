@@ -15,21 +15,25 @@
  * limitations under the License.
  */
 
-package org.open18.model.dao;
+package org.open18.extension;
 
-import javax.enterprise.context.RequestScoped;
-
-import org.open18.model.Course;
+import javax.enterprise.inject.spi.BeanManager;
 
 /**
- *
+ * Simple holder for the {@link javax.enterprise.inject.spi.BeanManager} so it can be used without needing injection.
  */
-@RequestScoped
-public class CourseDao extends BaseDao<Course, Long> {
-    private static final long serialVersionUID = -2800409908144944901L;
+public class BeanManagerProvider {
+    private static BeanManager bm;
 
-    public CourseDao() {
-        this.entityType = Course.class;
-        this.idType = Long.class;
+    public static BeanManager getBm() {
+        if (BeanManagerProvider.bm == null) {
+            throw new IllegalStateException("No BeanManager is set");
+        }
+
+        return bm;
+    }
+
+    protected static void setBm(BeanManager bm) {
+        BeanManagerProvider.bm = bm;
     }
 }

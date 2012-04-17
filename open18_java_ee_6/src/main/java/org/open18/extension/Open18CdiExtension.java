@@ -15,32 +15,28 @@
  * limitations under the License.
  */
 
-package org.open18.action;
+package org.open18.extension;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
-
-import org.open18.model.Course;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.BeforeBeanDiscovery;
+import javax.enterprise.inject.spi.Extension;
 
 /**
  *
  */
-@SessionScoped
-@Named
-public class CourseResultList implements Serializable {
-    private static final long serialVersionUID = -4493359232013812707L;
-
-    private List<Course> results = Collections.emptyList();
-
-    public List<Course> getResults() {
-        return results;
+public class Open18CdiExtension implements Extension {
+    public void afterValidation(@Observes AfterDeploymentValidation event, BeanManager bm) {
+        BeanManagerProvider.setBm(bm);
     }
 
-    public void setResults(List<Course> results) {
-        this.results = results;
+    public void afterDiscovery(@Observes AfterBeanDiscovery event) {
+        event.addContext(new ViewScopedContext());
+    }
+
+    public void beforeDiscovery(@Observes BeforeBeanDiscovery event) {
+        event.addScope(ViewScoped.class, true, true);
     }
 }

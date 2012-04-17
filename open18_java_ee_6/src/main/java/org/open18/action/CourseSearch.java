@@ -18,67 +18,42 @@
 package org.open18.action;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
-import javax.faces.context.FacesContext;
+import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.open18.extension.ViewScoped;
 import org.open18.model.Course;
 import org.open18.model.dao.CourseDao;
 
 /**
  *
  */
-@ConversationScoped
+@Stateful
+@ViewScoped
 @Named
-public class CourseAction implements Serializable {
+public class CourseSearch implements Serializable {
 
     private static final long serialVersionUID = 2281839629956903065L;
 
     @Inject
     private CourseDao dao;
 
-    @Inject
-    private Conversation conversation;
-
-    private Long courseId;
+    private List<Course> resultList;
 
     private Course course;
-
-    private boolean managed;
 
     @Inject
     private void init() {
         course = new Course();
+        resultList = Collections.emptyList();
     }
 
-    public void loadCourse() {
-        if (this.courseId != null && !FacesContext.getCurrentInstance().isPostback()) {
-            this.course = this.dao.findBy(this.courseId);
-        }
-        this.beginConversation();
-    }
-
-    public void beginConversation() {
-        if (conversation.isTransient()) {
-            conversation.begin();
-        }
-    }
-
-    public void endConversation() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
-    }
-
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long newCourseId) {
-        courseId = newCourseId;
+    public void search() {
+        resultList = dao.findBy(course);
     }
 
     public Course getCourse() {
@@ -89,11 +64,11 @@ public class CourseAction implements Serializable {
         course = newCourse;
     }
 
-    public boolean isManaged() {
-        return managed;
+    public List<Course> getResultList() {
+        return resultList;
     }
 
-    public void setManaged(boolean newManaged) {
-        managed = newManaged;
+    public void setResultList(List<Course> resultList) {
+        this.resultList = resultList;
     }
 }

@@ -12,7 +12,7 @@ public class FacilityList {
 //			"lower(facility.country) like concat(lower(#{facilityList.facility.country}),'%')",
 //			"lower(facility.county) like concat(lower(#{facilityList.facility.county}),'%')",
 //			"lower(facility.description) like concat(lower(#{facilityList.facility.description}),'%')",
-//			"lower(facility.name) like concat(lower(#{facilityList.facility.name}),'%')",
+//			"lower(facility.name) like concat(lower(#{facilit>.List.facility.name}),'%')",
 //			"lower(facility.phone) like concat(lower(#{facilityList.facility.phone}),'%')",
 //			"lower(facility.state) like concat(lower(#{facilityList.facility.state}),'%')",
 //			"lower(facility.type) like concat(lower(#{facilityList.facility.type}),'%')",
