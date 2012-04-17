@@ -17,14 +17,11 @@
 
 package org.open18.model.dao;
 
-import javax.enterprise.context.RequestScoped;
-
 import org.open18.model.Course;
 
 /**
  *
  */
-@RequestScoped
 public class CourseDao extends BaseDao<Course, Long> {
     private static final long serialVersionUID = -2800409908144944901L;
 

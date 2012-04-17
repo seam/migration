@@ -58,7 +58,6 @@ public class CourseAction implements Serializable {
         if (this.courseId != null && !FacesContext.getCurrentInstance().isPostback()) {
             this.course = this.dao.findBy(this.courseId);
         }
-        this.beginConversation();
     }
 
     public void beginConversation() {
