@@ -25,194 +25,196 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "FACILITY")
 public class Facility implements java.io.Serializable {
 
-	private Long id;
-	private String name;
-	private String description;
-	private String type;
-	private String address;
-	private String city;
-	private String state;
-	private String zip;
-	private String county;
-	private String country;
-	private String phone;
-	private String uri;
-	private Integer priceRange;
-	private Set<Course> courses = new HashSet<Course>(0);
-	private Golfer owner;
+    private Long id;
+    private String name;
+    private String description;
+    private String type;
+    private String address;
+    private String city;
+    private String state;
+    private String zip;
+    private String county;
+    private String country;
+    private String phone;
+    private String uri;
+    private Integer priceRange;
+    private Set<Course> courses = new HashSet<Course>(0);
+    private Golfer owner;
 
-	public Facility() {
-	}
+    public Facility() {
+    }
 
-	public Facility(String name, String type) {
-		this.name = name;
-		this.type = type;
-	}
-	public Facility(String name, String description, String type,
-			String address, String city, String state, String zip,
-			String county, String country, String phone, String uri,
-			Integer priceRange, Set<Course> courses) {
-		this.name = name;
-		this.description = description;
-		this.type = type;
-		this.address = address;
-		this.city = city;
-		this.state = state;
-		this.zip = zip;
-		this.county = county;
-		this.country = country;
-		this.phone = phone;
-		this.uri = uri;
-		this.priceRange = priceRange;
-		this.courses = courses;
-	}
+    public Facility(String name, String type) {
+        this.name = name;
+        this.type = type;
+    }
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	public Long getId() {
-		return this.id;
-	}
+    public Facility(String name, String description, String type,
+                    String address, String city, String state, String zip,
+                    String county, String country, String phone, String uri,
+                    Integer priceRange, Set<Course> courses) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.address = address;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+        this.county = county;
+        this.country = country;
+        this.phone = phone;
+        this.uri = uri;
+        this.priceRange = priceRange;
+        this.courses = courses;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "ID", unique = true, nullable = false)
+    public Long getId() {
+        return this.id;
+    }
 
-	@Column(name = "NAME", nullable = false, length = 50)
-	@NotNull
-	@Size(max = 50)
-	public String getName() {
-		return this.name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Column(name = "NAME", nullable = false, length = 50)
+    @NotNull
+    @Size(max = 50)
+    public String getName() {
+        return this.name;
+    }
 
-	@Column(name = "DESCRIPTION")
-	public String getDescription() {
-		return this.description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @Column(name = "DESCRIPTION")
+    public String getDescription() {
+        return this.description;
+    }
 
-	@Column(name = "TYPE", nullable = false, length = 15)
-	@NotNull
-	@Size(max = 15)
-	public String getType() {
-		return this.type;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    @Column(name = "TYPE", nullable = false, length = 15)
+    @NotNull
+    @Size(max = 15)
+    public String getType() {
+        return this.type;
+    }
 
-	@Column(name = "ADDRESS", length = 50)
-	@Size(max = 50)
-	public String getAddress() {
-		return this.address;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    @Column(name = "ADDRESS", length = 50)
+    @Size(max = 50)
+    public String getAddress() {
+        return this.address;
+    }
 
-	@Column(name = "CITY", length = 30)
-	@Size(max = 30)
-	public String getCity() {
-		return this.city;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    @Column(name = "CITY", length = 30)
+    @Size(max = 30)
+    public String getCity() {
+        return this.city;
+    }
 
-	@Column(name = "STATE", length = 2)
-	@Size(max = 2)
-	public String getState() {
-		return this.state;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    @Column(name = "STATE", length = 2)
+    @Size(max = 2)
+    public String getState() {
+        return this.state;
+    }
 
-	@Column(name = "ZIP", length = 5)
-	@Size(max = 5)
-	public String getZip() {
-		return this.zip;
-	}
+    public void setState(String state) {
+        this.state = state;
+    }
 
-	public void setZip(String zip) {
-		this.zip = zip;
-	}
+    @Column(name = "ZIP", length = 5)
+    @Size(max = 5)
+    public String getZip() {
+        return this.zip;
+    }
 
-	@Column(name = "COUNTY", length = 30)
-	@Size(max = 30)
-	public String getCounty() {
-		return this.county;
-	}
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
 
-	public void setCounty(String county) {
-		this.county = county;
-	}
+    @Column(name = "COUNTY", length = 30)
+    @Size(max = 30)
+    public String getCounty() {
+        return this.county;
+    }
 
-	@Column(name = "COUNTRY", length = 30)
-	@Size(max = 30)
-	public String getCountry() {
-		return this.country;
-	}
+    public void setCounty(String county) {
+        this.county = county;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    @Column(name = "COUNTRY", length = 30)
+    @Size(max = 30)
+    public String getCountry() {
+        return this.country;
+    }
 
-	@Column(name = "PHONE", length = 10)
-	@Size(max = 10)
-	public String getPhone() {
-		return this.phone;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    @Column(name = "PHONE", length = 10)
+    @Size(max = 10)
+    public String getPhone() {
+        return this.phone;
+    }
 
-	@Column(name = "URI")
-	public String getUri() {
-		return this.uri;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
+    @Column(name = "URI")
+    public String getUri() {
+        return this.uri;
+    }
 
-	@Column(name = "PRICE_RANGE")
-	public Integer getPriceRange() {
-		return this.priceRange;
-	}
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 
-	public void setPriceRange(Integer priceRange) {
-		this.priceRange = priceRange;
-	}
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
-	public Set<Course> getCourses() {
-		return this.courses;
-	}
+    @Column(name = "PRICE_RANGE")
+    public Integer getPriceRange() {
+        return this.priceRange;
+    }
 
-	public void setCourses(Set<Course> courses) {
-		this.courses = courses;
-	}
+    public void setPriceRange(Integer priceRange) {
+        this.priceRange = priceRange;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "OWNER_ID", nullable = true)
-	public Golfer getOwner() {
-		return owner;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "facility")
+    public Set<Course> getCourses() {
+        return this.courses;
+    }
 
-	public void setOwner(Golfer owner) {
-		this.owner = owner;
-	}
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "OWNER_ID", nullable = true)
+    public Golfer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Golfer owner) {
+        this.owner = owner;
+    }
 
 }

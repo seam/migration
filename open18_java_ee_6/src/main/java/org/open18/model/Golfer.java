@@ -24,117 +24,120 @@ import javax.validation.constraints.Size;
 @Table(name = "GOLFER")
 public class Golfer extends Member {
 
-	private String lastName;
-	private String firstName;
-	private Gender gender;
-	private Date dateJoined;
-	private Date dateOfBirth;
-	private String location;
-	private String specialty;
-	private String proStatus;
-	private Set<Round> rounds = new HashSet<Round>(0);
-	private Set<CourseComment> courseComments = new HashSet<CourseComment>(0);
+    private String lastName;
+    private String firstName;
+    private Gender gender;
+    private Date dateJoined;
+    private Date dateOfBirth;
+    private String location;
+    private String specialty;
+    private String proStatus;
+    private Set<Round> rounds = new HashSet<Round>(0);
+    private Set<CourseComment> courseComments = new HashSet<CourseComment>(0);
 
-	@Column(name = "last_name", nullable = false)
-	@NotNull
-	@Size(max = 40)
-	public String getLastName() {
-		return lastName;
-	}
+    @Column(name = "last_name", nullable = false)
+    @NotNull
+    @Size(max = 40)
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	@Column(name = "first_name", nullable = false)
-	@NotNull
-	@Size(max = 40)
-	public String getFirstName() {
-		return firstName;
-	}
+    @Column(name = "first_name", nullable = false)
+    @NotNull
+    @Size(max = 40)
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	@Transient
-	public String getName() {
-		return firstName + ' ' + lastName;
-	}
+    @Transient
+    public String getName() {
+        return firstName + ' ' + lastName;
+    }
 
-	@Transient
-	public String getNameLastFirst() {
-		return lastName + ", " + firstName;
-	}
+    @Transient
+    public String getNameLastFirst() {
+        return lastName + ", " + firstName;
+    }
 
-	@Enumerated(EnumType.STRING)
-	public Gender getGender() {
-		return gender;
-	}
+    @Enumerated(EnumType.STRING)
+    public Gender getGender() {
+        return gender;
+    }
 
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "joined", nullable = false, updatable = false)
-	@NotNull
-	public Date getDateJoined() {
-		return dateJoined;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "joined", nullable = false, updatable = false)
+    @NotNull
+    public Date getDateJoined() {
+        return dateJoined;
+    }
 
-	public void setDateJoined(Date dateJoined) {
-		this.dateJoined = dateJoined;
-	}
+    public void setDateJoined(Date dateJoined) {
+        this.dateJoined = dateJoined;
+    }
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "dob")
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
+    @Temporal(TemporalType.DATE)
+    @Column(name = "dob")
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
 
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 
-	public String getLocation() {
-		return location;
-	}
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public String getSpecialty() {
-		return specialty;
-	}
-	public void setSpecialty(String specialty) {
-		this.specialty = specialty;
-	}
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-	@Column(name = "pro_status")
-	public String getProStatus() {
-		return proStatus;
-	}
-	public void setProStatus(String proStatus) {
-		this.proStatus = proStatus;
-	}
+    public String getSpecialty() {
+        return specialty;
+    }
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "golfer")
-	public Set<Round> getRounds() {
-		return rounds;
-	}
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
 
-	public void setRounds(Set<Round> rounds) {
-		this.rounds = rounds;
-	}
+    @Column(name = "pro_status")
+    public String getProStatus() {
+        return proStatus;
+    }
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "golfer")
-	public Set<CourseComment> getCourseComments() {
-		return courseComments;
-	}
+    public void setProStatus(String proStatus) {
+        this.proStatus = proStatus;
+    }
 
-	public void setCourseComments(Set<CourseComment> courseComments) {
-		this.courseComments = courseComments;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "golfer")
+    public Set<Round> getRounds() {
+        return rounds;
+    }
+
+    public void setRounds(Set<Round> rounds) {
+        this.rounds = rounds;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "golfer")
+    public Set<CourseComment> getCourseComments() {
+        return courseComments;
+    }
+
+    public void setCourseComments(Set<CourseComment> courseComments) {
+        this.courseComments = courseComments;
+    }
 
 }

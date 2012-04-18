@@ -25,250 +25,255 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "COURSE")
 public class Course implements java.io.Serializable {
 
-	private Long id;
-	private Facility facility;
-	private String name;
-	private String description;
-	private String designer;
-	private String fairways;
-	private String greens;
-	private Integer yearBuilt;
-	private int numHoles;
-	private Long signatureHole;
-	private Set<TeeSet> teeSets = new HashSet<TeeSet>(0);
-	private Set<Hole> holes = new HashSet<Hole>(0);
-	private Set<CourseComment> comments = new HashSet<CourseComment>(0);
+    private Long id;
+    private Facility facility;
+    private String name;
+    private String description;
+    private String designer;
+    private String fairways;
+    private String greens;
+    private Integer yearBuilt;
+    private int numHoles;
+    private Long signatureHole;
+    private Set<TeeSet> teeSets = new HashSet<TeeSet>(0);
+    private Set<Hole> holes = new HashSet<Hole>(0);
+    private Set<CourseComment> comments = new HashSet<CourseComment>(0);
 
-	public Course() {
-	}
+    public Course() {
+    }
 
-	public Course(Facility facility, String fairways, String greens,
-			int numHoles) {
-		this.facility = facility;
-		this.fairways = fairways;
-		this.greens = greens;
-		this.numHoles = numHoles;
-	}
-	public Course(Facility facility, String name, String description,
-			String designer, String fairways, String greens, Integer yearBuilt,
-			int numHoles, Long signatureHole, Set<TeeSet> teeSets,
-			Set<Hole> holes) {
-		this.facility = facility;
-		this.name = name;
-		this.description = description;
-		this.designer = designer;
-		this.fairways = fairways;
-		this.greens = greens;
-		this.yearBuilt = yearBuilt;
-		this.numHoles = numHoles;
-		this.signatureHole = signatureHole;
-		this.teeSets = teeSets;
-		this.holes = holes;
-	}
+    public Course(Facility facility, String fairways, String greens,
+                  int numHoles) {
+        this.facility = facility;
+        this.fairways = fairways;
+        this.greens = greens;
+        this.numHoles = numHoles;
+    }
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "ID", unique = true, nullable = false)
-	public Long getId() {
-		return this.id;
-	}
+    public Course(Facility facility, String name, String description,
+                  String designer, String fairways, String greens, Integer yearBuilt,
+                  int numHoles, Long signatureHole, Set<TeeSet> teeSets,
+                  Set<Hole> holes) {
+        this.facility = facility;
+        this.name = name;
+        this.description = description;
+        this.designer = designer;
+        this.fairways = fairways;
+        this.greens = greens;
+        this.yearBuilt = yearBuilt;
+        this.numHoles = numHoles;
+        this.signatureHole = signatureHole;
+        this.teeSets = teeSets;
+        this.holes = holes;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FACILITY_ID", nullable = false)
-	@NotNull
-	public Facility getFacility() {
-		return this.facility;
-	}
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "ID", unique = true, nullable = false)
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setFacility(Facility facility) {
-		this.facility = facility;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Column(name = "NAME", length = 50)
-	@Size(max = 50)
-	public String getName() {
-		return this.name;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FACILITY_ID", nullable = false)
+    @NotNull
+    public Facility getFacility() {
+        return this.facility;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setFacility(Facility facility) {
+        this.facility = facility;
+    }
 
-	@Column(name = "DESCRIPTION")
-	public String getDescription() {
-		return this.description;
-	}
+    @Column(name = "NAME", length = 50)
+    @Size(max = 50)
+    public String getName() {
+        return this.name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Column(name = "DESIGNER", length = 50)
-	@Size(max = 50)
-	public String getDesigner() {
-		return this.designer;
-	}
+    @Column(name = "DESCRIPTION")
+    public String getDescription() {
+        return this.description;
+    }
 
-	public void setDesigner(String designer) {
-		this.designer = designer;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Column(name = "FAIRWAYS", nullable = false, length = 15)
-	@NotNull
-	@Size(max = 15)
-	public String getFairways() {
-		return this.fairways;
-	}
+    @Column(name = "DESIGNER", length = 50)
+    @Size(max = 50)
+    public String getDesigner() {
+        return this.designer;
+    }
 
-	public void setFairways(String fairways) {
-		this.fairways = fairways;
-	}
+    public void setDesigner(String designer) {
+        this.designer = designer;
+    }
 
-	@Column(name = "GREENS", nullable = false, length = 15)
-	@NotNull
-	@Size(max = 15)
-	public String getGreens() {
-		return this.greens;
-	}
+    @Column(name = "FAIRWAYS", nullable = false, length = 15)
+    @NotNull
+    @Size(max = 15)
+    public String getFairways() {
+        return this.fairways;
+    }
 
-	public void setGreens(String greens) {
-		this.greens = greens;
-	}
+    public void setFairways(String fairways) {
+        this.fairways = fairways;
+    }
 
-	@Column(name = "YEAR_BUILT")
-	public Integer getYearBuilt() {
-		return this.yearBuilt;
-	}
+    @Column(name = "GREENS", nullable = false, length = 15)
+    @NotNull
+    @Size(max = 15)
+    public String getGreens() {
+        return this.greens;
+    }
 
-	public void setYearBuilt(Integer yearBuilt) {
-		this.yearBuilt = yearBuilt;
-	}
+    public void setGreens(String greens) {
+        this.greens = greens;
+    }
 
-	@Column(name = "NUM_HOLES", nullable = false)
-	@NotNull
-	public int getNumHoles() {
-		return this.numHoles;
-	}
+    @Column(name = "YEAR_BUILT")
+    public Integer getYearBuilt() {
+        return this.yearBuilt;
+    }
 
-	public void setNumHoles(int numHoles) {
-		this.numHoles = numHoles;
-	}
+    public void setYearBuilt(Integer yearBuilt) {
+        this.yearBuilt = yearBuilt;
+    }
 
-	@Column(name = "SIGNATURE_HOLE")
-	public Long getSignatureHole() {
-		return this.signatureHole;
-	}
+    @Column(name = "NUM_HOLES", nullable = false)
+    @NotNull
+    public int getNumHoles() {
+        return this.numHoles;
+    }
 
-	public void setSignatureHole(Long signatureHole) {
-		this.signatureHole = signatureHole;
-	}
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
-	public Set<TeeSet> getTeeSets() {
-		return this.teeSets;
-	}
+    public void setNumHoles(int numHoles) {
+        this.numHoles = numHoles;
+    }
 
-	public void setTeeSets(Set<TeeSet> teeSets) {
-		this.teeSets = teeSets;
-	}
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
-	public Set<Hole> getHoles() {
-		return this.holes;
-	}
+    @Column(name = "SIGNATURE_HOLE")
+    public Long getSignatureHole() {
+        return this.signatureHole;
+    }
 
-	public void setHoles(Set<Hole> holes) {
-		this.holes = holes;
-	}
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
-	public Set<CourseComment> getComments() {
-		return comments;
-	}
+    public void setSignatureHole(Long signatureHole) {
+        this.signatureHole = signatureHole;
+    }
 
-	public void setComments(Set<CourseComment> comments) {
-		this.comments = comments;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
+    public Set<TeeSet> getTeeSets() {
+        return this.teeSets;
+    }
 
-	// The following is extra code specified in the hbm.xml files
+    public void setTeeSets(Set<TeeSet> teeSets) {
+        this.teeSets = teeSets;
+    }
 
-	@javax.persistence.Transient
-	public int getMensParOut() {
-		int par = 0;
-		for (Hole hole : holes) {
-			if (hole.getNumber() <= 9) {
-				par += hole.getMensPar();
-			}
-		}
-		return par;
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
+    public Set<Hole> getHoles() {
+        return this.holes;
+    }
 
-	@javax.persistence.Transient
-	public int getMensParIn() {
-		int par = 0;
-		for (Hole hole : holes) {
-			if (hole.getNumber() > 9) {
-				par += hole.getMensPar();
-			}
-		}
-		return par;
-	}
+    public void setHoles(Set<Hole> holes) {
+        this.holes = holes;
+    }
 
-	@javax.persistence.Transient
-	public int getTotalMensPar() {
-		return getMensParOut() + getMensParIn();
-	}
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course")
+    public Set<CourseComment> getComments() {
+        return comments;
+    }
 
-	@javax.persistence.Transient
-	public int getLadiesParOut() {
-		int par = 0;
-		for (Hole hole : holes) {
-			if (hole.getNumber() <= 9) {
-				par += hole.getLadiesPar();
-			}
-		}
-		return par;
-	}
+    public void setComments(Set<CourseComment> comments) {
+        this.comments = comments;
+    }
 
-	@javax.persistence.Transient
-	public int getLadiesParIn() {
-		int par = 0;
-		for (Hole hole : holes) {
-			if (hole.getNumber() > 9) {
-				par += hole.getLadiesPar();
-			}
-		}
-		return par;
-	}
+    // The following is extra code specified in the hbm.xml files
 
-	@javax.persistence.Transient
-	public int getTotalLadiesPar() {
-		return getLadiesParOut() + getLadiesParIn();
-	}
+    @javax.persistence.Transient
+    public int getMensParOut() {
+        int par = 0;
+        for (Hole hole : holes) {
+            if (hole.getNumber() <= 9) {
+                par += hole.getMensPar();
+            }
+        }
+        return par;
+    }
 
-	@javax.persistence.Transient
-	public boolean isLadiesParUnique() {
-		for (Hole hole : holes) {
-			if (hole.getMensPar() != hole.getLadiesPar()) {
-				return true;
-			}
-		}
+    @javax.persistence.Transient
+    public int getMensParIn() {
+        int par = 0;
+        for (Hole hole : holes) {
+            if (hole.getNumber() > 9) {
+                par += hole.getMensPar();
+            }
+        }
+        return par;
+    }
 
-		return false;
-	}
+    @javax.persistence.Transient
+    public int getTotalMensPar() {
+        return getMensParOut() + getMensParIn();
+    }
 
-	@javax.persistence.Transient
-	public boolean isLadiesHandicapUnique() {
-		for (Hole hole : holes) {
-			if (hole.getLadiesHandicap() != null
-					&& !hole.getLadiesHandicap().equals(hole.getMensHandicap())) {
-				return true;
-			}
-		}
+    @javax.persistence.Transient
+    public int getLadiesParOut() {
+        int par = 0;
+        for (Hole hole : holes) {
+            if (hole.getNumber() <= 9) {
+                par += hole.getLadiesPar();
+            }
+        }
+        return par;
+    }
 
-		return false;
-	}
+    @javax.persistence.Transient
+    public int getLadiesParIn() {
+        int par = 0;
+        for (Hole hole : holes) {
+            if (hole.getNumber() > 9) {
+                par += hole.getLadiesPar();
+            }
+        }
+        return par;
+    }
 
-	// end of extra code specified in the hbm.xml files
+    @javax.persistence.Transient
+    public int getTotalLadiesPar() {
+        return getLadiesParOut() + getLadiesParIn();
+    }
+
+    @javax.persistence.Transient
+    public boolean isLadiesParUnique() {
+        for (Hole hole : holes) {
+            if (hole.getMensPar() != hole.getLadiesPar()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @javax.persistence.Transient
+    public boolean isLadiesHandicapUnique() {
+        for (Hole hole : holes) {
+            if (hole.getLadiesHandicap() != null
+                    && !hole.getLadiesHandicap().equals(hole.getMensHandicap())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // end of extra code specified in the hbm.xml files
 
 }

@@ -27,102 +27,103 @@ import org.open18.model.enums.Weather;
 @Table(name = "ROUND")
 public class Round implements Serializable {
 
-	private Long id;
-	private Integer version;
-	private Date date;
-	private String notes;
-	private Golfer golfer;
-	private TeeSet teeSet;
-	private Integer totalScore;
-	private Weather weather;
-	private boolean selected;
+    private Long id;
+    private Integer version;
+    private Date date;
+    private String notes;
+    private Golfer golfer;
+    private TeeSet teeSet;
+    private Integer totalScore;
+    private Weather weather;
+    private boolean selected;
 
-	@Id @GeneratedValue
-	public Long getId() {
-		return this.id;
-	}
+    @Id
+    @GeneratedValue
+    public Long getId() {
+        return this.id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Version
-	public Integer getVersion() {
-		return version;
-	}
+    @Version
+    public Integer getVersion() {
+        return version;
+    }
 
-	private void setVersion(Integer version) {
-		this.version = version;
-	}
+    private void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	@Temporal(TemporalType.DATE)
-	@NotNull
-	public Date getDate() {
-		return this.date;
-	}
+    @Temporal(TemporalType.DATE)
+    @NotNull
+    public Date getDate() {
+        return this.date;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-	@Lob
-	@Size(max = 50000)
-	public String getNotes() {
-		return this.notes;
-	}
+    @Lob
+    @Size(max = 50000)
+    public String getNotes() {
+        return this.notes;
+    }
 
-	public void setNotes(String comment) {
-		this.notes = comment;
-	}
+    public void setNotes(String comment) {
+        this.notes = comment;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "GOLFER_ID", nullable = false)
-	@NotNull
-	public Golfer getGolfer() {
-		return golfer;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GOLFER_ID", nullable = false)
+    @NotNull
+    public Golfer getGolfer() {
+        return golfer;
+    }
 
-	public void setGolfer(Golfer golfer) {
-		this.golfer = golfer;
-	}
+    public void setGolfer(Golfer golfer) {
+        this.golfer = golfer;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TEE_SET_ID", nullable = false)
-	@NotNull
-	public TeeSet getTeeSet() {
-		return teeSet;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEE_SET_ID", nullable = false)
+    @NotNull
+    public TeeSet getTeeSet() {
+        return teeSet;
+    }
 
-	public void setTeeSet(TeeSet teeSet) {
-		this.teeSet = teeSet;
-	}
+    public void setTeeSet(TeeSet teeSet) {
+        this.teeSet = teeSet;
+    }
 
-	@Column(name = "TOTAL_SCORE")
-	@NotNull
-	public Integer getTotalScore() {
-		return totalScore;
-	}
+    @Column(name = "TOTAL_SCORE")
+    @NotNull
+    public Integer getTotalScore() {
+        return totalScore;
+    }
 
-	public void setTotalScore(Integer totalScore) {
-		this.totalScore = totalScore;
-	}
+    public void setTotalScore(Integer totalScore) {
+        this.totalScore = totalScore;
+    }
 
-	@Enumerated(EnumType.STRING)
-	@NotNull
-	public Weather getWeather() {
-		return this.weather;
-	}
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    public Weather getWeather() {
+        return this.weather;
+    }
 
-	public void setWeather(Weather weather) {
-		this.weather = weather;
-	}
+    public void setWeather(Weather weather) {
+        this.weather = weather;
+    }
 
-	@Transient
-	public boolean isSelected() {
-		return selected;
-	}
+    @Transient
+    public boolean isSelected() {
+        return selected;
+    }
 
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }

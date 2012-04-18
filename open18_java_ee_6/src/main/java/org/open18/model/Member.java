@@ -22,68 +22,68 @@ import javax.validation.constraints.Size;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "MEMBER", uniqueConstraints = {
-	@UniqueConstraint(columnNames = "username"),
-	@UniqueConstraint(columnNames = "email_address")
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email_address")
 })
 public class Member implements Serializable {
 
-	private Long id;
-	private String username;
-	private String passwordHash;
-	private String emailAddress;
-	private Set<Role> roles = new HashSet<Role>(0);
+    private Long id;
+    private String username;
+    private String passwordHash;
+    private String emailAddress;
+    private Set<Role> roles = new HashSet<Role>(0);
 
-	@Id
-	@GeneratedValue
-	public Long getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Column(name = "username", nullable = false)
-	@Size(max = 6)
-	@NotNull
-	public String getUsername() {
-		return username;
-	}
+    @Column(name = "username", nullable = false)
+    @Size(max = 6)
+    @NotNull
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	@Column(name = "password_hash", nullable = false)
-	@NotNull
-	public String getPasswordHash() {
-		return passwordHash;
-	}
+    @Column(name = "password_hash", nullable = false)
+    @NotNull
+    public String getPasswordHash() {
+        return passwordHash;
+    }
 
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
-	}
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
 
-	@Column(name = "email_address", nullable = false)
-	//@Email TODO: add hibernate validator (provided) for this validation
-	@NotNull
-	public String getEmailAddress() {
-		return emailAddress;
-	}
+    @Column(name = "email_address", nullable = false)
+    //@Email TODO: add hibernate validator (provided) for this validation
+    @NotNull
+    public String getEmailAddress() {
+        return emailAddress;
+    }
 
-	public void setEmailAddress(String emailAddress) {
-		this.emailAddress = emailAddress;
-	}
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "MEMBER_ROLE",
-		joinColumns = @JoinColumn(name = "member_id"),
-		inverseJoinColumns = @JoinColumn(name = "role_id"))
-	public Set<Role> getRoles() {
-		return roles;
-	}
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "MEMBER_ROLE",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }

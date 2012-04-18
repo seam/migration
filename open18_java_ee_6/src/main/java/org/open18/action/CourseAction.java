@@ -18,14 +18,24 @@
 package org.open18.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.open18.model.Course;
+import org.open18.model.Hole;
+import org.open18.model.TeeSet;
 import org.open18.model.dao.CourseDao;
 
 /**
@@ -33,6 +43,7 @@ import org.open18.model.dao.CourseDao;
  */
 @ConversationScoped
 @Named
+@Stateful
 public class CourseAction implements Serializable {
 
     private static final long serialVersionUID = 2281839629956903065L;
@@ -57,6 +68,7 @@ public class CourseAction implements Serializable {
     public void loadCourse() {
         if (this.courseId != null && !FacesContext.getCurrentInstance().isPostback()) {
             this.course = this.dao.findBy(this.courseId);
+            this.managed = true;
         }
     }
 
@@ -72,12 +84,45 @@ public class CourseAction implements Serializable {
         }
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public String save() {
+        dao.saveAndFlush(course);
+        endConversation();
+        return "/CourseList.xhtml";
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public String update() {
+        dao.saveAndFlush(course);
+        return "/Course.xhtml?courseId=" + course.getId();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public String remove() {
+        dao.remove(course);
+        endConversation();
+        return "/CourseList.xhtml";
+    }
+
     public Long getCourseId() {
         return courseId;
     }
 
     public void setCourseId(Long newCourseId) {
-        courseId = newCourseId;
+        if (newCourseId != null && !newCourseId.equals(course.getId())) {
+            courseId = newCourseId;
+            course = dao.findBy(newCourseId);
+            managed = true;
+
+            if (course == null) {
+                managed = false;
+                course = new Course();
+                final FacesContext fc = FacesContext.getCurrentInstance();
+                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Facility found with id " + newCourseId, ""));
+            }
+
+            this.beginConversation();
+        }
     }
 
     public Course getCourse() {
@@ -94,5 +139,40 @@ public class CourseAction implements Serializable {
 
     public void setManaged(boolean newManaged) {
         managed = newManaged;
+    }
+
+    public List<Hole> getHoles() {
+        if (!this.managed) {
+            return Collections.emptyList();
+        }
+
+        List<Hole> holes =
+                new ArrayList<Hole>(this.course.getHoles());
+        Collections.sort(holes, new Comparator<Hole>() {
+
+            public int compare(Hole a, Hole b) {
+                return Integer.valueOf(a.getNumber()).compareTo(b.getNumber());
+            }
+        });
+
+        return holes;
+    }
+
+    public List<TeeSet> getTeeSets() {
+        if (!this.managed) {
+            return Collections.emptyList();
+        }
+
+        List<TeeSet> teeSets =
+                new ArrayList<TeeSet>(this.course.getTeeSets());
+        Collections.sort(teeSets, new Comparator<TeeSet>() {
+
+            public int compare(TeeSet a, TeeSet b) {
+                return a.getPosition() == null ||
+                        b.getPosition() == null ? 0 : a.getPosition().compareTo(b.getPosition());
+            }
+        });
+
+        return teeSets;
     }
 }

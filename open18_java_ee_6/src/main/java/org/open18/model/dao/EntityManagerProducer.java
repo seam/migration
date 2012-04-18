@@ -32,7 +32,8 @@ public class EntityManagerProducer {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;
 
-    @Produces @RequestScoped
+    @Produces
+    @RequestScoped
     public EntityManager getEntityManager() {
         return em;
     }

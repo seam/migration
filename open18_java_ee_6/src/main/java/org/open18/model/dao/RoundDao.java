@@ -22,5 +22,5 @@ import org.open18.model.Round;
 /**
  *
  */
-public class RoundDao extends BaseDao<Round, Long>{
+public class RoundDao extends BaseDao<Round, Long> {
 }

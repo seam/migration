@@ -21,71 +21,72 @@ import javax.validation.constraints.NotNull;
 @Table(name = "COURSE_COMMENT")
 public class CourseComment implements Serializable {
 
-	private Long id;
-	private Integer version;
-	private Date datePosted;
-	private String text;
-	private Course course;
-	private Golfer golfer;
+    private Long id;
+    private Integer version;
+    private Date datePosted;
+    private String text;
+    private Course course;
+    private Golfer golfer;
 
-	@Id	@GeneratedValue
-	public Long getId() {
-		return id;
-	}
+    @Id
+    @GeneratedValue
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Version
-	public Integer getVersion() {
-		return version;
-	}
+    @Version
+    public Integer getVersion() {
+        return version;
+    }
 
-	private void setVersion(Integer version) {
-		this.version = version;
-	}
+    private void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "DATE_POSTED", nullable = false)
-	@NotNull
-	public Date getDatePosted() {
-		return datePosted;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DATE_POSTED", nullable = false)
+    @NotNull
+    public Date getDatePosted() {
+        return datePosted;
+    }
 
-	public void setDatePosted(Date date) {
-		this.datePosted = date;
-	}
+    public void setDatePosted(Date date) {
+        this.datePosted = date;
+    }
 
-	@Lob
-	@NotNull
-	public String getText() {
-		return text;
-	}
+    @Lob
+    @NotNull
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "COURSE_ID", nullable = false)
-	@NotNull
-	public Course getCourse() {
-		return course;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COURSE_ID", nullable = false)
+    @NotNull
+    public Course getCourse() {
+        return course;
+    }
 
-	public void setCourse(Course course) {
-		this.course = course;
-	}
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "GOLFER_ID", nullable = false)
-	@NotNull
-	public Golfer getGolfer() {
-		return golfer;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GOLFER_ID", nullable = false)
+    @NotNull
+    public Golfer getGolfer() {
+        return golfer;
+    }
 
-	public void setGolfer(Golfer golfer) {
-		this.golfer = golfer;
-	}
+    public void setGolfer(Golfer golfer) {
+        this.golfer = golfer;
+    }
 }
