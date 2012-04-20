@@ -12,11 +12,12 @@
 		<div id="banner">
 			<h1>#{messages['application.title']}</h1>
 			<h2>...#{messages['application.tagline']}</h2>
-            <!-- TODO: fix with Apache Shiro
+            <ui:remove><!-- TODO: fix with Apache Shiro
 			<ui:fragment rendered="#{not identity.loggedIn}">
 				<p>Not a member?#{' '}<h:link id="register" value="Sign up now!" outcome="/register.xhtml" /></p>
 			</ui:fragment>
 			-->
+            </ui:remove>
 		</div>
 
 		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"/>
@@ -42,7 +43,9 @@
 
 					<h:form id="selectGolfer">
 						<rich:list var="_golfer" value="#{newGolfers}">
-							<h:commandLink action="#{profileAction.view}" value="#{_golfer.name} (#{_golfer.username})"/>
+							<h:link outcome="/profile.xhtml" value="#{_golfer.name} (#{_golfer.username})">
+                                    <f:param name="golferId" value="#{_golfer.id}" />
+                            </h:link>
 						</rich:list>
 					</h:form>
 				</rich:panel>

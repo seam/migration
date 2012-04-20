@@ -1,63 +1,69 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a="http://richfaces.org/a4j"
+    xmlns:open18="http://java.sun.com/jsf/composite/components"
 	template="layout/template.xhtml">
-						 
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="golferId" value="#{golferAction.golferId}"/>
+            <f:event type="preRenderView" listener="#{golferAction.loadCourse}"/> <!-- TODO move the logic in setGolferId to this method -->
+        </f:metadata>
+    </ui:define>
+
 	<ui:define name="body">
 
-		<s:div id="banner">
-			<h1>#{selectedGolfer.name}</h1>
-			<ui:remove><p>#{selectedGolfer.status}</p></ui:remove>
-		</s:div>
-	
+		<div id="banner">
+			<h1>#{golferAction.golfer.name}</h1>
+			<ui:remove><p>#{golferAction.golfer.proStatus}</p></ui:remove>
+		</div>
+
 		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" />
-	
+
 		<rich:panel>
 			<f:facet name="header">Profile</f:facet>
 
-			<s:decorate template="layout/display.xhtml" rendered="#{s:hasRole('admin')}">
-				<ui:define name="label">Email address</ui:define>
-				#{selectedGolfer.emailAddress}
-			</s:decorate>
-		
-			<s:decorate template="layout/display.xhtml">
-				<ui:define name="label">Gender</ui:define>
-				#{selectedGolfer.gender}
-			</s:decorate>
+            <ui:remove>
+                <!-- TODO: Add back in later once we have security
+                <open18:input template="layout/display.xhtml" rendered="#{s:hasRole('admin')}">
+                    <ui:define name="label">Email address</ui:define>
+                    #{selectedGolfer.emailAddress}
+                </open18:input>
+                -->
+            </ui:remove>
 
-			<s:decorate template="layout/display.xhtml">
-				<ui:define name="label">Birthday</ui:define>
-				<h:outputText value="#{selectedGolfer.dateOfBirth}">
-					<s:convertDateTime pattern="MMMM dd, yyyy" />
+			<open18:input id="genderDecorator" label="Gender">
+				#{golferAction.golfer.gender}
+			</open18:input>
+
+			<open18:input id="BirthdayDecorator" label="Birthday">
+				<h:outputText value="#{golferAction.golfer.dateOfBirth}">
+                    <f:convertDateTime pattern="dd MMM yyyy" timeZone="Etc/UTC"/>
 				</h:outputText>
-			</s:decorate>
+			</open18:input>
 
-			<s:decorate template="layout/display.xhtml">
-				<ui:define name="label">Location</ui:define>
-				#{selectedGolfer.location}
-			</s:decorate>
+			<open18:input id="LocationDecorator" label="Location">
+				#{golferAction.golfer.location}
+			</open18:input>
 
-			<s:decorate template="layout/display.xhtml">
-				<ui:define name="label">Member since</ui:define>
-				<h:outputText value="#{selectedGolfer.dateJoined}">
-					<s:convertDateTime pattern="MMMM dd, yyyy" />
+			<open18:input id="dateJoinedDecorator" label="Member since">
+				<h:outputText value="#{golferAction.golfer.dateJoined}">
+                    <f:convertDateTime pattern="dd MMM yyyy" timeZone="Etc/UTC"/>
 				</h:outputText>
-			</s:decorate>
+			</open18:input>
 
-			<div style="clear: both;"/>
-			
+			<div style="clear: both;"></div>
+
 		</rich:panel>
-		
+
 		<div class="actionButtons">
-			<s:button propagation="end" id="done" value="Done" action="home"/>
+			<h:button id="done" value="Done" outcome="/home.xhtml"/>
 		</div>
-	
+
 	</ui:define>
 
 </ui:composition>

@@ -12,7 +12,7 @@ public class RoundHome {
 //	// As an alternative to a page parameter, the courseId request
 //	// parameter can be injected using the @RequestParameter annotation.
 //	//@RequestParameter
-//	//public void setRoundId(Long id) {
+//	//public void setGolferId(Long id) {
 //	//	setId(id);
 //	//}
 //

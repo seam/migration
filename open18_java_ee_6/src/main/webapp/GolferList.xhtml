@@ -1,7 +1,6 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -17,15 +16,15 @@
 
 			<div class="results">
 
-				<h:outputText value="There are no golfers registered." rendered="#{empty golferList.resultList}"/>
+				<h:outputText value="There are no golfers registered." rendered="#{empty allGolfers}"/>
 
-				<rich:dataTable id="golferList" var="_golfer" value="#{golferList.resultList}"
-					rendered="#{not empty golferList.resultList}">
+				<rich:dataTable id="golferList" var="_golfer" value="#{allGolfers}"
+					rendered="#{not empty allGolfers}">
 					<h:column>
 						<f:facet name="header">Username</f:facet>
-						<s:link id="view" value="#{_golfer.username}" view="/profile.xhtml" propagation="none">
+						<h:link id="view" value="#{_golfer.username}" outcome="/profile.xhtml">
 							<f:param name="golferId" value="#{_golfer.id}"/>
-						</s:link>
+						</h:link>
 					</h:column>
 					<h:column>
 						<f:facet name="header">Name</f:facet>
@@ -34,7 +33,7 @@
 					<h:column>
 						<f:facet name="header">Date Joined</f:facet>
 						<h:outputText value="#{_golfer.dateJoined}">
-							<s:convertDateTime pattern="MMMM dd, yyyy" />
+                            <f:convertDateTime pattern="dd MMM yyyy" timeZone="Etc/UTC"/>
 						</h:outputText>
 					</h:column>
 				</rich:dataTable>

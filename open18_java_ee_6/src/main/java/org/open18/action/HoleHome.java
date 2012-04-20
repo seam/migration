@@ -24,12 +24,12 @@ public class HoleHome {
 //		getInstance();
 //		Course course = courseHome.getDefinedInstance();
 //		if (course != null) {
-//			getInstance().setRound(course);
+//			getInstance().setGolfer(course);
 //		}
 //	}
 //
 //	public boolean isWired() {
-//		if (getInstance().getRound() == null)
+//		if (getInstance().getGolfer() == null)
 //			return false;
 //		return true;
 //	}
