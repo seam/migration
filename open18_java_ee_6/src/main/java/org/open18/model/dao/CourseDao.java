@@ -17,6 +17,12 @@
 
 package org.open18.model.dao;
 
+import java.util.List;
+
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
+
+import org.open18.extension.ViewScoped;
 import org.open18.model.Course;
 
 /**
@@ -28,5 +34,11 @@ public class CourseDao extends BaseDao<Course, Long> {
     public CourseDao() {
         this.entityType = Course.class;
         this.idType = Long.class;
+    }
+
+    @Produces
+    @Named("allCourses") @ViewScoped
+    public List<Course> getAllCourses() {
+        return findAll();
     }
 }

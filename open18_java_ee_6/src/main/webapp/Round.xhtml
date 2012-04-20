@@ -1,108 +1,111 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.com/products/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:p="http://jboss.com/products/seam/pdf"
-	template="layout/template.xhtml">
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:open18="http://java.sun.com/jsf/composite/components"
+                template="layout/template.xhtml">
 
-	<ui:define name="body">
-		
-		<h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
-		
-		<rich:panel>
-			<f:facet name="header">Round</f:facet>
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="roundId" value="#{roundAction.roundId}"/>
+            <f:event type="preRenderView" listener="#{roundAction.loadCourse}"/>
+        </f:metadata>
+    </ui:define>
 
-			<s:decorate id="golfer" template="layout/display.xhtml">
-					<ui:define name="label">Golfer</ui:define>
-					<s:link view="/profile.xhtml">
-						<f:param name="golferId" value="#{round.golfer.id}"/>
-						#{round.golfer.name}
-					</s:link>
-			</s:decorate>
+    <ui:define name="body">
 
-			<s:decorate id="name" template="layout/display.xhtml">
-					<ui:define name="label">Date</ui:define>
-					<h:outputText value="#{round.date}">
-						<s:convertDateTime type="date" />
-					</h:outputText>
-			</s:decorate>
+        <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
+                    id="globalMessages"/>
 
-			<s:decorate id="totalScore" template="layout/display.xhtml">
-					<ui:define name="label">Total score</ui:define>
-					#{round.totalScore}
-			</s:decorate>
+        <rich:panel>
+            <f:facet name="header">Round</f:facet>
 
-			<s:decorate id="weather" template="layout/display.xhtml">
-					<ui:define name="label">Weather</ui:define>
-					#{round.weather}
-			</s:decorate>
+            <open18:input id="golferDecorator" label="Golfer">
+                #{roundAction.round.golfer.name}
+            </open18:input>
 
-			<s:decorate id="notes" template="layout/display.xhtml">
-					<ui:define name="label">Notes</ui:define>
-					#{round.notes}
-			</s:decorate>
+            <open18:input id="nameDecorator" label="Date">
+                <h:outputText value="#{roundAction.round.date}">
+                    <f:convertDateTime pattern="dd MMM yyyy" timeZone="Etc/UTC"/>
+                </h:outputText>
+            </open18:input>
 
-			<div style="clear:both"/>
-		</rich:panel>
-		
-		<div class="actionButtons">
-			<s:button id="edit" view="/RoundEdit.xhtml" value="Edit"/>
-			<s:button id="done" view="/#{empty roundFrom ? 'RoundList' : roundFrom}.xhtml" value="Done"/>
-		</div>
+            <open18:input id="totalScoreDecorator" label="Total score">
+                #{roundAction.round.totalScore}
+            </open18:input>
 
-		<rich:tabPanel switchType="ajax">
+            <open18:input id="weatherDecorator" label="Weather">
+                #{roundAction.round.weather}
+            </open18:input>
 
-			<rich:tab label="Tee set">
-				<div class="association" id="teeSetParent">
-				
-					<h:outputText value="No tee set" rendered="#{round.teeSet == null}"/>
+            <open18:input id="notesDecorator" label="Notes">
+                #{roundAction.round.notes}
+            </open18:input>
 
-					<rich:dataTable id="teeSetTable" var="teeSet" value="#{round.teeSet}"
-						rendered="#{round.teeSet != null}" rowClasses="rvgRowOne,rvgRowTwo">
-						<h:column>
-								<f:facet name="header">id</f:facet>
-								#{teeSet.id}
-						</h:column>
-						<h:column>
-								<f:facet name="header">Name</f:facet>
-								#{teeSet.name}
-						</h:column>
-						<h:column>
-								<f:facet name="header">Course</f:facet>
-								#{teeSet.course.name}
-						</h:column>
-						<h:column>
-								<f:facet name="header">Color</f:facet>
-								<div title="#{teeSet.color}" class="colorSwatch" style="background-color: #{teeSet.color};" />
-						</h:column>
-						<h:column>
-								<f:facet name="header">Course/Slope Rating (Men)</f:facet>
-								#{teeSet.mensCourseRating} / #{teeSet.mensSlopeRating}
-						</h:column>
-						<h:column>
-								<f:facet name="header">Course/Slope Rating (Ladies)</f:facet>
-								#{teeSet.ladiesCourseRating} / #{teeSet.ladiesSlopeRating}
-						</h:column>
-						<h:column>
-								<f:facet name="header">Position</f:facet>
-								#{teeSet.position}
-						</h:column>
-						<h:column>
-							<f:facet name="header">action</f:facet>
-							<s:link id="viewteeSet" value="View" view="/TeeSet.xhtml">
-								<f:param name="teeSetId" value="#{teeSet.id}"/>
-							</s:link>
-						</h:column>
-					</rich:dataTable>
-				</div>
-			</rich:tab>
+            <div style="clear:both"></div>
+        </rich:panel>
 
-		</rich:tabPanel>
+        <div class="actionButtons">
+            <h:button id="edit" outcome="/RoundEdit.xhtml" value="Edit" includeViewParams="true">
+                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
+            </h:button>
+            <h:button id="done" outcome="/RoundList.xhtml" value="Done"/>
+        </div>
 
-	</ui:define>
+        <h:form id="tabPanelForm">
+            <rich:tabPanel switchType="client">
+
+                <rich:tab header="Tee set">
+                    <div class="association" id="teeSetParent">
+
+                        <h:outputText value="No tee set" rendered="#{roundAction.round.teeSet == null}"/>
+
+                        <rich:dataTable id="teeSetTable" var="_teeSet" value="#{roundAction.round.teeSet}"
+                                        rendered="#{roundAction.round.teeSet != null}" rowClasses="rvgRowOne,rvgRowTwo">
+                            <rich:column>
+                                <f:facet name="header">id</f:facet>
+                                #{_teeSet.id}
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">Name</f:facet>
+                                #{_teeSet.name}
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">Course</f:facet>
+                                #{_teeSet.course.name}
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">Color</f:facet>
+
+                                <div title="#{_teeSet.color}" class="colorSwatch"
+                                     style="background-color: #{_teeSet.color};"></div>
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">Course/Slope Rating (Men)</f:facet>
+                                #{_teeSet.mensCourseRating} / #{_teeSet.mensSlopeRating}
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">Course/Slope Rating (Ladies)</f:facet>
+                                #{_teeSet.ladiesCourseRating} / #{_teeSet.ladiesSlopeRating}
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">Position</f:facet>
+                                #{_teeSet.position}
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">action</f:facet>
+                                <h:link id="viewteeSet" value="View" outcome="/TeeSet.xhtml">
+                                    <f:param name="teeSetId" value="#{_teeSet.id}"/>
+                                </h:link>
+                            </rich:column>
+                        </rich:dataTable>
+                    </div>
+                </rich:tab>
+
+            </rich:tabPanel>
+        </h:form>
+
+    </ui:define>
 
 </ui:composition>

@@ -63,7 +63,9 @@
     <h:button outcome="/CourseEdit.xhtml"
               id="edit"
               includeViewParams="true"
-              value="Edit"/>
+              value="Edit">
+        <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
+    </h:button>
 
     <h:button outcome="/CourseList.xhtml"
               id="done"
@@ -221,43 +223,43 @@
                       rendered="#{empty courseAction.teeSets}"/>
 
         <rich:dataTable value="#{courseAction.teeSets}"
-                        var="teeSet"
+                        var="_teeSet"
                         rendered="#{not empty courseAction.teeSets}"
                         rowClasses="rvgRowOne,rvgRowTwo"
                         id="teeSetsTable">
             <h:column>
                 <f:facet name="header">id</f:facet>
-                <h:outputText value="#{teeSet.id}"/>
+                <h:outputText value="#{_teeSet.id}"/>
             </h:column>
             <h:column>
                 <f:facet name="header">color</f:facet>
 
-                <div title="#{teeSet.color}"
-                     style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;"></div>
+                <div title="#{_teeSet.color}"
+                     style="background-color: #{_teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;"></div>
             </h:column>
             <h:column>
                 <f:facet name="header">ladiesCourseRating</f:facet>
-                <h:outputText value="#{teeSet.ladiesCourseRating}"/>
+                <h:outputText value="#{_teeSet.ladiesCourseRating}"/>
             </h:column>
             <h:column>
                 <f:facet name="header">ladiesSlopeRating</f:facet>
-                <h:outputText value="#{teeSet.ladiesSlopeRating}"/>
+                <h:outputText value="#{_teeSet.ladiesSlopeRating}"/>
             </h:column>
             <h:column>
                 <f:facet name="header">mensCourseRating</f:facet>
-                <h:outputText value="#{teeSet.mensCourseRating}"/>
+                <h:outputText value="#{_teeSet.mensCourseRating}"/>
             </h:column>
             <h:column>
                 <f:facet name="header">mensSlopeRating</f:facet>
-                <h:outputText value="#{teeSet.mensSlopeRating}"/>
+                <h:outputText value="#{_teeSet.mensSlopeRating}"/>
             </h:column>
             <h:column>
                 <f:facet name="header">name</f:facet>
-                <h:outputText value="#{teeSet.name}"/>
+                <h:outputText value="#{_teeSet.name}"/>
             </h:column>
             <h:column>
                 <f:facet name="header">position</f:facet>
-                <h:outputText value="#{teeSet.position}"/>
+                <h:outputText value="#{_teeSet.position}"/>
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
@@ -265,7 +267,7 @@
                         value="View"
                         outcome="/TeeSet.xhtml">
                     <f:param name="teeSetId"
-                             value="#{teeSet.id}"/>
+                             value="#{_teeSet.id}"/>
                     <f:param name="teeSetFrom" value="Course"/>
                 </h:link>
             </h:column>

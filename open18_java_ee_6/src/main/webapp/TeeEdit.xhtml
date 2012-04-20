@@ -1,4 +1,4 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                              "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
@@ -9,13 +9,13 @@
                 xmlns:a="http://richfaces.org/a4j"
                 xmlns:rich="http://richfaces.org/rich"
                 template="layout/template.xhtml">
-                       
+
 <ui:define name="body">
-    
+
     <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
 
     <h:form id="tee" styleClass="edit">
-    
+
         <rich:panel>
             <f:facet name="header">#{teeHome.managed ? 'Edit' : 'Add'} Tee</f:facet>
 
@@ -51,40 +51,40 @@
             </s:decorate>
 
 
-        
+
             <div style="clear:both">
-                <span class="required">*</span> 
+                <span class="required">*</span>
                 required fields
             </div>
-            
+
         </rich:panel>
-                
+
         <div class="actionButtons">
 
-            <h:commandButton id="save" 
-                          value="Save" 
+            <h:commandButton id="save"
+                          value="Save"
                          action="#{teeHome.persist}"
                        disabled="#{!teeHome.wired}"
-                       rendered="#{!teeHome.managed}"/>  
-                          			  
-            <h:commandButton id="update" 
-                          value="Save" 
+                       rendered="#{!teeHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
                          action="#{teeHome.update}"
                        rendered="#{teeHome.managed}"/>
-                        			  
-            <h:commandButton id="delete" 
-                          value="Delete" 
+
+            <h:commandButton id="delete"
+                          value="Delete"
                          action="#{teeHome.remove}"
                       immediate="true"
                        rendered="#{teeHome.managed}"/>
-                    
-            <s:button id="done" 
+
+            <s:button id="done"
                    value="Done"
              propagation="end"
                     view="/Tee.xhtml"
                 rendered="#{teeHome.managed}"/>
-                
-            <s:button id="cancel" 
+
+            <s:button id="cancel"
                    value="Cancel"
              propagation="end"
                     view="/#{empty teeFrom ? 'TeeList' : teeFrom}.xhtml"
@@ -94,15 +94,15 @@
     </h:form>
 
 <rich:tabPanel switchType="ajax">
-    
+
     <rich:tab label="hole *" labelClass="required">
     <div class="association" id="holeParent">
-    
-        <h:outputText value="There is no hole associated with this tee." 
+
+        <h:outputText value="There is no hole associated with this tee."
                    rendered="#{teeHome.instance.hole == null}"/>
-        
-        <rich:dataTable var="hole" 
-                   value="#{teeHome.instance.hole}" 
+
+        <rich:dataTable var="hole"
+                   value="#{teeHome.instance.hole}"
                 rendered="#{teeHome.instance.hole != null}"
               rowClasses="rvgRowOne,rvgRowTwo"
                       id="holeTable">
@@ -140,11 +140,11 @@
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link view="/Hole.xhtml" 
-                         id="viewhole" 
-                      value="View" 
+                <s:link view="/Hole.xhtml"
+                         id="viewhole"
+                      value="View"
                 propagation="none">
-                    <f:param name="holeId" 
+                    <f:param name="holeId"
                            value="#{hole.id}"/>
                 </s:link>
             </h:column>
@@ -156,65 +156,65 @@
                 <f:param name="from" value="TeeEdit"/>
             </s:button>
         </div>
-        
+
     </div>
     </rich:tab>
-    
+
     <rich:tab label="teeSet *" labelClass="required">
     <div class="association" id="teeSetParent">
-    
-        <h:outputText value="There is no teeSet associated with this tee." 
+
+        <h:outputText value="There is no teeSet associated with this tee."
                    rendered="#{teeHome.instance.teeSet == null}"/>
-        
-        <rich:dataTable var="teeSet" 
-                   value="#{teeHome.instance.teeSet}" 
+
+        <rich:dataTable var="_teeSet"
+                   value="#{teeHome.instance.teeSet}"
                 rendered="#{teeHome.instance.teeSet != null}"
               rowClasses="rvgRowOne,rvgRowTwo"
                       id="teeSetTable">
             <h:column>
                 <f:facet name="header">id</f:facet>
-                #{teeSet.id}
+                #{_teeSet.id}
             </h:column>
             <h:column>
                 <f:facet name="header">color</f:facet>
-                <div title="#{teeSet.color}" style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
+                <div title="#{_teeSet.color}" style="background-color: #{_teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
             </h:column>
             <h:column>
 	    	    <f:facet name="header">course id</f:facet>
-		    	#{teeSet.course.id}
+		    	#{_teeSet.course.id}
             </h:column>
             <h:column>
                 <f:facet name="header">ladiesCourseRating</f:facet>
-                #{teeSet.ladiesCourseRating}
+                #{_teeSet.ladiesCourseRating}
             </h:column>
             <h:column>
                 <f:facet name="header">ladiesSlopeRating</f:facet>
-                #{teeSet.ladiesSlopeRating}
+                #{_teeSet.ladiesSlopeRating}
             </h:column>
             <h:column>
                 <f:facet name="header">mensCourseRating</f:facet>
-                #{teeSet.mensCourseRating}
+                #{_teeSet.mensCourseRating}
             </h:column>
             <h:column>
                 <f:facet name="header">mensSlopeRating</f:facet>
-                #{teeSet.mensSlopeRating}
+                #{_teeSet.mensSlopeRating}
             </h:column>
             <h:column>
                 <f:facet name="header">name</f:facet>
-                #{teeSet.name}
+                #{_teeSet.name}
             </h:column>
             <h:column>
                 <f:facet name="header">position</f:facet>
-                #{teeSet.position}
+                #{_teeSet.position}
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link view="/TeeSet.xhtml" 
-                         id="viewteeSet" 
-                      value="View" 
+                <s:link view="/TeeSet.xhtml"
+                         id="viewteeSet"
+                      value="View"
                 propagation="none">
-                    <f:param name="teeSetId" 
-                           value="#{teeSet.id}"/>
+                    <f:param name="teeSetId"
+                           value="#{_teeSet.id}"/>
                 </s:link>
             </h:column>
         </rich:dataTable>
@@ -225,7 +225,7 @@
                 <f:param name="from" value="TeeEdit"/>
             </s:button>
         </div>
-        
+
     </div>
     </rich:tab>
 </rich:tabPanel>

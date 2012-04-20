@@ -276,4 +276,18 @@ public class Course implements java.io.Serializable {
 
     // end of extra code specified in the hbm.xml files
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof Course)) return false;
+
+        Course course = (Course) o;
+
+        return id.equals(course.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

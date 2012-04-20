@@ -24,12 +24,12 @@ public class TeeSetHome {
 //		getInstance();
 //		Course course = courseHome.getDefinedInstance();
 //		if (course != null) {
-//			getInstance().setCourse(course);
+//			getInstance().setRound(course);
 //		}
 //	}
 //
 //	public boolean isWired() {
-//		if (getInstance().getCourse() == null)
+//		if (getInstance().getRound() == null)
 //			return false;
 //		return true;
 //	}

@@ -1,4 +1,4 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                              "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
@@ -8,11 +8,11 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:rich="http://richfaces.org/rich"
                 template="layout/template.xhtml">
-                       
+
 <ui:define name="body">
-    
+
     <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" id="globalMessages"/>
-    
+
     <rich:panel>
         <f:facet name="header">Tee</f:facet>
 
@@ -34,13 +34,13 @@
         </s:decorate>
 
         <div style="clear:both"/>
-        
-    </rich:panel>
-    
-    <div class="actionButtons">      
 
-        <s:button view="/TeeEdit.xhtml" 
-                    id="edit" 
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/TeeEdit.xhtml"
+                    id="edit"
                  value="Edit"/>
 
         <s:button view="/#{empty teeFrom ? 'TeeList' : teeFrom}.xhtml"
@@ -53,12 +53,12 @@
 
     <rich:tab label="hole">
     <div class="association" id="holeParent">
-        
-        <h:outputText value="There is no hole associated with this tee." 
+
+        <h:outputText value="There is no hole associated with this tee."
                    rendered="#{teeHome.instance.hole == null}"/>
-        
-        <rich:dataTable var="hole" 
-                   value="#{teeHome.instance.hole}" 
+
+        <rich:dataTable var="hole"
+                   value="#{teeHome.instance.hole}"
                 rendered="#{teeHome.instance.hole != null}"
               rowClasses="rvgRowOne,rvgRowTwo"
                       id="holeTable">
@@ -96,76 +96,76 @@
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link id="viewhole" 
-                     value="View" 
+                <s:link id="viewhole"
+                     value="View"
                       view="/Hole.xhtml">
-                    <f:param name="holeId" 
+                    <f:param name="holeId"
                            value="#{hole.id}"/>
                 </s:link>
             </h:column>
         </rich:dataTable>
-        
+
     </div>
     </rich:tab>
 
     <rich:tab label="teeSet">
     <div class="association" id="teeSetParent">
-        
-        <h:outputText value="There is no teeSet associated with this tee." 
+
+        <h:outputText value="There is no teeSet associated with this tee."
                    rendered="#{teeHome.instance.teeSet == null}"/>
-        
-        <rich:dataTable var="teeSet" 
-                   value="#{teeHome.instance.teeSet}" 
+
+        <rich:dataTable var="_teeSet"
+                   value="#{teeHome.instance.teeSet}"
                 rendered="#{teeHome.instance.teeSet != null}"
               rowClasses="rvgRowOne,rvgRowTwo"
                       id="teeSetTable">
             <h:column>
                 <f:facet name="header">id</f:facet>
-                #{teeSet.id}
+                #{_teeSet.id}
             </h:column>
             <h:column>
                 <f:facet name="header">color</f:facet>
-                <div title="#{teeSet.color}" style="background-color: #{teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
+                <div title="#{_teeSet.color}" style="background-color: #{_teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;" />
             </h:column>
             <h:column>
 	    	    <f:facet name="header">course id</f:facet>
-		    	#{teeSet.course.id}
+		    	#{_teeSet.course.id}
             </h:column>
             <h:column>
                 <f:facet name="header">ladiesCourseRating</f:facet>
-                #{teeSet.ladiesCourseRating}
+                #{_teeSet.ladiesCourseRating}
             </h:column>
             <h:column>
                 <f:facet name="header">ladiesSlopeRating</f:facet>
-                #{teeSet.ladiesSlopeRating}
+                #{_teeSet.ladiesSlopeRating}
             </h:column>
             <h:column>
                 <f:facet name="header">mensCourseRating</f:facet>
-                #{teeSet.mensCourseRating}
+                #{_teeSet.mensCourseRating}
             </h:column>
             <h:column>
                 <f:facet name="header">mensSlopeRating</f:facet>
-                #{teeSet.mensSlopeRating}
+                #{_teeSet.mensSlopeRating}
             </h:column>
             <h:column>
                 <f:facet name="header">name</f:facet>
-                #{teeSet.name}
+                #{_teeSet.name}
             </h:column>
             <h:column>
                 <f:facet name="header">position</f:facet>
-                #{teeSet.position}
+                #{_teeSet.position}
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <s:link id="viewteeSet" 
-                     value="View" 
+                <s:link id="viewteeSet"
+                     value="View"
                       view="/TeeSet.xhtml">
-                    <f:param name="teeSetId" 
-                           value="#{teeSet.id}"/>
+                    <f:param name="teeSetId"
+                           value="#{_teeSet.id}"/>
                 </s:link>
             </h:column>
         </rich:dataTable>
-        
+
     </div>
     </rich:tab>
 </rich:tabPanel>

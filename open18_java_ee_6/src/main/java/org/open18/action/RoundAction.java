@@ -18,25 +18,22 @@
 package org.open18.action;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.open18.model.Course;
-import org.open18.model.Hole;
-import org.open18.model.TeeSet;
-import org.open18.model.dao.CourseDao;
+import org.open18.model.Round;
+import org.open18.model.dao.RoundDao;
+import org.open18.model.dao.TeeSetDao;
+import org.open18.model.enums.Weather;
 
 /**
  *
@@ -44,30 +41,33 @@ import org.open18.model.dao.CourseDao;
 @ConversationScoped
 @Named
 @Stateful
-public class CourseAction implements Serializable {
+public class RoundAction implements Serializable {
 
     private static final long serialVersionUID = 2281839629956903065L;
 
     @Inject
-    private CourseDao dao;
+    private RoundDao dao;
 
     @Inject
-    private Conversation conversation;
+    private TeeSetDao teeSetDao;
 
-    private Long courseId;
+    @Inject
+    private transient Conversation conversation;
 
-    private Course course;
+    private Long roundId;
+
+    private Round round;
 
     private boolean managed;
 
     @Inject
     private void init() {
-        course = new Course();
+        round = new Round();
     }
 
     public void loadCourse() {
-        if (this.courseId != null && !FacesContext.getCurrentInstance().isPostback()) {
-            this.course = this.dao.findBy(this.courseId);
+        if (this.roundId != null && !FacesContext.getCurrentInstance().isPostback()) {
+            this.round = this.dao.findBy(this.roundId);
             this.managed = true;
         }
     }
@@ -86,51 +86,63 @@ public class CourseAction implements Serializable {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String save() {
-        dao.saveAndFlush(course);
+        dao.saveAndFlush(round);
         endConversation();
-        return "/CourseList.xhtml";
+        return "/RoundList.xhtml";
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String update() {
-        dao.saveAndFlush(course);
-        return "/Course.xhtml?courseId=" + course.getId();
+        dao.saveAndFlush(round);
+        return "/Round.xhtml?roundId=" + round.getId();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String remove() {
-        dao.remove(course);
+        dao.remove(round);
         endConversation();
-        return "/CourseList.xhtml";
+        return "/RoundList.xhtml";
     }
 
-    public Long getCourseId() {
-        return courseId;
+    @Produces
+    @Named
+    public Weather[] getWeatherCategories() {
+        return Weather.values();
     }
 
-    public void setCourseId(Long newCourseId) {
-        if (newCourseId != null && !newCourseId.equals(course.getId())) {
-            courseId = newCourseId;
-            course = dao.findBy(newCourseId);
+//    public List<TeeSet> getTeeSetsByCourse() {
+//        TeeSet example = new TeeSet();
+//        example.setCourse(this.round.getTeeSet().getCourse());
+//        return teeSetDao.findBy(example);
+//    }
+
+    public Long getRoundId() {
+        return roundId;
+    }
+
+    public void setRoundId(Long newRoundId) {
+        if (newRoundId != null && !newRoundId.equals(round.getId())) {
+            roundId = newRoundId;
+            round = dao.findBy(newRoundId);
             managed = true;
 
-            if (course == null) {
+            if (round == null) {
                 managed = false;
-                course = new Course();
+                round = new Round();
                 final FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Course found with id " + newCourseId, ""));
+                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Round found with id " + newRoundId, ""));
             }
 
             this.beginConversation();
         }
     }
 
-    public Course getCourse() {
-        return course;
+    public Round getRound() {
+        return round;
     }
 
-    public void setCourse(Course newCourse) {
-        course = newCourse;
+    public void setRound(Round newRound) {
+        round = newRound;
     }
 
     public boolean isManaged() {
@@ -139,40 +151,5 @@ public class CourseAction implements Serializable {
 
     public void setManaged(boolean newManaged) {
         managed = newManaged;
-    }
-
-    public List<Hole> getHoles() {
-        if (!this.managed) {
-            return Collections.emptyList();
-        }
-
-        List<Hole> holes =
-                new ArrayList<Hole>(this.course.getHoles());
-        Collections.sort(holes, new Comparator<Hole>() {
-
-            public int compare(Hole a, Hole b) {
-                return Integer.valueOf(a.getNumber()).compareTo(b.getNumber());
-            }
-        });
-
-        return holes;
-    }
-
-    public List<TeeSet> getTeeSets() {
-        if (!this.managed) {
-            return Collections.emptyList();
-        }
-
-        List<TeeSet> teeSets =
-                new ArrayList<TeeSet>(this.course.getTeeSets());
-        Collections.sort(teeSets, new Comparator<TeeSet>() {
-
-            public int compare(TeeSet a, TeeSet b) {
-                return a.getPosition() == null ||
-                        b.getPosition() == null ? 0 : a.getPosition().compareTo(b.getPosition());
-            }
-        });
-
-        return teeSets;
     }
 }

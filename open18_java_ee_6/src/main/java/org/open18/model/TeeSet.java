@@ -202,4 +202,20 @@ public class TeeSet implements java.io.Serializable {
     public Double getSlopeRating(Gender gender) {
         return (gender == null || gender == Gender.MALE) ? mensSlopeRating : ladiesSlopeRating;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof TeeSet)) return false;
+
+        TeeSet teeSet = (TeeSet) o;
+
+        return id.equals(teeSet.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

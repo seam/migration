@@ -15,24 +15,33 @@
  * limitations under the License.
  */
 
-package org.open18.model.dao;
+package org.open18.ui.converter;
 
-import java.util.List;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 
-import org.open18.model.TeeSet;
+import org.open18.model.Course;
 
 /**
  *
  */
-public class TeeSetDao extends BaseDao<TeeSet, Long> {
-    public TeeSetDao() {
-        this.entityType = TeeSet.class;
-        this.idType = Long.class;
+@FacesConverter(forClass = Course.class, value = "courseConverter")
+public class CourseConverter implements Converter {
+    @Override
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
+        final Course c = new Course();
+        c.setId(Long.valueOf(value));
+        return c;
     }
 
-    public List<String> getAllColors() {
-        return this.em.createQuery("select distinct ts.color from TeeSet ts", String.class).getResultList();
+    @Override
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
+        if (value instanceof Course) {
+            return ((Course) value).getId().toString();
+        } else {
+            return value.toString();
+        }
     }
-
-//    public List<TeeSet> getTeeSetsByCourse
 }

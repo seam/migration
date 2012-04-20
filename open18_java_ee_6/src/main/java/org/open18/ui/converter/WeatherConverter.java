@@ -15,24 +15,19 @@
  * limitations under the License.
  */
 
-package org.open18.model.dao;
+package org.open18.ui.converter;
 
-import java.util.List;
+import javax.faces.convert.EnumConverter;
+import javax.faces.convert.FacesConverter;
 
-import org.open18.model.TeeSet;
+import org.open18.model.enums.Weather;
 
 /**
  *
  */
-public class TeeSetDao extends BaseDao<TeeSet, Long> {
-    public TeeSetDao() {
-        this.entityType = TeeSet.class;
-        this.idType = Long.class;
+@FacesConverter(forClass = Weather.class, value = "weatherConverter")
+public class WeatherConverter extends EnumConverter {
+    public WeatherConverter() {
+        super(Weather.class);
     }
-
-    public List<String> getAllColors() {
-        return this.em.createQuery("select distinct ts.color from TeeSet ts", String.class).getResultList();
-    }
-
-//    public List<TeeSet> getTeeSetsByCourse
 }
