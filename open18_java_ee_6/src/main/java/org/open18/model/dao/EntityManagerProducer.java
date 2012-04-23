@@ -17,7 +17,7 @@
 
 package org.open18.model.dao;
 
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
@@ -27,7 +27,8 @@ import javax.persistence.PersistenceContextType;
 /**
  *
  */
-@Stateless
+@Stateful
+@RequestScoped
 public class EntityManagerProducer {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;

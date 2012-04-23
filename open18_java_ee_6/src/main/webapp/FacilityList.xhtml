@@ -9,7 +9,7 @@
                 xmlns:rich="http://richfaces.org/rich"
                 xmlns:a="http://richfaces.org/a4j"
                 xmlns:open18="http://java.sun.com/jsf/composite/components"
-                template="layout/template.xhtml">
+                template="layout/#{empty template ? 'template' : template}.xhtml">
 
     <ui:define name="body">
 

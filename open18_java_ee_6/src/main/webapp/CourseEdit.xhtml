@@ -121,7 +121,7 @@
                           outcome="/CourseList.xhtml"/>
             </div>
 
-            <rich:tabPanel switchType="ajax">
+            <rich:tabPanel switchType="client">
 
                 <rich:tab  header="facility *" headerClass="required">
                     <div class="association" id="facilityParent">
@@ -203,8 +203,21 @@
                             <h:button value="Select facility"
                                       outcome="/FacilityList.xhtml">
                             </h:button>
+                            <h:commandLink value="Show Popup">
+                                <rich:componentControl target="facilityListPopup" operation="show" />
+                            </h:commandLink>
                         </div>
-
+                        <rich:popupPanel id="facilityListPopup" autosized="true" modal="true">
+                            <f:facet name="header">Facilities</f:facet>
+                            <f:facet name="controls">
+                                <h:outputLink value="#" onclick="#{rich:component('facilityListPopup')}.hide(); return false;">
+                                    X
+                                </h:outputLink>
+                            </f:facet>
+                            <ui:include src="/FacilityList.xhtml">
+                                <ui:param name="template" value="popup" />
+                            </ui:include>
+                        </rich:popupPanel>
                     </div>
                 </rich:tab>
 
@@ -266,6 +279,7 @@
                                       value="Add hole"
                                       includeViewParams="true"
                                       outcome="/HoleEdit.xhtml">
+                                <f:param name="courseId" value="#{courseAction.course.id}" />
                             </h:button>
                         </div>
                     </f:subview>
@@ -335,6 +349,8 @@
                                       value="Add teeSet"
                                       includeViewParams="true"
                                       outcome="/TeeSetEdit.xhtml">
+                                <f:param name="courseId" value="#{courseAction.course.id}" />
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                             </h:button>
                         </div>
                     </f:subview>
