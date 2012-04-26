@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -70,6 +72,8 @@ public class Tee implements java.io.Serializable {
 
     @Column(name = "DISTANCE", nullable = false)
     @NotNull
+    @Min(1)
+    @Max(999)
     public int getDistance() {
         return this.distance;
     }

@@ -33,6 +33,4 @@ public class TeeSetDao extends BaseDao<TeeSet, Long> {
     public List<String> getAllColors() {
         return this.em.createQuery("select distinct ts.color from TeeSet ts", String.class).getResultList();
     }
-
-//    public List<TeeSet> getTeeSetsByCourse
 }

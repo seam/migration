@@ -16,6 +16,82 @@
 
     <ui:define name="body">
 
+    <rich:popupPanel id="facilityListPopup" autosized="true" modal="true">
+        <f:facet name="header">Facilities</f:facet>
+        <f:facet name="controls">
+            <h:outputLink value="#" onclick="#{rich:component('facilityListPopup')}.hide(); return false;">
+                X
+            </h:outputLink>
+        </f:facet>
+        <h:form id="facilityPopupForm">
+            <rich:dataTable id="facilityListTable"
+                            var="_facility"
+                            value="#{allFacilities}"
+                            rows="10">
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="name"/>
+                    </f:facet>
+                    <h:outputLink value="#{_facility.uri}"
+                                  rendered="#{not empty _facility.uri}">#{_facility.name}</h:outputLink>
+                    <h:outputText value="#{_facility.uri}"
+                                  rendered="#{empty _facility.uri}">#{_facility.name}</h:outputText>
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="type"/>
+                    </f:facet>
+                    #{_facility.type}
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="address"/>
+                    </f:facet>
+                    #{_facility.address}
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="city"/>
+                    </f:facet>
+                    #{_facility.city}
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="county"/>
+                    </f:facet>
+                    #{_facility.county}
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="state"/>
+                    </f:facet>
+                    #{_facility.state}
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="zip"/>
+                    </f:facet>
+                    #{_facility.zip}
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText styleClass="columnHeader" value="country"/>
+                    </f:facet>
+                    #{_facility.country}
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">Select</f:facet>
+                    <h:commandLink id="selectLink" action="#{courseAction.selectFacility(_facility)}"
+                            value="Select">
+                    </h:commandLink>
+                </rich:column>
+                <f:facet name="footer">
+                    <rich:dataScroller for="facilityListTable" maxPages="5"/>
+                </f:facet>
+            </rich:dataTable>
+        </h:form>
+    </rich:popupPanel>
+
     <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
                 id="globalMessages"/>
 
@@ -123,10 +199,10 @@
 
             <rich:tabPanel switchType="client">
 
-                <rich:tab  header="facility *" headerClass="required">
+                <rich:tab  header="teeSet *" headerClass="required">
                     <div class="association" id="facilityParent">
 
-                        <h:outputText value="There is no facility associated with this course."
+                        <h:outputText value="There is no teeSet associated with this course."
                                       rendered="#{courseAction.course.facility == null}"/>
 
                         <rich:dataTable var="_facility"
@@ -200,24 +276,10 @@
                         </rich:dataTable>
 
                         <div class="actionButtons">
-                            <h:button value="Select facility"
-                                      outcome="/FacilityList.xhtml">
-                            </h:button>
-                            <h:commandLink value="Show Popup">
+                            <h:commandLink value="Select Facility">
                                 <rich:componentControl target="facilityListPopup" operation="show" />
                             </h:commandLink>
                         </div>
-                        <rich:popupPanel id="facilityListPopup" autosized="true" modal="true">
-                            <f:facet name="header">Facilities</f:facet>
-                            <f:facet name="controls">
-                                <h:outputLink value="#" onclick="#{rich:component('facilityListPopup')}.hide(); return false;">
-                                    X
-                                </h:outputLink>
-                            </f:facet>
-                            <ui:include src="/FacilityList.xhtml">
-                                <ui:param name="template" value="popup" />
-                            </ui:include>
-                        </rich:popupPanel>
                     </div>
                 </rich:tab>
 
@@ -228,7 +290,7 @@
                                       rendered="#{empty courseAction.holes}"/>
 
                         <rich:dataTable value="#{courseAction.holes}"
-                                        var="hole"
+                                        var="teeSet"
                                         rendered="#{not empty courseAction.holes}"
                                         rowClasses="rvgRowOne,rvgRowTwo"
                                         id="holesTable">
@@ -270,19 +332,7 @@
                                 </h:link>
                             </h:column>
                         </rich:dataTable>
-
                     </div>
-
-                    <f:subview rendered="#{courseAction.managed}" id="holes">
-                        <div class="actionButtons">
-                            <h:button id="addhole"
-                                      value="Add hole"
-                                      includeViewParams="true"
-                                      outcome="/HoleEdit.xhtml">
-                                <f:param name="courseId" value="#{courseAction.course.id}" />
-                            </h:button>
-                        </div>
-                    </f:subview>
                 </rich:tab>
 
                 <rich:tab header="teeSets">
@@ -340,20 +390,7 @@
                                 </h:link>
                             </h:column>
                         </rich:dataTable>
-
                     </div>
-
-                    <f:subview rendered="#{courseAction.managed}" id="teeSets">
-                        <div class="actionButtons">
-                            <h:button id="addteeSet"
-                                      value="Add teeSet"
-                                      includeViewParams="true"
-                                      outcome="/TeeSetEdit.xhtml">
-                                <f:param name="courseId" value="#{courseAction.course.id}" />
-                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
-                            </h:button>
-                        </div>
-                    </f:subview>
                 </rich:tab>
             </rich:tabPanel>
         </h:form>

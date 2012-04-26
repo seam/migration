@@ -2,22 +2,22 @@
 Seam in Action Open18 to Java EE 6 Migration
 ################################################################################
 
-This tutorial will walk through converting the Open18 application from Dan 
+This tutorial will walk through converting the Open18 application from Dan
 Allen's *Seam in Action* from Seam 2 to Java EE 6. It will be as plain Java EE 6
 as possible. However, there are two large gaps in this migration which will
 require projects outside the core of Java EE 6: CRUD scaffolding and application
 security. For those two sections CDI Query and Apache Shiro will be used. The
-application will also be upgraded to RichFaces 4.1 (the current release at time 
+application will also be upgraded to RichFaces 4.1 (the current release at time
 of writing).
 
 ********************************************************************************
 Migrate to Maven
 ********************************************************************************
 
-Seam 2, prior to 2.3, used Apache Ant as it's build tool of choice. In migrating 
-to vanilla Java EE 6 or when using CDI extensions written by others, Apache 
+Seam 2, prior to 2.3, used Apache Ant as it's build tool of choice. In migrating
+to vanilla Java EE 6 or when using CDI extensions written by others, Apache
 Maven (or similar such as Gradle, Builder, Ant+Ivy, SBT, etc) will be the
-preferred build tool. 
+preferred build tool.
 
 Setup Maven Structure
 ================================================================================
@@ -37,12 +37,12 @@ Apache Maven follows a standard project layout defined below::
           └── resources
 
 A full explanation of Apache Maven is beyond this tutorial. More information
-about Apache Maven (probably more than you'd ever want to know) is available 
+about Apache Maven (probably more than you'd ever want to know) is available
 from Sonatype at `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/>`_.
 
 The pom.xml file defines all of the dependencies of the project and instructions
-for building the project. The directory structure is fairly self explanatory. 
-Application source lives under src/main/java. All of the tests are under 
+for building the project. The directory structure is fairly self explanatory.
+Application source lives under src/main/java. All of the tests are under
 src/test/java. Additional resources for the application such as persistence.xml
 will be at src/main/resources/META-INF, and lastly, JSF views and other web
 assets such as images, css, javascript, etc. will be under src/main/webapp.
@@ -236,15 +236,15 @@ Migrate to Bean Validation from Hibernate Validator 3
 ================================================================================
 
 Java EE 6 contains another specification which standardized validation: JSR 303
-- Bean Validation. `Hibernate Validator 4 <http://hibernate.org/subprojects/validator.html`_ 
+- Bean Validation. `Hibernate Validator 4 <http://hibernate.org/subprojects/validator.html`_
 (4.2.0 is shipped with AS7) is the reference implementation. This is a
 completely different code base and includes all new package, validations and
 ways of interacting with those validations. If the application is only using
 the annotations, these are typically a package change and at times an
-annotation change. For example, the ``@org.hibernate.validator.Length``
+annotation change. For teeSet, the ``@org.hibernate.validator.Length``
 validation becomes the ``@javax.validation.constraints.Size`` annotation. In
 some cases, such as the GolferValidator in Open18, this can become a custom
-constraint. Information about custom constraints can be found at the 
+constraint. Information about custom constraints can be found at the
 `Hibernate Validator documentation <http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-customconstraints.html>`_.
 
 For more information about migrating from Hibernate Validator 3, please see `the migration documentation <https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-MigratetoHibernate4Validator>`_.
@@ -255,7 +255,7 @@ Migrate to CDI
 
 Java EE 6 had a few new additions to the platform, two of them combining to
 formally standardize dependency injection for the Enterprise Edition of Java.
-These two JSRs are `JSR 330 <http://jcp.org/en/jsr/summary?id=330>`_, which 
+These two JSRs are `JSR 330 <http://jcp.org/en/jsr/summary?id=330>`_, which
 defines the annotations used for injection, and `JSR 299
 <http://jcp.org/en/jsr/summary?id=299>`_ which defines how dependency resolution
 and injection works, scopes for the platform similar to what Seam 2 provided,
@@ -267,7 +267,7 @@ With these specifications at least two features of Seam 2 had become part of the
 platform. Also many of the features Seam 2 had for working JSF also became part
 of the JSF specification. Migration from Seam 2 to Java EE 6 makes sense, and
 isn't terribly difficult (of course this depends on some of the features that
-were used from Seam 2).  
+were used from Seam 2).
 
 Activation
 ================================================================================
@@ -323,7 +323,7 @@ calling the no-args constructor. CDI a similar feature called producers. There
 are two big differences between factories and producers and the way both
 platforms handle proxies.
 
-* Producers are called once for the scope, similar to scoping a factory, 
+* Producers are called once for the scope, similar to scoping a factory,
   however, they cannot be changed and "re-produced" similar to some approaches
   that have been done with Seam 2.
 * Factories do not support injection. With a producer, each parameter is an
@@ -331,13 +331,13 @@ platforms handle proxies.
 
 Because of the first difference, it, at times can be necessary to to create a
 wrapper around the actual object desired and modify the information as needed.
-For example, the list of new golfers in the Open18 application could be produced
+For teeSet, the list of new golfers in the Open18 application could be produced
 and scoped as a ``@SessionScoped`` resource, but it would never change for that
 session. If the list were wrapped within another object, the internal list could
 be modified if a new golfer registered during the session and the existing
 session could then see the new golfer in the list.
 
-In Open18, besides the example mentioned, another resource which must be
+In Open18, besides the teeSet mentioned, another resource which must be
 produced which Seam 2 had readily available out of the box is the collection of
 messages. This is really a simple ResourceBundle, but it isn't available out of
 the box. This allows for a combination of messages similar to what Seam 2
@@ -377,7 +377,7 @@ composition, lack of being able to search for null fields, inability to perform
 joins, etc. Java EE 6 doesn't have anything ready to use to fill this gap.
 Fortunately a little creativity and the JPA Criteria API can go a long way.
 
-In this example a base dao abstract class has been created to keep things DRY. A
+In this teeSet a base dao abstract class has been created to keep things DRY. A
 similar approach could be done with composition, however, some of the type
 safety would be lost. This base class contains all of the functionality for the
 DAO, including a dynamic search similar to the Seam 2 Query search idea.
@@ -402,7 +402,7 @@ with ``@Named`` so they can be used in EL.
 
 .. todo: Many have restrictions, will have to see how to recreate this.
 
-.. todo: Trying to use abstract classes to simplify the searching and make it 
+.. todo: Trying to use abstract classes to simplify the searching and make it
   similar to what was done in Seam 2
 
 Changes in the conversation model
@@ -418,7 +418,7 @@ conversation. Instead the conversation must be injected and then managed
 (started, ended, timeout configured, etc.).
 
 The conversation can still be tracked by using a query parameter for JSF GET
-requests, the name is ``conversationId``. However, using a conversation outside 
+requests, the name is ``conversationId``. However, using a conversation outside
 of JSF will require additional work, and non portable changes to an application,
 unless a new scope is created for the application which behaves like the
 conversation from Seam 2.
@@ -429,7 +429,7 @@ Migrate to  JSF 2.0
 
 Seam 2 contained many enhancements to JSF 1.2. Many of these enhancements made
 it into the official JSF 2 (JSR 314) specification! Some of these enhancements
-include ``h:link`` and ``h:button``, ``f:metadata`` and ``f:viewparam``. Also 
+include ``h:link`` and ``h:button``, ``f:metadata`` and ``f:viewparam``. Also
 included in JSF 2 is facelets as the preferred view description language. All of
 the power of facelets which was use in Seam 2 applications is now available
 standard. Composite Components also made their debut in JSR 314 as an easier way
@@ -471,7 +471,7 @@ will need to remain::
         </locale-config>
     </application>
 
-The main changes, as listed above in the example are an update for the schema,
+The main changes, as listed above in the teeSet are an update for the schema,
 the version and the removal of the view handler declaration.
 
 Migrate to RichFaces 4.1
@@ -490,13 +490,13 @@ Rework Navigation from pages.xml
 Two changes in JSF 2 which Seam influenced are in navigation. Navigation
 enhancements include implicit navigation and also conditional navigation,
 similar to conditions in pages.xml from Seam 2. These two features have been
-covered `in <http://java.dzone.com/articles/fluent-navigation-jsf-2>`_ `many <http://mkblog.exadel.com/2009/09/learning-jsf2-navigation/>`_ 
-`places <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#navigation>`_. 
+covered `in <http://java.dzone.com/articles/fluent-navigation-jsf-2>`_ `many <http://mkblog.exadel.com/2009/09/learning-jsf2-navigation/>`_
+`places <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#navigation>`_.
 While slightly more work in some cases, using a combination of these two
 features navigation from pages.xml should be fairly straight forward.
 
 While not directly related to navigation, page actions and params also have
-`corresponding solutions <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#get>`_ 
+`corresponding solutions <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#get>`_
 in JSF 2. Any number of view parameters can be assigned to a view. They also can
 participate in conversion and validation, which is more powerful than what Seam
 2 offered in pages.xml. A view action in JSF 2 can be done by creating a
@@ -527,7 +527,7 @@ The first step for migrating these tags is to remove the seam namespace from the
    * - ``s:decorate``
      - There is no direct mapping for this, however the same functionality can
        be achieved with the ``UIInputContainer`` and a composite container, both of
-       which are in the Open18 migration example.
+       which are in the Open18 migration teeSet.
    * - ``s:label``
      - No direct mapping, but ``h:outputLabel`` is similar.
    * - ``s:span``

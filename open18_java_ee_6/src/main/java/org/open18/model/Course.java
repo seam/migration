@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -141,6 +143,8 @@ public class Course implements java.io.Serializable {
     }
 
     @Column(name = "YEAR_BUILT")
+    @Min(1000)
+    @Max(9999)
     public Integer getYearBuilt() {
         return this.yearBuilt;
     }
@@ -151,6 +155,8 @@ public class Course implements java.io.Serializable {
 
     @Column(name = "NUM_HOLES", nullable = false)
     @NotNull
+    @Min(9)
+    @Max(18)
     public int getNumHoles() {
         return this.numHoles;
     }

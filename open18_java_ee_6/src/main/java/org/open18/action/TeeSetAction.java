@@ -18,22 +18,22 @@
 package org.open18.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.inject.Produces;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.open18.model.Round;
-import org.open18.model.dao.RoundDao;
+import org.open18.model.Tee;
+import org.open18.model.TeeSet;
 import org.open18.model.dao.TeeSetDao;
-import org.open18.model.enums.Weather;
 
 /**
  *
@@ -41,35 +41,33 @@ import org.open18.model.enums.Weather;
 @ConversationScoped
 @Named
 @Stateful
-public class RoundAction implements Serializable {
+public class TeeSetAction implements Serializable {
 
     private static final long serialVersionUID = 2281839629956903065L;
 
     @Inject
-    private RoundDao dao;
-
-    @Inject
-    private TeeSetDao teeSetDao;
+    private TeeSetDao dao;
 
     @Inject
     private transient Conversation conversation;
 
-    private Long roundId;
+    private Long teeSetId;
 
-    private Round round;
+    private TeeSet teeSet;
 
     private boolean managed;
 
     @Inject
     private void init() {
-        round = new Round();
+        teeSet = new TeeSet();
     }
 
-    public void loadCourse() {
-        if (this.roundId != null && !FacesContext.getCurrentInstance().isPostback()) {
-            this.round = this.dao.findBy(this.roundId);
+    public void loadTeeSet() {
+        if (this.teeSetId != null && !FacesContext.getCurrentInstance().isPostback()) {
+            this.teeSet = this.dao.findBy(teeSetId);
             this.managed = true;
         }
+        beginConversation();
     }
 
     public void beginConversation() {
@@ -86,63 +84,40 @@ public class RoundAction implements Serializable {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String save() {
-        dao.saveAndFlush(round);
+        dao.saveAndFlush(teeSet);
         endConversation();
-        return "/RoundList.xhtml";
+        return "/TeeSetList.xhtml";
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String update() {
-        dao.saveAndFlush(round);
-        return "/Round.xhtml?roundId=" + round.getId();
+        dao.saveAndFlush(teeSet);
+        return "/TeeSet.xhtml?teeSetId=" + teeSet.getId();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String remove() {
-        dao.remove(round);
+        dao.remove(teeSet);
         endConversation();
-        return "/RoundList.xhtml";
+        return "/TeeSetList.xhtml";
     }
 
-    @Produces
-    @Named
-    public Weather[] getWeatherCategories() {
-        return Weather.values();
+    public Long getTeeSetId() {
+        return this.teeSetId;
     }
 
-//    public List<TeeSet> getTeeSetsByCourse() {
-//        TeeSet example = new TeeSet();
-//        example.setTeeSet(this.round.getTeeSet().getTeeSet());
-//        return teeSetDao.findBy(example);
-//    }
-
-    public Long getRoundId() {
-        return roundId;
-    }
-
-    public void setRoundId(Long newRoundId) {
-        if (newRoundId != null && !newRoundId.equals(round.getId())) {
-            roundId = newRoundId;
-            round = dao.findBy(newRoundId);
-            managed = true;
-
-            if (round == null) {
-                managed = false;
-                round = new Round();
-                final FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Round found with id " + newRoundId, ""));
-            }
-
-            this.beginConversation();
+    public void setTeeSetId(Long newTeeSetId) {
+        if (newTeeSetId != null) {
+            this.teeSetId = newTeeSetId;
         }
     }
 
-    public Round getRound() {
-        return round;
+    public TeeSet getTeeSet() {
+        return teeSet;
     }
 
-    public void setRound(Round newRound) {
-        round = newRound;
+    public void setTeeSet(TeeSet newTee) {
+        teeSet = newTee;
     }
 
     public boolean isManaged() {
@@ -151,5 +126,10 @@ public class RoundAction implements Serializable {
 
     public void setManaged(boolean newManaged) {
         managed = newManaged;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Tee> getTees() {
+        return teeSet.getTees() == null ? Collections.EMPTY_LIST : new ArrayList<Tee>(teeSet.getTees());
     }
 }

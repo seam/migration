@@ -74,10 +74,10 @@
 
 <rich:tabPanel id="facilityPanel" switchType="client">
 
-<rich:tab header="facility">
+<rich:tab header="teeSet">
     <div class="association" id="facilityParent">
 
-        <h:outputText value="There is no facility associated with this course."
+        <h:outputText value="There is no teeSet associated with this course."
                       rendered="#{courseAction.course.facility == null}"/>
 
         <rich:dataTable var="_facility"
@@ -160,7 +160,7 @@
                       rendered="#{empty courseAction.holes}"/>
 
         <rich:dataTable value="#{courseAction.holes}"
-                        var="hole"
+                        var="teeSet"
                         rendered="#{not empty courseAction.holes}"
                         rowClasses="rvgRowOne,rvgRowTwo"
                         id="holesTable">
@@ -207,7 +207,7 @@
 
     <div class="actionButtons">
         <h:button
-                value="Add hole"
+                value="Add teeSet"
                 view="/HoleEdit.xhtml">
             <f:param name="courseId"
                      value="#{courseAction.course.id}"/>

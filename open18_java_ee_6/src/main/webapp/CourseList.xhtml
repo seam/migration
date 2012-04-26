@@ -40,6 +40,8 @@
                     <h:inputText id="name" value="#{courseSearch.course.name}"/>
                 </open18:input>
 
+                <br clear="all" />
+
                 <div class="actionButtons">
                     <h:commandButton id="search" value="Search" action="#{courseSearch.search}"/>
                 </div>
@@ -99,7 +101,7 @@
                         <rich:column sortBy="#{_course.facility.id}">
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader"
-                                              value="facility id">
+                                              value="teeSet id">
                                 </h:outputText>
                             </f:facet>
                             #{_course.facility.id}

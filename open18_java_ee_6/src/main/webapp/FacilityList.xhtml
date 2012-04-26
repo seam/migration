@@ -21,51 +21,53 @@
             <rich:collapsiblePanel id="searchPanel" header="Facility search parameters" switchType="client" expanded="true">
 
                 <open18:input id="addressDecorator" inputId="address" label="address">
-                    <h:inputText id="address" value="#{facilityAction.facility.address}"/>
+                    <h:inputText id="address" value="#{facilitySearch.facility.address}"/>
                 </open18:input>
 
                 <open18:input id="cityDecorator" inputId="city" label="city">
-                    <h:inputText id="city" value="#{facilityAction.facility.city}"/>
+                    <h:inputText id="city" value="#{facilitySearch.facility.city}"/>
                 </open18:input>
 
                 <open18:input id="countryDecorator" inputId="country" label="country">
-                    <h:inputText id="country" value="#{facilityAction.facility.country}"/>
+                    <h:inputText id="country" value="#{facilitySearch.facility.country}"/>
                 </open18:input>
 
                 <open18:input id="countyDecorator" inputId="country" label="county">
-                    <h:inputText id="county" value="#{facilityAction.facility.county}"/>
+                    <h:inputText id="county" value="#{facilitySearch.facility.county}"/>
                 </open18:input>
 
                 <open18:input id="descriptionDecorator" inputId="description" label="description">
-                    <h:inputText id="description" value="#{facilityAction.facility.description}"/>
+                    <h:inputText id="description" value="#{facilitySearch.facility.description}"/>
                 </open18:input>
 
                 <open18:input id="nameDecorator" inputId="name" label="name">
-                    <h:inputText id="name" value="#{facilityAction.facility.name}"/>
+                    <h:inputText id="name" value="#{facilitySearch.facility.name}"/>
                 </open18:input>
 
                 <open18:input id="phoneDecorator" inputId="phone" label="phone">
-                    <h:inputText id="phone" value="#{facilityAction.facility.phone}"/>
+                    <h:inputText id="phone" value="#{facilitySearch.facility.phone}"/>
                 </open18:input>
 
                 <open18:input id="stateDecorator" inputId="state" label="state">
-                    <h:inputText id="state" value="#{facilityAction.facility.state}"/>
+                    <h:inputText id="state" value="#{facilitySearch.facility.state}"/>
                 </open18:input>
 
                 <open18:input id="typeDecorator" inputId="type" label="type">
-                    <h:inputText id="type" value="#{facilityAction.facility.type}"/>
+                    <h:inputText id="type" value="#{facilitySearch.facility.type}"/>
                 </open18:input>
 
                 <open18:input id="uriDecorator" inputId="uri" label="uri">
-                    <h:inputText id="uri" value="#{facilityAction.facility.uri}"/>
+                    <h:inputText id="uri" value="#{facilitySearch.facility.uri}"/>
                 </open18:input>
 
                 <open18:input id="zipDecorator" inputId="zip" label="zip">
-                    <h:inputText id="zip" value="#{facilityAction.facility.zip}"/>
+                    <h:inputText id="zip" value="#{facilitySearch.facility.zip}"/>
                 </open18:input>
 
+                <br clear="all" />
+
                 <div class="actionButtons">
-                    <h:commandButton id="search" value="Search" action="#{facilityAction.search}"/>
+                    <h:commandButton id="search" value="Search" action="#{facilitySearch.search}"/>
                 </div>
             </rich:collapsiblePanel>
 
@@ -76,14 +78,14 @@
 
                 <div class="results" id="facilityAction">
 
-                    <h:outputText value="The facility search returned no results."
-                                  rendered="#{empty facilityAction.resultList}"/>
+                    <h:outputText value="The teeSet search returned no results."
+                                  rendered="#{empty facilitySearch.resultList}"/>
 
                     <rich:dataTable id="facilityListTable"
                                     var="_facility"
-                                    value="#{facilityAction.resultList}"
+                                    value="#{facilitySearch.resultList}"
                                     rows="10"
-                                    rendered="#{not empty facilityAction.resultList}">
+                                    rendered="#{not empty facilitySearch.resultList}">
                         <rich:column sortBy="#{_facility.id}">
                             <f:facet name="header">
                                 <a:commandLink styleClass="columnHeader" value="id"/>
@@ -176,7 +178,7 @@
             <div class="actionButtons">
                 <h:button outcome="/FacilityEdit.xhtml"
                           id="create"
-                          value="Create facility">
+                          value="Create teeSet">
                     <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
                 </h:button>
             </div>

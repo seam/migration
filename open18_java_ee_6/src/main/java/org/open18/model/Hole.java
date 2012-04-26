@@ -15,7 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -83,7 +85,7 @@ public class Hole implements java.io.Serializable {
     }
 
     @Column(name = "NAME", length = 25)
-    @Max(25)
+    @Size(max = 25)
     public String getName() {
         return this.name;
     }
@@ -93,7 +95,8 @@ public class Hole implements java.io.Serializable {
     }
 
     @Column(name = "NUMBER", nullable = false)
-    @NotNull
+    @Max(18)
+    @Min(0)
     public int getNumber() {
         return this.number;
     }
@@ -103,7 +106,8 @@ public class Hole implements java.io.Serializable {
     }
 
     @Column(name = "M_PAR", nullable = false)
-    @NotNull
+    @Min(0)
+    @Max(6)
     public int getMensPar() {
         return this.mensPar;
     }
@@ -113,6 +117,8 @@ public class Hole implements java.io.Serializable {
     }
 
     @Column(name = "M_HANDICAP")
+    @Min(0)
+    @Max(18)
     public Integer getMensHandicap() {
         return this.mensHandicap;
     }
@@ -122,7 +128,8 @@ public class Hole implements java.io.Serializable {
     }
 
     @Column(name = "L_PAR", nullable = false)
-    @NotNull
+    @Min(0)
+    @Max(6)
     public int getLadiesPar() {
         return this.ladiesPar;
     }
@@ -132,6 +139,8 @@ public class Hole implements java.io.Serializable {
     }
 
     @Column(name = "L_HANDICAP")
+    @Min(0)
+    @Max(18)
     public Integer getLadiesHandicap() {
         return this.ladiesHandicap;
     }

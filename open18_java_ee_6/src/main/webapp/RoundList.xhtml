@@ -16,7 +16,7 @@
         </div>
         <h:form id="roundSearch" styleClass="edit">
 
-            <rich:togglePanel label="Round search parameters" switchType="client">
+            <rich:collapsiblePanel header="Round search parameters" switchType="client">
 
                 <ui:remove><!-- TODO: rendered="#{s:hasRole('golfer')}" --></ui:remove>
                 <open18:input label="My rounds">
@@ -58,13 +58,14 @@
                         <f:selectItems value="#{roundSearch.allTeeSetColors}" var="_color" itemLabel="#{_color}" itemValue="#{_color}" />
                     </h:selectOneMenu>
                 </open18:input>
-            </rich:togglePanel>
-
-            <div class="actionButtons">
-                <h:commandButton id="search" value="Search" action="#{roundSearch.search}"/>
-            </div>
-
+                <br clear="all" />
+                <div class="actionButtons">
+                    <h:commandButton id="search" value="Search" action="#{roundSearch.search}"/>
+                </div>
+            </rich:collapsiblePanel>
         </h:form>
+
+        <br clear="all" />
 
         <rich:panel>
             <f:facet name="header">Round search results</f:facet>

@@ -15,41 +15,57 @@
  * limitations under the License.
  */
 
-package org.open18.model.dao;
+package org.open18.action;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
-import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.TypedQuery;
 
 import org.open18.extension.ViewScoped;
-import org.open18.model.Golfer;
+import org.open18.model.TeeSet;
+import org.open18.model.dao.TeeSetDao;
 
 /**
  *
  */
-public class GolferDao extends BaseDao<Golfer, Long> {
+@ViewScoped
+@Named
+public class TeeSetSearch implements Serializable {
+    private static final long serialVersionUID = 3274792096739222125L;
 
-    private static final long serialVersionUID = -4873600374648186511L;
+    @Inject
+    private TeeSetDao dao;
 
-    public GolferDao() {
-        this.entityType = Golfer.class;
-        this.idType = Long.class;
+    private List<TeeSet> resultList;
+
+    private TeeSet teeSet;
+
+    @Inject
+    private void init() {
+        teeSet = new TeeSet();
+        resultList = Collections.emptyList();
     }
 
-    public List<Golfer> findNewGolfers() {
-        final TypedQuery<Golfer> query = em.createQuery("select g from Golfer g order by g.dateJoined desc", Golfer.class);
-        query.setMaxResults(25);
-
-        return query.getResultList();
+    public void search() {
+        resultList = dao.findBy(teeSet);
     }
 
-    @Override
-    @Produces
-    @ViewScoped
-    @Named("allGolfers")
-    public List<Golfer> findAll() {
-        return super.findAll();
+    public TeeSet getTeeSet() {
+        return teeSet;
+    }
+
+    public void setTeeSet(TeeSet teeSet) {
+        this.teeSet = teeSet;
+    }
+
+    public List<TeeSet> getResultList() {
+        return resultList;
+    }
+
+    public void setResultList(List<TeeSet> resultList) {
+        this.resultList = resultList;
     }
 }

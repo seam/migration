@@ -76,7 +76,7 @@
                 <h:commandButton id="delete" value="Delete" action="#{roundAction.remove}"
                                  immediate="true" rendered="#{roundAction.managed}"/>
 
-                <h:commandButton id="revert" value="Discard changes" action="#{roundAction.revert}"
+                <h:commandButton id="revert" value="Discard changes" action="/RoundList.xhtml"
                                  immediate="true" rendered="#{roundAction.managed}"/>
 
                 <h:button id="cancel" value="Cancel" outcome="/RoundList.xhtml"

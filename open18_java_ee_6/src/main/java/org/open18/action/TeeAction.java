@@ -24,16 +24,13 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.inject.Produces;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.open18.model.Round;
-import org.open18.model.dao.RoundDao;
-import org.open18.model.dao.TeeSetDao;
-import org.open18.model.enums.Weather;
+import org.open18.model.Tee;
+import org.open18.model.TeeId;
+import org.open18.model.dao.TeeDao;
 
 /**
  *
@@ -41,33 +38,32 @@ import org.open18.model.enums.Weather;
 @ConversationScoped
 @Named
 @Stateful
-public class RoundAction implements Serializable {
+public class TeeAction implements Serializable {
 
     private static final long serialVersionUID = 2281839629956903065L;
 
     @Inject
-    private RoundDao dao;
-
-    @Inject
-    private TeeSetDao teeSetDao;
+    private TeeDao dao;
 
     @Inject
     private transient Conversation conversation;
 
-    private Long roundId;
+    private Long teeHoleId;
 
-    private Round round;
+    private Long teeSetId;
+
+    private Tee tee;
 
     private boolean managed;
 
     @Inject
     private void init() {
-        round = new Round();
+        tee = new Tee();
     }
 
-    public void loadCourse() {
-        if (this.roundId != null && !FacesContext.getCurrentInstance().isPostback()) {
-            this.round = this.dao.findBy(this.roundId);
+    public void loadTee() {
+        if (this.teeSetId != null && this.teeHoleId != null && !FacesContext.getCurrentInstance().isPostback()) {
+            this.tee = this.dao.findBy(new TeeId(this.teeSetId, this.teeHoleId));
             this.managed = true;
         }
     }
@@ -86,63 +82,40 @@ public class RoundAction implements Serializable {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String save() {
-        dao.saveAndFlush(round);
+        dao.saveAndFlush(tee);
         endConversation();
-        return "/RoundList.xhtml";
+        return "/CourseList.xhtml";
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String update() {
-        dao.saveAndFlush(round);
-        return "/Round.xhtml?roundId=" + round.getId();
+        dao.saveAndFlush(tee);
+        return "/Course.xhtml?courseId=" + tee.getId();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String remove() {
-        dao.remove(round);
+        dao.remove(tee);
         endConversation();
-        return "/RoundList.xhtml";
+        return "/CourseList.xhtml";
     }
 
-    @Produces
-    @Named
-    public Weather[] getWeatherCategories() {
-        return Weather.values();
+    public Long getTeeSetId() {
+        return this.teeSetId;
     }
 
-//    public List<TeeSet> getTeeSetsByCourse() {
-//        TeeSet example = new TeeSet();
-//        example.setTeeSet(this.round.getTeeSet().getTeeSet());
-//        return teeSetDao.findBy(example);
-//    }
-
-    public Long getRoundId() {
-        return roundId;
-    }
-
-    public void setRoundId(Long newRoundId) {
-        if (newRoundId != null && !newRoundId.equals(round.getId())) {
-            roundId = newRoundId;
-            round = dao.findBy(newRoundId);
-            managed = true;
-
-            if (round == null) {
-                managed = false;
-                round = new Round();
-                final FacesContext fc = FacesContext.getCurrentInstance();
-                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Round found with id " + newRoundId, ""));
-            }
-
-            this.beginConversation();
+    public void setTeeSetId(Long newTeeSetId) {
+        if (newTeeSetId != null) {
+            this.teeSetId = newTeeSetId;
         }
     }
 
-    public Round getRound() {
-        return round;
+    public Tee getTee() {
+        return tee;
     }
 
-    public void setRound(Round newRound) {
-        round = newRound;
+    public void setTee(Tee newTee) {
+        tee = newTee;
     }
 
     public boolean isManaged() {
@@ -151,5 +124,15 @@ public class RoundAction implements Serializable {
 
     public void setManaged(boolean newManaged) {
         managed = newManaged;
+    }
+
+    public Long getTeeHoleId() {
+        return teeHoleId;
+    }
+
+    public void setTeeHoleId(Long teeHoleId) {
+        if (teeHoleId != null) {
+            this.teeHoleId = teeHoleId;
+        }
     }
 }

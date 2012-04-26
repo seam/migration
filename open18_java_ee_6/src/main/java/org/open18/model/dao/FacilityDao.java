@@ -17,6 +17,8 @@
 
 package org.open18.model.dao;
 
+import java.util.List;
+
 import org.open18.model.Facility;
 
 /**
@@ -31,4 +33,7 @@ public class FacilityDao extends BaseDao<Facility, Long> {
         this.idType = Long.class;
     }
 
+    public List<Facility> getAllFacilities() {
+        return this.findAll();
+    }
 }

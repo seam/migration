@@ -23,4 +23,10 @@ import org.open18.model.Hole;
  *
  */
 public class HoleDao extends BaseDao<Hole, Long> {
+    private static final long serialVersionUID = 495556254136598193L;
+
+    public HoleDao() {
+        this.entityType = Hole.class;
+        this.idType = Long.class;
+    }
 }

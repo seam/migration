@@ -27,13 +27,13 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.open18.extension.ViewScoped;
 import org.open18.model.Course;
 import org.open18.model.Facility;
 import org.open18.model.dao.FacilityDao;
@@ -62,18 +62,10 @@ public class FacilityAction implements Serializable {
 
     private boolean enterCourse;
 
-    private List<Facility> resultList;
 
     @Inject
     private void init() {
         facility = new Facility();
-
-        resultList = Collections.emptyList();
-    }
-
-    public void search() {
-        resultList = dao.findBy(facility);
-        beginConversation();
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -136,14 +128,6 @@ public class FacilityAction implements Serializable {
         }
     }
 
-    public List<Facility> getResultList() {
-        return resultList;
-    }
-
-    public void setResultList(List<Facility> resultList) {
-        resultList = resultList;
-    }
-
     public Facility getFacility() {
         return facility;
     }
@@ -154,7 +138,7 @@ public class FacilityAction implements Serializable {
 
     @Produces
     @Named("facilityCourses")
-    @RequestScoped
+    @ViewScoped
     public List<Course> getCourses() {
         if (!dao.isManaged(facility) && facility.getId() != null) {
             facility = dao.findBy(facility.getId());

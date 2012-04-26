@@ -92,10 +92,12 @@ body {
 .error {
 	float: left;
 	padding: 5px;
+    height: auto !important;
 }
 .errors {
 	color: red;
 	vertical-align: middle;
+    height: auto !important;
 }
 img.errors {
 	padding-right: 5px;
@@ -303,7 +305,7 @@ th a.desc {
 div.entry {
     clear: both;
     padding-top: .5em;
-    width: 35em;
+    /*width: 35em;*/
 }
 
 div.entry span.label {
@@ -313,7 +315,8 @@ div.entry span.label {
 }
 
 div.entry span.input {
-    float: right;
+    float: left;
     width: 20em;
+    margin-left: 1em;
     text-align: left;
 }

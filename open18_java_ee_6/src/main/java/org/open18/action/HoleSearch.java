@@ -15,32 +15,57 @@
  * limitations under the License.
  */
 
-package org.open18.model.dao;
+package org.open18.action;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
-import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.open18.extension.ViewScoped;
-import org.open18.model.Tee;
-import org.open18.model.TeeId;
+import org.open18.model.Hole;
+import org.open18.model.dao.HoleDao;
 
 /**
  *
  */
-public class TeeDao extends BaseDao<Tee, TeeId> {
-    private static final long serialVersionUID = -838288999306868273L;
+@ViewScoped
+@Named
+public class HoleSearch implements Serializable {
+    private static final long serialVersionUID = 3274792096739222125L;
 
-    public TeeDao() {
-        this.entityType = Tee.class;
-        this.idType = TeeId.class;
+    @Inject
+    private HoleDao dao;
+
+    private List<Hole> resultList;
+
+    private Hole hole;
+
+    @Inject
+    private void init() {
+        hole = new Hole();
+        resultList = Collections.emptyList();
     }
 
-    @Produces
-    @ViewScoped
-    @Named
-    public List<Tee> getAllTees() {
-        return this.findAll();
+    public void search() {
+        resultList = dao.findBy(hole);
+    }
+
+    public Hole getHole() {
+        return hole;
+    }
+
+    public void setHole(Hole hole) {
+        this.hole = hole;
+    }
+
+    public List<Hole> getResultList() {
+        return resultList;
+    }
+
+    public void setResultList(List<Hole> resultList) {
+        this.resultList = resultList;
     }
 }

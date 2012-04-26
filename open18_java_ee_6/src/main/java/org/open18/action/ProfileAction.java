@@ -7,13 +7,11 @@ import java.util.Random;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.ConversationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
+import org.open18.extension.ViewScoped;
 import org.open18.model.Golfer;
 import org.open18.model.dao.GolferDao;
 
@@ -21,38 +19,16 @@ import org.open18.model.dao.GolferDao;
 @ConversationScoped
 @Stateful
 public class ProfileAction implements Serializable {
-	@PersistenceContext
-    protected EntityManager entityManager;
+    private static final long serialVersionUID = 6581903565825140682L;
 
     @Inject
     transient GolferDao golferDao;
-
-//  @RequestParameter protected Long golferId;
 
 	protected Golfer selectedGolfer;
 
 	private int newGolferDisplaySize = 5;
 
-//    @Inject
-//    private void init() {
-//        this.golferDao.setEntityManager(entityManager);
-//    }
-//
-//	public void load() {
-//		if (selectedGolfer != null && selectedGolfer.getId() != null) {
-//			return;
-//		}
-//
-//		if (golferId != null && golferId > 0) {
-//			selectedGolfer = entityManager.find(Golfer.class, golferId);
-//		}
-//
-//		if (selectedGolfer == null) {
-//			throw new ProfileNotFoundException(golferId);
-//		}
-//	}
-//
-    @Produces @RequestScoped @Named("newGolfers") @TransactionAttribute
+    @Produces @ViewScoped @Named("newGolfers") @TransactionAttribute
 	public List<Golfer> findNewGolfers() {
         final List<Golfer> newGolfers = golferDao.findNewGolfers();
 

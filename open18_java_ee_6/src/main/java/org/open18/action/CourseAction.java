@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.open18.model.Course;
+import org.open18.model.Facility;
 import org.open18.model.Hole;
 import org.open18.model.TeeSet;
 import org.open18.model.dao.CourseDao;
@@ -174,5 +175,9 @@ public class CourseAction implements Serializable {
         });
 
         return teeSets;
+    }
+
+    public void selectFacility(Facility facility) {
+        this.course.setFacility(facility);
     }
 }

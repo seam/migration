@@ -47,7 +47,7 @@ public abstract class BaseDao<E, PK extends Serializable> implements Serializabl
     private static final long serialVersionUID = 1845865757364398127L;
 
     @Inject
-    protected EntityManager em;
+    protected transient EntityManager em;
 
     protected Class<E> entityType;
     protected Class<PK> idType;

@@ -21,7 +21,7 @@
 <h:messages globalOnly="false" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
             id="globalMessages"/>
 
-<h:form id="facility" styleClass="edit">
+<h:form id="teeSet" styleClass="edit">
 
     <rich:panel>
         <f:facet name="header">#{facilityAction.managed ? 'Edit' : 'Add'} Facility</f:facet>
@@ -149,7 +149,7 @@
 <rich:panel label="courses">
     <div class="association" id="coursesChildren">
 
-        <h:outputText value="There are no courses associated with this facility."
+        <h:outputText value="There are no courses associated with this teeSet."
                       rendered="#{empty facilityCourses}"/>
 
         <rich:dataTable value="#{facilityCourses}"
@@ -207,18 +207,6 @@
         </rich:dataTable>
 
     </div>
-
-    <f:subview rendered="#{facilityAction.managed}" id="courses">
-        <div class="actionButtons">
-            <h:button id="addcourse"
-                      value="Add course"
-                      outcome="/CourseEdit.xhtml">
-                <f:param name="facilityId"
-                         value="#{facilityAction.facility.id}"/>
-                <f:param name="courseFrom" value="Facility"/>
-            </h:button>
-        </div>
-    </f:subview>
 </rich:panel>
 </ui:define>
 
