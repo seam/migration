@@ -1,29 +1,26 @@
-################################################################################
-Seam in Action Open18 to Java EE 6 Migration
-################################################################################
+== Seam in Action Open18 to Java EE 6 Migration ==
 
 This tutorial will walk through converting the Open18 application from Dan
-Allen's *Seam in Action* from Seam 2 to Java EE 6. It will be as plain Java EE 6
+Allen's [underline]#Seam in Action# from Seam 2 to Java EE 6. It will be as plain Java EE 6
 as possible. However, there are two large gaps in this migration which will
 require projects outside the core of Java EE 6: CRUD scaffolding and application
 security. For those two sections CDI Query and Apache Shiro will be used. The
 application will also be upgraded to RichFaces 4.1 (the current release at time
 of writing).
 
-********************************************************************************
-Migrate to Maven
-********************************************************************************
+=== Migrate to Maven ===
 
 Seam 2, prior to 2.3, used Apache Ant as it's build tool of choice. In migrating
 to vanilla Java EE 6 or when using CDI extensions written by others, Apache
 Maven (or similar such as Gradle, Builder, Ant+Ivy, SBT, etc) will be the
 preferred build tool.
 
-Setup Maven Structure
-================================================================================
+==== Setup Maven Structure ====
 
-Apache Maven follows a standard project layout defined below::
+Apache Maven follows a standard project layout defined below
 
+.Standard Maven Layout
+----
   ├── pom.xml
   └── src
       ├── main
@@ -35,10 +32,11 @@ Apache Maven follows a standard project layout defined below::
       └── test
           ├── java
           └── resources
+----
 
 A full explanation of Apache Maven is beyond this tutorial. More information
 about Apache Maven (probably more than you'd ever want to know) is available
-from Sonatype at `Maven: The Complete Reference <http://www.sonatype.com/books/mvnref-book/reference/>`_.
+from Sonatype at http://www.sonatype.com/books/mvnref-book/reference/[Maven: The Complete Reference].
 
 The pom.xml file defines all of the dependencies of the project and instructions
 for building the project. The directory structure is fairly self explanatory.
@@ -47,8 +45,7 @@ src/test/java. Additional resources for the application such as persistence.xml
 will be at src/main/resources/META-INF, and lastly, JSF views and other web
 assets such as images, css, javascript, etc. will be under src/main/webapp.
 
-Flesh out pom.xml
-================================================================================
+===== Flesh out pom.xml =====
 
 Below is the contents for the pom.xml file. There's very little there in terms
 of dependencies because the bulk of the dependencies will be provided for the
@@ -56,8 +53,11 @@ project by the application server. It is important to note that any dependency
 that must be present for either compilation or runtime but is already within the
 application server be stated in the pom and given the "provided" scope. Further
 information about the sections of the pom.xml file are given as comments in the
-actual file::
+actual file
 
+.pom.xml
+[source, xml]
+----
   <?xml version="1.0" encoding="UTF-8"?>
   <project xmlns="http://maven.apache.org/POM/4.0.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -186,11 +186,9 @@ actual file::
       </build>
 
   </project>
+----
 
-
-********************************************************************************
-Migrate to JPA 2.0
-********************************************************************************
+=== Migrate to JPA 2.0 ===
 
 JSR 317, the update to the Java Persistence API includes a number of updates,
 many of which users had been asking for including improved mappings, a criteria
@@ -198,70 +196,64 @@ API, ordering of collections, eviction control, access to a second level cache,
 and locking improvements. Setup and configuration is the same as the initial JPA
 specification, as is usage.
 
-Additional information can be found at the `migration guide to AS7 <https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-UpdateyourHibernate3applicationtouseHibernate4>`_.
+Additional information can be found at the https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-UpdateyourHibernate3applicationtouseHibernate4[migration guide to AS7].
 
 There have been issues in the past with Seam 2 when using a Seam Managed
 Persistence Context and having entities become detached or issues with
 transactions. This migration recommends using a transaction scoped Persistence
 Context and using EJBs as backing beans. This allows declarative transaction
 control and a familiar Persistence Context injection strategy. Due to this
-change, use of the ``EntityManager.merge()`` function is required when using
+change, use of the +EntityManager.merge()+ function is required when using
 entities which may have become detached from a previous transaction (or
-request). Also recommended is the use of the ``@Version`` annotation and column
+request). Also recommended is the use of the +@Version+ annotation and column
 in the entities to allow for optimistic locking.
 
-Update persistence.xml to 2.0
-================================================================================
+==== Update persistence.xml to 2.0 ====
 
 JPA 2 is backwards compatible with JPA 1. All entities should work correctly as
 they did using a JPA 1 implementation. The version in persistence.xml should be
 updated to take advantage of new features though. Such features include the type
 safe criteria api, new mappings, and additional methods.
 
-Metamodel Generation
-================================================================================
+==== Metamodel Generation ====
 
 To take full advantage of type saftey, static meta model classes should be
 created or generated. The simplest way of doing this is using an annotation
 processor such as Hibernate's JPA 2 Metamodel Generator. Additional information
-on using this annotation processor can be found in `the documentation <http://docs.jboss.org/hibernate/jpamodelgen/1.1/reference/en-
-US/html_single/>`_.
+on using this annotation processor can be found in http://docs.jboss.org/hibernate/jpamodelgen/1.1/reference/en-US/html_single/[the documentation].
 
-.. todo: should I actually go through the steps?
+// TODO: should I actually go through the steps?
 
 For this migration, the annotation processor was used once and then removed from
 the pom.xml file.
 
-Migrate to Bean Validation from Hibernate Validator 3
-================================================================================
+=== Migrate to Bean Validation from Hibernate Validator 3 ===
 
 Java EE 6 contains another specification which standardized validation: JSR 303
-- Bean Validation. `Hibernate Validator 4 <http://hibernate.org/subprojects/validator.html`_
+- Bean Validation. http://hibernate.org/subprojects/validator.html[Hibernate Validator 4]
 (4.2.0 is shipped with AS7) is the reference implementation. This is a
 completely different code base and includes all new package, validations and
 ways of interacting with those validations. If the application is only using
 the annotations, these are typically a package change and at times an
-annotation change. For teeSet, the ``@org.hibernate.validator.Length``
-validation becomes the ``@javax.validation.constraints.Size`` annotation. In
+annotation change. For teeSet, the +@org.hibernate.validator.Length+
+validation becomes the +@javax.validation.constraints.Size+ annotation. In
 some cases, such as the GolferValidator in Open18, this can become a custom
 constraint. Information about custom constraints can be found at the
-`Hibernate Validator documentation <http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-customconstraints.html>`_.
+http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-customconstraints.html[Hibernate Validator documentation].
 
-For more information about migrating from Hibernate Validator 3, please see `the migration documentation <https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-MigratetoHibernate4Validator>`_.
+For more information about migrating from Hibernate Validator 3, please see https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-MigratetoHibernate4Validator[the migration documentation].
 
-********************************************************************************
-Migrate to CDI
-********************************************************************************
+=== Migrate to CDI ===
 
 Java EE 6 had a few new additions to the platform, two of them combining to
 formally standardize dependency injection for the Enterprise Edition of Java.
-These two JSRs are `JSR 330 <http://jcp.org/en/jsr/summary?id=330>`_, which
-defines the annotations used for injection, and `JSR 299
-<http://jcp.org/en/jsr/summary?id=299>`_ which defines how dependency resolution
-and injection works, scopes for the platform similar to what Seam 2 provided,
-and possibly the most important of all: extensibility for the platform. These
-two specifications were developed with input from authors of other dependency
-injection solutions in Java such as Spring, Guice, and Seam
+These two JSRs are http://jcp.org/en/jsr/summary?id=330[JSR 330], which
+defines the annotations used for injection, and http://jcp.org/en/jsr/summary?id=299[JSR 299] 
+which defines how dependency resolution and injection works, scopes for the 
+platform similar to what Seam 2 provided, and possibly the most important of 
+all: extensibility for the platform. These two specifications were developed 
+with input from authors of other dependency injection solutions in Java such 
+as Spring, Guice, and Seam
 
 With these specifications at least two features of Seam 2 had become part of the
 platform. Also many of the features Seam 2 had for working JSF also became part
@@ -269,8 +261,7 @@ of the JSF specification. Migration from Seam 2 to Java EE 6 makes sense, and
 isn't terribly difficult (of course this depends on some of the features that
 were used from Seam 2).
 
-Activation
-================================================================================
+==== Activation ====
 
 Seam 2 required the use of the seam.properties file to mark a jar, or WEB-
 INF/classes as containing Seam 2 components. This was mainly an optimization
@@ -278,8 +269,11 @@ for scanning purposes. CDI has a similar requirement. Each Bean Archive (jar,
 war, etc. containing CDI beans) must contain a META-INF/beans.xml for a jar and
 WEB-INF/beans.xml for a war. Some configuration may occur in this file, but
 often times it can be left blank. In this migration of Open18 the following
-beans.xml is used (src/main/webapp/WEB-INF/beans.xml)::
+beans.xml is used 
 
+.src/main/webapp/WEB-INF/beans.xml
+[source, xml]
+----
   <?xml version="1.0" encoding="UTF-8"?>
   <beans xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -287,35 +281,32 @@ beans.xml is used (src/main/webapp/WEB-INF/beans.xml)::
                 http://java.sun.com/xml/ns/javaee
                 http://docs.jboss.org/cdi/beans_1_0.xsd">
   </beans>
+----
 
-
-Substitute Seam 2 annotations for CDI equivalents
-================================================================================
+==== Substitute Seam 2 annotations for CDI equivalents ====
 
 Nearly all of the annotations that were Seam 2 based have equivalents in Java EE
 6, however, some of them do not or are no longer needed.
 
-Injecting resources
---------------------------------------------------------------------------------
+===== Injecting resources =====
 
 Because Seam components were typically not managed by the container
 (unless an EJB happened to be a Seam component, such as a SFSB or SLSB)
-all injection has handled used Seam's ``@In``. As mentioned earlier, Java
+all injection has handled used Seam's +@In+. As mentioned earlier, Java
 EE 6 has standardized Dependency Injection using JSR 330. The annotation
-now is ``@javax.inject.Inject``. All of the ``@In`` annotations will need
+now is +@javax.inject.Inject+. All of the +@In+ annotations will need
 to be replaced.
 
 There is also a difference in defining what is a bean (or a component in Seam
-2). In Seam 2 all components needed to be annotated with the ``@Name``
+2). In Seam 2 all components needed to be annotated with the +@Name+
 annotation. This is no longer the case. Each class (there are some exceptions,
 please refer to JSR 299 or a CDI implementation documentation) with a no-args
 constructor is now a managed bean (not to be confused with the JSF Managed
-Bean). There is, however the ``@javax.inject.Named`` annotation. It's main
+Bean). There is, however the +@javax.inject.Named+ annotation. It's main
 purpose is to register an EL name for the bean. If the bean is not going to be
 used in an EL expression, it is not needed.
 
-Producing resources
---------------------------------------------------------------------------------
+===== Producing resources =====
 
 Seam 2 had a feature called factories which allowed a resource to be created and
 outjected. It allowed for a more custom creation than what Seam could do by
@@ -332,7 +323,7 @@ platforms handle proxies.
 Because of the first difference, it, at times can be necessary to to create a
 wrapper around the actual object desired and modify the information as needed.
 For teeSet, the list of new golfers in the Open18 application could be produced
-and scoped as a ``@SessionScoped`` resource, but it would never change for that
+and scoped as a +@SessionScoped+ resource, but it would never change for that
 session. If the list were wrapped within another object, the internal list could
 be modified if a new golfer registered during the session and the existing
 session could then see the new golfer in the list.
@@ -343,19 +334,18 @@ messages. This is really a simple ResourceBundle, but it isn't available out of
 the box. This allows for a combination of messages similar to what Seam 2
 offered, though done in Java code instead of components.xml.
 
-Scopes
---------------------------------------------------------------------------------
+===== Scopes =====
 
 Scopes are nothing new when coming from Seam 2. The standard scopes still exist
 when using CDI:
 
-* ``@ApplicationScoped``
-* ``@SessionScoped``
-* ``@ConversationScoped``
-* ``@RequestScoped``
+* +@ApplicationScoped+
+* +@SessionScoped+
+* +@ConversationScoped+
+* +@RequestScoped+
 
 There is no business process scope or method scope however. CDI has one
-other scope which does not exist in Seam 2: ``@DependentScoped``. This scope
+other scope which does not exist in Seam 2: +@DependentScoped+. This scope
 is similar in life as a typical Java object creation. It will last as long
 as the containing object survives. There's also one important difference,
 when injected, the inject object is the actual object not a proxy like the
@@ -366,8 +356,7 @@ If the need arises for additional scopes, such as a business process scope, CDI
 allows for additional scopes to be created. Please refer to the JSR 299 spec or
 CDI implementation documentation for defining scopes.
 
-Migrate Query  / Home objects
-================================================================================
+==== Migrate Query  / Home objects ====
 
 The application framework within Seam 2 consisting of Home and Query objects has
 proved to be very powerful for CRUD based sites. When coupled with seam-gen, it
@@ -391,22 +380,21 @@ buffer between the view and the backend. These backing beans also happen to be
 Stateful Session beans in this instance. It's not required, but the advantages
 of SFSBs have been enumerated many times throughout the years. These backing
 beans are annotated with one of the scope annotations mentioned earlier and also
-with ``@Named`` so they can be used in EL.
+with +@Named+ so they can be used in EL.
 
-.. sidebar:: WARNING
-
+WARNING: 
   It is best not to directly use JPA entities created by CDI, unless
   they are created by a producer. If CDI manages the life cycle of an entity, JPA
   functionality is lost and the entire object will have to be cloned into a new
   object to be persisted.
 
-.. todo: Many have restrictions, will have to see how to recreate this.
+// TODO: Many have restrictions, will have to see how to recreate this.
 
-.. todo: Trying to use abstract classes to simplify the searching and make it
-  similar to what was done in Seam 2
+// TODO: Trying to use abstract classes to simplify the searching and make it similar to what was done in Seam 2
 
-Changes in the conversation model
-================================================================================
+// TODO: Expand this section and show some code, explain composition
+
+==== Changes in the conversation model ====
 
 CDI has a conversation state similar to Seam 2, however, there are some major
 differences. The largest being that only one conversation can be active at a
@@ -418,18 +406,16 @@ conversation. Instead the conversation must be injected and then managed
 (started, ended, timeout configured, etc.).
 
 The conversation can still be tracked by using a query parameter for JSF GET
-requests, the name is ``conversationId``. However, using a conversation outside
+requests, the name is +conversationId+. However, using a conversation outside
 of JSF will require additional work, and non portable changes to an application,
 unless a new scope is created for the application which behaves like the
 conversation from Seam 2.
 
-********************************************************************************
-Migrate to  JSF 2.0
-********************************************************************************
+=== Migrate to  JSF 2.0 ===
 
 Seam 2 contained many enhancements to JSF 1.2. Many of these enhancements made
 it into the official JSF 2 (JSR 314) specification! Some of these enhancements
-include ``h:link`` and ``h:button``, ``f:metadata`` and ``f:viewparam``. Also
+include +h:link+ and +h:button+, +f:metadata+ and +f:viewparam+. Also
 included in JSF 2 is facelets as the preferred view description language. All of
 the power of facelets which was use in Seam 2 applications is now available
 standard. Composite Components also made their debut in JSR 314 as an easier way
@@ -438,28 +424,30 @@ to create JSF components and reusable templates.
 Because there are many JSF related enhancements in Seam 2, there are a number of
 actions needed to happen to migrate successfully to JSF 2.
 
-.. todo: Also will need something to replace CourseComparison
-  ProfileAction needs a replacement possibly from Shiro
-  MultiRoundAction needs a Java replacement, or we could just update it CDI
-  RegisterAction needs a replacement, may be part of switching to Shiro
+// TODO: Also will need something to replace CourseComparison ProfileAction needs a replacement possibly from Shiro MultiRoundAction needs a Java replacement, or we could just update it CDI RegisterAction needs a replacement, may be part of switching to Shiro
 
-Update faces-config.xml to 2.0
-================================================================================
+==== Update faces-config.xml to 2.0 ====
 
 Similar to Seam 2, the faces-config.xml file is very sparse, and essentially
 becomes a marker file to include JSF support. Below is a typical JSF 2 faces-
-config.xml file::
+config.xml file.
 
+[source, xml]
+----
   <?xml version='1.0' encoding='UTF-8'?>
   <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
   </faces-config>
+----
 
 In the Open18 application, there were multiple languages supported. That part
-will need to remain::
+will need to remain.
 
+.src/main/webapp/WEB-INF/faces-config.xml excerpt
+[source, xml]
+----
     <application>
         <locale-config>
             <default-locale>en</default-locale>
@@ -470,115 +458,97 @@ will need to remain::
             <supported-locale>tr</supported-locale>
         </locale-config>
     </application>
+----
 
-The main changes, as listed above in the teeSet are an update for the schema,
+The main changes, as listed above in the faces-config.xml are an update for the schema,
 the version and the removal of the view handler declaration.
 
-Migrate to RichFaces 4.1
-================================================================================
+==== Migrate to RichFaces 4.2 ====
 
 Migrating to JSF 2 also involves an update to the component library. Open18 made
 use of RichFaces. True JSF 2 support in RichFaces came out with version
 4.0.0.Final. Currently RichFaces 4.1.0.Final is out and 4.2.0.CR1 is also
 available. For many components the switch is change of JAR files, however, some
 components have not yet been migrated, or others have been combined. Information
-about component migration can be found on the `RichFaces wiki <https://community.jboss.org/wiki/RichFacesMigrationGuide33x-4xMigration>`_.
+about component migration can be found on the https://community.jboss.org/wiki/RichFacesMigrationGuide33x-4xMigration[RichFaces wiki].
 
-Rework Navigation from pages.xml
-================================================================================
+==== Rework Navigation from pages.xml ====
 
 Two changes in JSF 2 which Seam influenced are in navigation. Navigation
 enhancements include implicit navigation and also conditional navigation,
 similar to conditions in pages.xml from Seam 2. These two features have been
-covered `in <http://java.dzone.com/articles/fluent-navigation-jsf-2>`_ `many <http://mkblog.exadel.com/2009/09/learning-jsf2-navigation/>`_
-`places <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#navigation>`_.
+covered http://java.dzone.com/articles/fluent-navigation-jsf-2[in] http://mkblog.exadel.com/2009/09/learning-jsf2-navigation/[many]
+http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#navigation[places].
 While slightly more work in some cases, using a combination of these two
 features navigation from pages.xml should be fairly straight forward.
 
 While not directly related to navigation, page actions and params also have
-`corresponding solutions <http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#get>`_
+ http://andyschwartz.wordpress.com/2009/07/31/whats-new-in-jsf-2/#get[corresponding solutions]
 in JSF 2. Any number of view parameters can be assigned to a view. They also can
 participate in conversion and validation, which is more powerful than what Seam
 2 offered in pages.xml. A view action in JSF 2 can be done by creating a
-listener for the ``preRenderView`` event within an ``f:metadata`` section.
+listener for the +preRenderView+ event within an +f:metadata+ section.
 
-Seam Tags and equivalents in JSF and RichFaces
-================================================================================
+==== Seam Tags and equivalents in JSF and RichFaces ====
 
 Seam 2 introduced some useful JSF components, some which made navigation easier, others which are useful for conversation. The navigation components are simple to migration, while some of the others are a little more difficult and a small collection do not have any replacement.
 
 The first step for migrating these tags is to remove the seam namespace from the view. Below is a table of the tags in Seam 2 and replacements either in JSF 2 or RichFaces.
 
-.. list-table::
-   :widths: 15 40
-   :header-rows: 1
+[cols="20%,80%",width="35%",options="header"]
+|==========================================
+|Seam 2 Tag|JSF 2 or RichFaces
+|+s:div+|No direct mapping. Could be done with an +h:panelGroup layout="block+ or a 
++ui:fragment+ containing a div.
 
-   * - Seam 2 Tag
-     - JSF 2 or RichFaces
-   * - ``s:div``
-     - No direct mapping. Could be done with an ``h:panelGroup layout="block``
-       or a ``ui:fragment`` containing a div.
-   * - ``s:fragment``
-     - ``ui:fragment``
-   * - ``s:link``
-     - ``h:link`` action maps to outcome, and there is no propagation attribute.
-   * - ``s:button``
-     - ``h:button`` same conditions as ``h:link``
-   * - ``s:decorate``
-     - There is no direct mapping for this, however the same functionality can
-       be achieved with the ``UIInputContainer`` and a composite container, both of
+|+s:fragment+|+ui:fragment+
+|+s:link+|+h:link+ action maps to outcome, and there is no propagation attribute.
+|+s:button+|+h:button+ same conditions as +h:link+
+|+s:decorate+|There is no direct mapping for this, however the same functionality can
+       be achieved with the +UIInputContainer+ and a composite container, both of
        which are in the Open18 migration teeSet.
-   * - ``s:label``
-     - No direct mapping, but ``h:outputLabel`` is similar.
-   * - ``s:span``
-     - No direct mapping, but similar output can be achieved by ``h:panelGroup``
-       or a ``ui:fragment`` with a ``span`` element
-   * - ``s:message``
-     - No direct mapping for the same functionality, though ``rich:message``
+
+|+s:label+|No direct mapping, but +h:outputLabel+ is similar.
+|+s:span+| No direct mapping, but similar output can be achieved by +h:panelGroup+
+       or a +ui:fragment+ with a +span+ element
+
+|+s:message+|No direct mapping for the same functionality, though +rich:message+
        could be used instead.
-   * - ``s:validateAll``
-     - f:validateBean or rich:validator can achieve similar affects.
-   * - s:convertDateTime
-     - A similar affect can be achieved by using the standard
-       ``f:convertDateTime`` and setting the locale, or setting the context-param
-       ``javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE`` to
-       true, as defined in the spec in section 11.1.3. Dan Allen `blogged
-       <http://in.relation.to/Bloggers/StepRightUpAndSelectYourTimeZone>`_ about
+
+|+s:validateAll+|f:validateBean or rich:validator can achieve similar affects.
+|+s:convertDateTime+|A similar affect can be achieved by using the standard
+       +f:convertDateTime+ and setting the locale, or setting the context-param
+       +javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE+ to
+       true, as defined in the spec in section 11.1.3. Dan Allen
+       http://in.relation.to/Bloggers/StepRightUpAndSelectYourTimeZone>[blogged] about
        this before the spec was final, however, nothing was changed.
-   * - ``s:convertEnum``
-     - No direct mapping. A custom converter is recommended.
-   * - ``s:enumItem``
-     - No direct mapping
-   * - ``s:selectItems``
-     - ``h:selectItems``
-   * - ``s:defaultAction``
-     - No direct mapping
 
-********************************************************************************
-Migrate to Apache Shiro for Security
-********************************************************************************
+|+s:convertEnum+|No direct mapping. A custom converter is recommended using the standard JSF enum converter as a base.
+|+s:enumItem+|No direct mapping
+|+s:selectItems+|+h:selectItems+
+|+s:defaultAction+|No direct mapping
+|====================================================================
 
-.. todo: AuthenticationManager goes away and uses Shiro, need to figure out how to produce the current golfer
-  The auth package goes away and uses Shiro, need to figure out what to do about captcha
+// TODO: security
+// TODO: AuthenticationManager goes away and uses Shiro, need to figure out how to produce the current golfer The auth package goes away and uses Shiro, need to figure out what to do about captcha
 
-********************************************************************************
-Further Information
-********************************************************************************
+=== Further Information ===
 
 More information about migrating from Seam 2:
 
-* `Jozef Hartinger's Diploma Thesis (PDF) <http://is.muni.cz/th/207788/fi_m/jharting-thesis.pdf?lang=en>`_
-* `Classic module mentioned in the above thesis <https://github.com/jharting/classic>`_
-* `Some comparison of Seam 2 and Java EE 6 <https://github.com/seam/migration/wiki>`_
+* http://is.muni.cz/th/207788/fi_m/jharting-thesis.pdf?lang=en[Jozef Hartinger's Diploma Thesis (PDF)]
+* https://github.com/jharting/classic[Classic module mentioned in the above thesis]
+* https://github.com/seam/migration/wiki[Some comparison of Seam 2 and Java EE 6]
 
 Additional CDI documentation:
 
-* `Weld, the Reference Implementation of CDI by JBoss <http://seamframework.org/Weld>`_
-* `OpenWebBeans, a CDI Implementation done by Apache <http://openwebbeans.apache.org/owb/index.html>`_
-* `CanDI, another CDI Implementation done by Caucho <http://www.caucho.com/resin-application-server/candi-java-dependency-injection/>`_
+* http://seamframework.org/Weld[Weld, the Reference Implementation of CDI by JBoss]
+* http://openwebbeans.apache.org/owb/index.html[OpenWebBeans, a CDI Implementation done by Apache]
+* http://www.caucho.com/resin-application-server/candi-java-dependency-injection/[CanDI, another CDI Implementation done by Caucho]
 
 Subsitute technologies:
 
-* `CDI Query, replacement for Home / Query <http://ctpconsulting.github.com/query>`_
-* `DataValve, replacement for Home / Query <http://www.andygibson.net/files/datavalve/docs/html/index.html>`_
-* `Seam3-persistence-framework, replacement for Home / Query <http://it-crowd.com.pl/blog/seam3_persistence_framework_comes_to_town.html>`_
+* http://ctpconsulting.github.com/query[CDI Query, replacement for Home / Query]
+* http://www.andygibson.net/files/datavalve/docs/html/index.html[DataValve, replacement for Home / Query]
+* http://it-crowd.com.pl/blog/seam3_persistence_framework_comes_to_town.html[Seam3-persistence-framework, replacement for Home / Query]
+
