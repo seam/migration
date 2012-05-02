@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateful;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -70,5 +71,12 @@ public class CourseSearch implements Serializable {
 
     public void setResultList(List<Course> resultList) {
         this.resultList = resultList;
+    }
+
+    @Produces
+    @Named("allCourses")
+    @ViewScoped
+    public List<Course> getAllCourses() {
+        return dao.findAll();
     }
 }

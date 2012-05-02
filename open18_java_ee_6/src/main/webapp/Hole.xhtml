@@ -28,26 +28,21 @@
                 #{holeAction.hole.ladiesHandicap}
             </open18:input>
 
-
             <open18:input id="ladiesParDecorator" label="ladiesPar">
                 #{holeAction.hole.ladiesPar}
             </open18:input>
-
 
             <open18:input id="mensHandicapDecorator" label="mensHandicap">
                 #{holeAction.hole.mensHandicap}
             </open18:input>
 
-
             <open18:input id="mensParDecorator" label="mensPar">
                 #{holeAction.hole.mensPar}
             </open18:input>
 
-
             <open18:input id="nameDecorator" label="name">
                 #{holeAction.hole.name}
             </open18:input>
-
 
             <open18:input id="numberDecorator" label="number">
                 #{holeAction.hole.number}
@@ -72,11 +67,8 @@
                     <h:outputText value="There is no course associated with this teeSet."
                                   rendered="#{holeAction.hole.course == null}"/>
 
-                    <rich:dataTable var="course"
-                                    value="#{holeAction.hole.course}"
-                                    rendered="#{holeAction.hole.course != null}"
-                                    rowClasses="rvgRowOne,rvgRowTwo"
-                                    id="courseTable">
+                    <rich:dataTable var="course" value="#{holeAction.hole.course}" rendered="#{holeAction.hole.course != null}"
+                                    rowClasses="rvgRowOne,rvgRowTwo" id="courseTable">
                         <rich:column>
                             <f:facet name="header">id</f:facet>
                             #{course.id}

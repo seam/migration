@@ -47,17 +47,6 @@
                     </h:selectOneMenu>
                 </open18:input>
 
-                <ui:remove>
-                    <open18:input id="teeSetField" label="Tee set">
-                        <h:selectOneMenu id="teeSet" value="#{roundAction.round.teeSet}">
-                            <f:selectItem noSelectionOption="true" itemLabel="-- Select --"/>
-                            <f:selectItems var="_teeSet" value="#{roundAction.teeSetsByCourse}"
-                                           itemLabel="#{_teeSet.course.name} - #{_teeSet.color}"/>
-                            <f:converter converterId="teeSetConverter"/>
-                        </h:selectOneMenu>
-                    </open18:input>
-                </ui:remove>
-
                 <div style="clear:both">
                     <span class="required">*</span>
                     required fields
@@ -137,6 +126,7 @@
                         </rich:dataTable>
 
                         <div class="actionButtons">
+                            <!-- TODO: Use modal -->
                             <h:commandButton value="Select tee set" action="selectTeeSet"/>
                         </div>
                     </div>

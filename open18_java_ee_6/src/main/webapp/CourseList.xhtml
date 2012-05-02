@@ -49,25 +49,27 @@
 
             <br clear="all" />
 
-            <ui:fragment rendered="#{not empty comparedCourses}">
-                <rich:panel style="margin-bottom: 5px;">
-                    <f:facet name="header">Courses marked for comparison</f:facet>
-                    <ui:repeat var="_c" value="#{comparedCourses}">
-                        <div>#{_c.name}</div>
-                    </ui:repeat>
+            <ui:remove> <!-- Add this back in later -->
+                <ui:fragment rendered="#{not empty comparedCourses}">
+                    <rich:panel style="margin-bottom: 5px;">
+                        <f:facet name="header">Courses marked for comparison</f:facet>
+                        <ui:repeat var="_c" value="#{comparedCourses}">
+                            <div>#{_c.name}</div>
+                        </ui:repeat>
 
-                    <div style="margin-top: 5px;">
-                        <h:link value="Compare" outcome="/CompareCourses.xhtml" rendered="#{courseComparison.ready}">
-                            <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
-                        </h:link>
-                        <h:outputText value="#{' '}" rendered="#{courseComparison.ready}"/>
-                        <h:link value="Clear selections" outcome="#{courseComparison.reset}">
-                            <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
-                        </h:link>
-                    </div>
-                </rich:panel>
-                <br clear="all"/>
-            </ui:fragment>
+                        <div style="margin-top: 5px;">
+                            <h:link value="Compare" outcome="/CompareCourses.xhtml" rendered="#{courseComparison.ready}">
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
+                            </h:link>
+                            <h:outputText value="#{' '}" rendered="#{courseComparison.ready}"/>
+                            <h:link value="Clear selections" outcome="#{courseComparison.reset}">
+                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
+                            </h:link>
+                        </div>
+                    </rich:panel>
+                    <br clear="all"/>
+                </ui:fragment>
+            </ui:remove>
 
             <rich:panel>
                 <f:facet name="header">Course search results</f:facet>
@@ -148,28 +150,24 @@
                         </rich:column>
                         <rich:column>
                             <f:facet name="header">action</f:facet>
-                            <h:link outcome="/Course.xhtml"
-                                    value="View"
-                                    id="courseViewLink">
-                                <f:param name="courseId"
-                                         value="#{_course.id}"/>
+                            <h:link outcome="/Course.xhtml" value="View" id="courseViewLink">
+                            <f:param name="courseId" value="#{_course.id}"/>
                                 <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                             </h:link>
                             #{' | '}
-                            <h:link outcome="/CourseEdit.xhtml"
-                                    value="Select"
-                                    id="courseEditLink">
-                                <f:param name="courseId"
-                                         value="#{_course.id}"/>
+                            <h:link outcome="/CourseEdit.xhtml" value="Select" id="courseEditLink">
+                            <f:param name="courseId" value="#{_course.id}"/>
                                 <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                             </h:link>
-                            #{' | '}
-                            <a:commandLink id="markLink"
-                                    action="#{courseComparison.mark(_course.id)}" value="Mark"
-                                    execute="@this" render="@form"
-                                    rendered="#{not courseComparison.isMarked(_course)}">
-                                <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
-                            </a:commandLink>
+                            <ui:remove>
+                                #{' | '}
+                                <a:commandLink id="markLink"
+                                        action="#{courseComparison.mark(_course.id)}" value="Mark"
+                                        execute="@this" render="@form"
+                                        rendered="#{not courseComparison.isMarked(_course)}">
+                                    <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
+                                </a:commandLink>
+                            </ui:remove>
                         </rich:column>
                         <f:facet name="footer">
                             <rich:dataScroller for="courseListTable" maxPages="5"/>
@@ -180,17 +178,11 @@
             </rich:panel>
 
             <div class="actionButtons">
-                <h:button outcome="/CourseEdit.xhtml"
-                          id="create"
-                          value="Create course">
-                    <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
-                          </h:button>
-
+                <h:button outcome="/CourseEdit.xhtml" id="create" value="Create course">
+                    <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
+                </h:button>
             </div>
-
         </h:form>
-
     </ui:define>
-
 </ui:composition>
 

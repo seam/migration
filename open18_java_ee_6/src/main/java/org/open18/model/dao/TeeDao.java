@@ -29,6 +29,7 @@ import org.open18.model.TeeId;
 /**
  *
  */
+@ViewScoped
 public class TeeDao extends BaseDao<Tee, TeeId> {
     private static final long serialVersionUID = -838288999306868273L;
 

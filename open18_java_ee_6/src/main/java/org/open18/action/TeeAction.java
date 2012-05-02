@@ -28,8 +28,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.open18.model.Hole;
 import org.open18.model.Tee;
 import org.open18.model.TeeId;
+import org.open18.model.TeeSet;
 import org.open18.model.dao.TeeDao;
 
 /**
@@ -134,5 +136,13 @@ public class TeeAction implements Serializable {
         if (teeHoleId != null) {
             this.teeHoleId = teeHoleId;
         }
+    }
+
+    public void selectHole(Hole hole) {
+        this.tee.setHole(hole);
+    }
+
+    public void selectTeeSet(TeeSet teeSet) {
+        this.tee.setTeeSet(teeSet);
     }
 }

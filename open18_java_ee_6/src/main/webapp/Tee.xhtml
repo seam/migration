@@ -50,13 +50,13 @@
 
         <h:form id="associationForm">
             <rich:tabPanel id="holeAssociationTab" switchType="client">
-                <rich:tab header="teeSet">
+                <rich:tab header="hole">
                     <div class="association" id="holeParent">
 
-                        <h:outputText value="There is no teeSet associated with this tee."
+                        <h:outputText value="There is no hole associated with this tee."
                                       rendered="#{teeAction.tee.hole == null}"/>
 
-                        <rich:dataTable var="teeSet" value="#{teeAction.tee.hole}" rendered="#{teeAction.tee.hole != null}"
+                        <rich:dataTable var="hole" value="#{teeAction.tee.hole}" rendered="#{teeAction.tee.hole != null}"
                                         rowClasses="rvgRowOne,rvgRowTwo" id="holeTable">
                             <h:column>
                                 <f:facet name="header">id</f:facet>
@@ -157,7 +157,6 @@
                                 </h:link>
                             </h:column>
                         </rich:dataTable>
-
                     </div>
                 </rich:tab>
             </rich:tabPanel>

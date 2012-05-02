@@ -19,11 +19,16 @@ package org.open18.model.dao;
 
 import java.util.List;
 
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
+
+import org.open18.extension.ViewScoped;
 import org.open18.model.TeeSet;
 
 /**
  *
  */
+@ViewScoped
 public class TeeSetDao extends BaseDao<TeeSet, Long> {
     public TeeSetDao() {
         this.entityType = TeeSet.class;
@@ -32,5 +37,12 @@ public class TeeSetDao extends BaseDao<TeeSet, Long> {
 
     public List<String> getAllColors() {
         return this.em.createQuery("select distinct ts.color from TeeSet ts", String.class).getResultList();
+    }
+
+    @Produces
+    @ViewScoped
+    @Named
+    public List<TeeSet> getAllTeeSets() {
+        return this.findAll();
     }
 }

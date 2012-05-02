@@ -22,6 +22,47 @@
         <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
                     id="globalMessages"/>
 
+        <h:form id="selectCoursePopupForm">
+            <rich:popupPanel id="selectCoursePopup" autosized="true" header="Courses" modal="true">
+                <f:facet name="header">Courses</f:facet>
+                <f:facet name="controls">
+                    <h:outputLink value="#" onclick="#{rich:component('selectCoursePopup')}.hide(); return false;">
+                        X
+                    </h:outputLink>
+                </f:facet>
+                <rich:dataTable id="courseListTable" var="_course" value="#{allCourses}" rendered="#{not empty allCourses}" rows="10">
+                    <rich:column>
+                        <f:facet name="header">
+                            <h:outputText styleClass="columnHeader" value="Facility Name"/>
+                        </f:facet>
+                        #{_course.facility.name}
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            <h:outputText styleClass="columnHeader" value="name"/>
+                        </f:facet>
+                        #{_course.name}
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            <h:outputText styleClass="columnHeader" value="numHoles">
+                            </h:outputText>
+                        </f:facet>
+                        #{_course.numHoles}
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            <h:outputText value="Select" />
+                        </f:facet>
+                        <h:commandLink id="selectCourseLink" action="#{teeSetAction.selectCourse(_course)}" value="Select"/>
+                    </rich:column>
+                    <f:facet name="footer">
+                        <rich:dataScroller for="courseListTable" maxPages="5"/>
+                    </f:facet>
+                </rich:dataTable>
+            </rich:popupPanel>
+        </h:form>
+
         <h:form id="teeSet" styleClass="edit">
 
             <rich:panel>
@@ -150,10 +191,9 @@
                         </rich:dataTable>
 
                         <div class="actionButtons">
-                            <!-- TODO: Fix this to use the popup modal -->
-                            <h:button value="Select course" outcome="/CourseList.xhtml">
-                                <f:param name="from" value="TeeSetEdit"/>
-                            </h:button>
+                            <h:commandButton value="Select course">
+                                <rich:componentControl target="selectCoursePopup" operation="show" />
+                            </h:commandButton>
                         </div>
 
                     </div>

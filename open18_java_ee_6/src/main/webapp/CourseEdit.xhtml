@@ -10,7 +10,7 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="courseId" value="#{courseAction.courseId}"/>
-            <f:event type="preRenderView" listener="#{courseAction.loadCourse}"/> <!-- TODO move the logic in setGolferId to this method -->
+            <f:event type="preRenderView" listener="#{courseAction.loadCourse}"/>
         </f:metadata>
     </ui:define>
 
@@ -24,10 +24,7 @@
             </h:outputLink>
         </f:facet>
         <h:form id="facilityPopupForm">
-            <rich:dataTable id="facilityListTable"
-                            var="_facility"
-                            value="#{allFacilities}"
-                            rows="10">
+            <rich:dataTable id="facilityListTable" var="_facility" value="#{allFacilities}" rows="10">
                 <rich:column>
                     <f:facet name="header">
                         <h:outputText styleClass="columnHeader" value="name"/>
@@ -81,8 +78,7 @@
                 </rich:column>
                 <rich:column>
                     <f:facet name="header">Select</f:facet>
-                    <h:commandLink id="selectLink" action="#{courseAction.selectFacility(_facility)}"
-                            value="Select">
+                    <h:commandLink id="selectLink" action="#{courseAction.selectFacility(_facility)}" value="Select">
                     </h:commandLink>
                 </rich:column>
                 <f:facet name="footer">
@@ -101,68 +97,47 @@
                 <f:facet name="header">#{courseAction.managed ? 'Edit' : 'Add'} Course</f:facet>
 
                 <open18:input id="descriptionDecoration" label="description">
-                    <h:inputTextarea id="description"
-                                     cols="80"
-                                     rows="3"
-                                     value="#{courseAction.course.description}"/>
+                    <h:inputTextarea id="description" cols="80" rows="3" value="#{courseAction.course.description}"/>
                 </open18:input>
 
                 <open18:input id="designerDecoration" label="designer">
-                    <h:inputText id="designer"
-                                 size="50"
-                                 maxlength="50"
-                                 value="#{courseAction.course.designer}">
+                    <h:inputText id="designer" size="50" maxlength="50" value="#{courseAction.course.designer}">
                         <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="fairwaysDecoration" label="fairways">
-                    <h:inputText id="fairways"
-                                 required="true"
-                                 size="15"
-                                 maxlength="15"
-                                 value="#{courseAction.course.fairways}">
+                    <h:inputText id="fairways" required="true" size="15" maxlength="15" value="#{courseAction.course.fairways}">
                         <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="greensDecoration" label="greens">
-                    <h:inputText id="greens"
-                                 required="true"
-                                 size="15"
-                                 maxlength="15"
-                                 value="#{courseAction.course.greens}">
+                    <h:inputText id="greens" required="true" size="15" maxlength="15" value="#{courseAction.course.greens}">
                         <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="nameDecoration" label="name">
-                    <h:inputText id="name"
-                                 size="50"
-                                 maxlength="50"
-                                 value="#{courseAction.course.name}">
+                    <h:inputText id="name" size="50" maxlength="50" value="#{courseAction.course.name}">
                         <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="numHolesDecoration" label="numHoles">
-                    <h:inputText id="numHoles"
-                                 required="true"
-                                 value="#{courseAction.course.numHoles}">
+                    <h:inputText id="numHoles" required="true" value="#{courseAction.course.numHoles}">
                         <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="signatureHoleDecoration" label="signatureHole">
-                    <h:inputText id="signatureHole"
-                                 value="#{courseAction.course.signatureHole}">
+                    <h:inputText id="signatureHole" value="#{courseAction.course.signatureHole}">
                         <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="yearBuiltDecoration" label="yearBuilt">
-                    <h:inputText id="yearBuilt"
-                                 value="#{courseAction.course.yearBuilt}">
+                    <h:inputText id="yearBuilt" value="#{courseAction.course.yearBuilt}">
                         <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
@@ -176,25 +151,14 @@
 
             <div class="actionButtons">
 
-                <h:commandButton id="save"
-                                 value="Save"
-                                 action="#{courseAction.save}"
-                                 rendered="#{!courseAction.managed}"/>
+                <h:commandButton id="save" value="Save" action="#{courseAction.save}" rendered="#{!courseAction.managed}"/>
 
-                <h:commandButton id="update"
-                                 value="Update"
-                                 action="#{courseAction.update}"
+                <h:commandButton id="update" value="Update" action="#{courseAction.update}" rendered="#{courseAction.managed}"/>
+
+                <h:commandButton id="delete" value="Delete" action="#{courseAction.remove}" immediate="true"
                                  rendered="#{courseAction.managed}"/>
 
-                <h:commandButton id="delete"
-                                 value="Delete"
-                                 action="#{courseAction.remove}"
-                                 immediate="true"
-                                 rendered="#{courseAction.managed}"/>
-
-                <h:button id="cancel"
-                          value="Cancel"
-                          outcome="/CourseList.xhtml"/>
+                <h:button id="cancel" value="Cancel" outcome="/CourseList.xhtml"/>
             </div>
 
             <rich:tabPanel switchType="client">
@@ -205,10 +169,8 @@
                         <h:outputText value="There is no teeSet associated with this course."
                                       rendered="#{courseAction.course.facility == null}"/>
 
-                        <rich:dataTable var="_facility"
-                                        value="#{courseAction.course.facility}"
-                                        rendered="#{courseAction.course.facility != null}"
-                                        rowClasses="rvgRowOne,rvgRowTwo"
+                        <rich:dataTable var="_facility" value="#{courseAction.course.facility}"
+                                        rendered="#{courseAction.course.facility != null}" rowClasses="rvgRowOne,rvgRowTwo"
                                         id="facilityTable">
                             <h:column>
                                 <f:facet name="header">id</f:facet>
@@ -266,19 +228,16 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">action</f:facet>
-                                <h:link outcome="/Facility.xhtml"
-                                        id="viewfacility"
-                                        value="View">
-                                    <f:param name="facilityId"
-                                             value="#{_facility.id}"/>
+                                <h:link outcome="/Facility.xhtml" id="viewfacility" value="View">
+                                    <f:param name="facilityId" value="#{_facility.id}"/>
                                 </h:link>
                             </h:column>
                         </rich:dataTable>
 
                         <div class="actionButtons">
-                            <h:commandLink value="Select Facility">
+                            <h:commandButton value="Select Facility">
                                 <rich:componentControl target="facilityListPopup" operation="show" />
-                            </h:commandLink>
+                            </h:commandButton>
                         </div>
                     </div>
                 </rich:tab>
@@ -290,7 +249,7 @@
                                       rendered="#{empty courseAction.holes}"/>
 
                         <rich:dataTable value="#{courseAction.holes}"
-                                        var="teeSet"
+                                        var="hole"
                                         rendered="#{not empty courseAction.holes}"
                                         rowClasses="rvgRowOne,rvgRowTwo"
                                         id="holesTable">

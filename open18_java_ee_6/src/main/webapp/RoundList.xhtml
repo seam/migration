@@ -131,17 +131,6 @@
                             <rich:dataScroller for="roundList" maxPages="5"/>
                         </f:facet>
                     </rich:dataTable>
-
-                    <ui:remove>
-                        <div class="actionButtons">
-                            <h:button outcome="/RoundEdit.xhtml"
-                                      id="create"
-                                      value="Create round">
-                                <f:param name="roundId"/>
-                            </h:button>
-                            <h:commandButton action="# {multiRoundAction.delete}" value="Delete selected"/>
-                        </div>
-                    </ui:remove>
                 </div>
             </h:form>
         </rich:panel>

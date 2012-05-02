@@ -22,6 +22,93 @@
         <h:messages globalOnly="true" styleClass="message" errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
                     id="globalMessages"/>
 
+        <h:form id="selectHolePopupForm">
+            <rich:popupPanel id="selectHolePopup" autosized="true" header="Holes" modal="true">
+                <f:facet name="header">Holes</f:facet>
+                <f:facet name="controls">
+                    <h:outputLink value="#" onclick="#{rich:component('selectHolePopup')}.hide(); return false;">
+                        X
+                    </h:outputLink>
+                </f:facet>
+                <rich:dataTable id="holeListTable" var="hole" value="#{allHoles}" rendered="#{not empty allHoles}" rows="10">
+                    <rich:column>
+                        <f:facet name="header">
+                            name
+                        </f:facet>
+                        #{hole.name}
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            course name
+                        </f:facet>
+                        #{hole.course.name}
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            number
+                        </f:facet>
+                        #{hole.number}
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            <h:outputText value="Select" />
+                        </f:facet>
+                        <h:commandLink id="selectHoleLink" action="#{teeAction.selectHole(hole)}" value="Select"/>
+                    </rich:column>
+                    <f:facet name="footer">
+                        <rich:dataScroller for="holeListTable" maxPages="20"/>
+                    </f:facet>
+                </rich:dataTable>
+            </rich:popupPanel>
+        </h:form>
+
+        <h:form id="selectTeeSetPopupForm">
+            <rich:popupPanel id="selectTeeSetPopup" autosized="true" header="Holes" modal="true">
+                <f:facet name="header">Tee Sets</f:facet>
+                <f:facet name="controls">
+                    <h:outputLink value="#" onclick="#{rich:component('selectTeeSetPopup')}.hide(); return false;">
+                        X
+                    </h:outputLink>
+                </f:facet>
+                <rich:dataTable id="teeSetListTable" var="_teeSet" value="#{allTeeSets}" rendered="#{not empty allTeeSets}" rows="10">
+                    <rich:column>
+                        <f:facet name="header">
+                            color
+                        </f:facet>
+                        <div title="#{_teeSet.color}"
+                             style="background-color: #{_teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;"></div>
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            course name
+                        </f:facet>
+                        #{_teeSet.course.name}
+                    </rich:column>
+                    <rich:column sortBy="#{_teeSet.name}">
+                        <f:facet name="header">
+                            name
+                        </f:facet>
+                        #{_teeSet.name}
+                    </rich:column>
+                    <rich:column sortBy="#{_teeSet.position}">
+                        <f:facet name="header">
+                            position
+                        </f:facet>
+                        #{_teeSet.position}
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">
+                            <h:outputText value="Select" />
+                        </f:facet>
+                        <h:commandLink id="selectTeeSetLink" action="#{teeAction.selectTeeSet(_teeSet)}" value="Select"/>
+                    </rich:column>
+                    <f:facet name="footer">
+                        <rich:dataScroller for="teeSetListTable" maxPages="20"/>
+                    </f:facet>
+                </rich:dataTable>
+            </rich:popupPanel>
+        </h:form>
+
         <h:form id="tee" styleClass="edit">
             <rich:panel>
                 <f:facet name="header">#{teeAction.managed ? 'Edit' : 'Add'} Tee</f:facet>
@@ -29,20 +116,20 @@
                 <open18:input id="holeIdDecoration" label="holeId">
                     <h:inputText id="holeId" required="true" disabled="#{teeAction.managed}"
                                  value="#{teeAction.tee.id.holeId}">
-                        <a:ajax event="onblur" render="@region" bypassUpdates="true" execute="@region"/>
+                        <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="teeSetIdDecoration" label="teeSetId">
                     <h:inputText id="teeSetId" required="true" disabled="#{teeAction.managed}"
                                  value="#{teeAction.tee.id.teeSetId}">
-                        <a:ajax event="onblur" render="@region" bypassUpdates="true" execute="@region"/>
+                        <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
                 <open18:input id="distanceDecoration" label="distance">
                     <h:inputText id="distance" required="true" value="#{teeAction.tee.distance}">
-                        <a:ajax event="onblur" render="@region" bypassUpdates="true" execute="@region"/>
+                        <a:ajax event="blur" render="@region" bypassUpdates="true" execute="@region"/>
                     </h:inputText>
                 </open18:input>
 
@@ -54,151 +141,138 @@
 
             <div class="actionButtons">
 
-                <h:commandButton id="save"
-                                 value="Save"
-                                 action="#{teeAction.persist}"
-                                 disabled="#{!teeAction.wired}"
-                                 rendered="#{!teeAction.managed}"/>
+                <h:commandButton id="save" value="Save" action="#{teeAction.save}" rendered="#{!teeAction.managed}"/>
 
-                <h:commandButton id="update"
-                                 value="Save"
-                                 action="#{teeAction.update}"
-                                 rendered="#{teeAction.managed}"/>
+                <h:commandButton id="update" value="Save" action="#{teeAction.update}" rendered="#{teeAction.managed}"/>
 
-                <h:commandButton id="delete"
-                                 value="Delete"
-                                 action="#{teeAction.remove}"
-                                 immediate="true"
+                <h:commandButton id="delete" value="Delete" action="#{teeAction.remove}" immediate="true"
                                  rendered="#{teeAction.managed}"/>
 
                 <h:button id="done" value="Done" outcome="/Tee.xhtml" rendered="#{teeAction.managed}"/>
 
                 <h:button id="cancel" value="Cancel" outcome="/TeeList.xhtml" rendered="#{!teeAction.managed}"/>
             </div>
+
+            <rich:tabPanel switchType="client">
+
+                <rich:tab header="hole *" labelClass="required">
+                    <div class="association" id="holeParent">
+
+                        <h:outputText value="There is no hole associated with this tee." rendered="#{teeAction.tee.hole == null}"/>
+
+                        <rich:dataTable var="hole" value="#{teeAction.tee.hole}" rendered="#{teeAction.tee.hole != null}"
+                                        rowClasses="rvgRowOne,rvgRowTwo" id="holeTable">
+                            <h:column>
+                                <f:facet name="header">id</f:facet>
+                                #{hole.id}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">course id</f:facet>
+                                #{hole.course.id}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">ladiesHandicap</f:facet>
+                                #{hole.ladiesHandicap}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">ladiesPar</f:facet>
+                                #{hole.ladiesPar}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">mensHandicap</f:facet>
+                                #{hole.mensHandicap}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">mensPar</f:facet>
+                                #{hole.mensPar}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">name</f:facet>
+                                #{hole.name}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">number</f:facet>
+                                #{hole.number}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">action</f:facet>
+                                <h:link outcome="/Hole.xhtml" id="viewhole" value="View">
+                                    <f:param name="holeId" value="#{hole.id}"/>
+                                </h:link>
+                            </h:column>
+                        </rich:dataTable>
+
+                        <div class="actionButtons">
+                            <h:commandButton value="Select hole">
+                                <rich:componentControl target="selectHolePopup" operation="show" />
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </rich:tab>
+
+                <rich:tab header="teeSet *" labelClass="required">
+                    <div class="association" id="teeSetParent">
+
+                        <h:outputText value="There is no teeSet associated with this tee."
+                                      rendered="#{teeAction.tee.teeSet == null}"/>
+
+                        <rich:dataTable var="_teeSet" value="#{teeAction.tee.teeSet}" rendered="#{teeAction.tee.teeSet != null}"
+                                        rowClasses="rvgRowOne,rvgRowTwo" id="teeSetTable">
+                        <h:column>
+                                <f:facet name="header">id</f:facet>
+                                #{_teeSet.id}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">color</f:facet>
+
+                                <div title="#{_teeSet.color}"
+                                     style="background-color: #{_teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;"></div>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">course id</f:facet>
+                                #{_teeSet.course.id}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">ladiesCourseRating</f:facet>
+                                #{_teeSet.ladiesCourseRating}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">ladiesSlopeRating</f:facet>
+                                #{_teeSet.ladiesSlopeRating}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">mensCourseRating</f:facet>
+                                #{_teeSet.mensCourseRating}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">mensSlopeRating</f:facet>
+                                #{_teeSet.mensSlopeRating}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">name</f:facet>
+                                #{_teeSet.name}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">position</f:facet>
+                                #{_teeSet.position}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">action</f:facet>
+                                <h:link outcome="/TeeSet.xhtml" id="viewteeSet" value="View">
+                                    <f:param name="teeSetId" value="#{_teeSet.id}"/>
+                                </h:link>
+                            </h:column>
+                        </rich:dataTable>
+
+                        <div class="actionButtons">
+                            <h:commandButton value="Select teeSet">
+                                <rich:componentControl target="selectTeeSetPopup" operation="show" />
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </rich:tab>
+            </rich:tabPanel>
         </h:form>
-
-        <rich:tabPanel switchType="client">
-
-            <rich:tab header="teeSet *" labelClass="required">
-                <div class="association" id="holeParent">
-
-                    <h:outputText value="There is no teeSet associated with this tee." rendered="#{teeAction.tee.hole == null}"/>
-
-                    <rich:dataTable var="teeSet" value="#{teeAction.tee.hole}" rendered="#{teeAction.tee.hole != null}"
-                                    rowClasses="rvgRowOne,rvgRowTwo" id="holeTable">
-                        <h:column>
-                            <f:facet name="header">id</f:facet>
-                            #{hole.id}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">course id</f:facet>
-                            #{hole.course.id}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">ladiesHandicap</f:facet>
-                            #{hole.ladiesHandicap}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">ladiesPar</f:facet>
-                            #{hole.ladiesPar}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">mensHandicap</f:facet>
-                            #{hole.mensHandicap}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">mensPar</f:facet>
-                            #{hole.mensPar}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">name</f:facet>
-                            #{hole.name}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">number</f:facet>
-                            #{hole.number}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">action</f:facet>
-                            <h:link outcome="/Hole.xhtml" id="viewhole" value="View">
-                                <f:param name="holeId" value="#{hole.id}"/>
-                            </h:link>
-                        </h:column>
-                    </rich:dataTable>
-
-                    <div class="actionButtons">
-                        <!-- TODO: fix this to use the popup -->
-                        <h:button value="Select teeSet" view="/HoleList.xhtml">
-                            <f:param name="from" value="TeeEdit"/>
-                        </h:button>
-                    </div>
-                </div>
-            </rich:tab>
-
-            <rich:tab header="teeSet *" labelClass="required">
-                <div class="association" id="teeSetParent">
-
-                    <h:outputText value="There is no teeSet associated with this tee."
-                                  rendered="#{teeAction.tee.teeSet == null}"/>
-
-                    <rich:dataTable var="_teeSet" value="#{teeAction.tee.teeSet}" rendered="#{teeAction.tee.teeSet != null}"
-                                    rowClasses="rvgRowOne,rvgRowTwo" id="teeSetTable">
-                    <h:column>
-                            <f:facet name="header">id</f:facet>
-                            #{_teeSet.id}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">color</f:facet>
-
-                            <div title="#{_teeSet.color}"
-                                 style="background-color: #{_teeSet.color}; height: 1em; width: 1em; outline: 1px solid black; margin: 0 auto;"></div>
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">course id</f:facet>
-                            #{_teeSet.course.id}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">ladiesCourseRating</f:facet>
-                            #{_teeSet.ladiesCourseRating}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">ladiesSlopeRating</f:facet>
-                            #{_teeSet.ladiesSlopeRating}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">mensCourseRating</f:facet>
-                            #{_teeSet.mensCourseRating}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">mensSlopeRating</f:facet>
-                            #{_teeSet.mensSlopeRating}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">name</f:facet>
-                            #{_teeSet.name}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">position</f:facet>
-                            #{_teeSet.position}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">action</f:facet>
-                            <h:link outcome="/TeeSet.xhtml" id="viewteeSet" value="View">
-                                <f:param name="teeSetId" value="#{_teeSet.id}"/>
-                            </h:link>
-                        </h:column>
-                    </rich:dataTable>
-
-                    <div class="actionButtons">
-                        <!-- TODO: fix this to use the popup -->
-                        <h:button value="Select teeSet" outcome="/TeeSetList.xhtml">
-                            <f:param name="from" value="TeeEdit"/>
-                        </h:button>
-                    </div>
-
-                </div>
-            </rich:tab>
-        </rich:tabPanel>
     </ui:define>
 
 </ui:composition>

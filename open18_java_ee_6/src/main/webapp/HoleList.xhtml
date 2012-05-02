@@ -32,7 +32,7 @@
 
                     <h:outputText value="The teeSet search returned no results." rendered="#{empty holeSearch.resultList}"/>
 
-                    <rich:dataTable id="holeList" var="teeSet" value="#{holeSearch.resultList}"
+                    <rich:dataTable id="holeList" var="hole" value="#{holeSearch.resultList}"
                                     rendered="#{not empty holeSearch.resultList}">
                         <rich:column sortBy="#{hole.id}">
                             <f:facet name="header">
@@ -97,7 +97,7 @@
             </rich:panel>
 
             <div class="actionButtons">
-                <h:button outcome="/HoleEdit.xhtml" id="create" value="Create teeSet"/>
+                <h:button outcome="/HoleEdit.xhtml" id="create" value="Create Hole"/>
             </div>
         </h:form>
     </ui:define>

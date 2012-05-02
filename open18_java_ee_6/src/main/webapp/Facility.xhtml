@@ -76,21 +76,12 @@
 
         <div class="actionButtons">
             <h:form id="actionButtonForm">
-                <h:button
-                        id="edit"
-                        outcome="/FacilityEdit.xhtml"
-                        includeViewParams="true"
-                        value="Edit">
+                <h:button id="edit" outcome="/FacilityEdit.xhtml" includeViewParams="true" value="Edit">
                     <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
                 </h:button>
 
-                <h:button outcome="/FacilityList.xhtml"
-                          id="done"
-                          includeViewParams="true"
-                          value="Done back to list">
-                </h:button>
+                <h:button outcome="/FacilityList.xhtml" id="done" includeViewParams="true" value="Done back to list" />
             </h:form>
-
         </div>
 
         <rich:panel id="viewPanel">
@@ -145,9 +136,7 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header">action</f:facet>
-                        <h:link id="selectcourse"
-                                value="View"
-                                outcome="/Course.xhtml">
+                        <h:link id="selectcourse" value="View" outcome="/Course.xhtml">
                             <f:param name="courseId" value="#{course.id}" />
                             <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                         </h:link>
@@ -157,12 +146,8 @@
             </div>
 
             <div class="actionButtons">
-                <h:button
-                        value="Add course"
-                        outcome="/CourseEdit.xhtml">
-                    <f:param name="facilityId"
-                             value="#{facilityAction.facility.id}"/>
-                    <f:param name="courseFrom" value="Facility"/>
+                <h:button value="Add course" outcome="/CourseEdit.xhtml">
+                    <f:param name="facilityId" value="#{facilityAction.facility.id}"/>
                     <f:param name="cid" value="#{javax.enterprise.context.conversation.id}" />
                 </h:button>
             </div>

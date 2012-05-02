@@ -121,27 +121,15 @@
 
     <div class="actionButtons">
 
-        <h:commandButton id="save"
-                         value="Save"
-                         action="#{facilityAction.save}"
-                         rendered="#{!facilityAction.managed}"/>
+        <h:commandButton id="save" value="Save" action="#{facilityAction.save}" rendered="#{!facilityAction.managed}"/>
 
-        <h:commandButton id="update"
-                         value="Update"
-                         action="#{facilityAction.update}"
+        <h:commandButton id="update" value="Update" action="#{facilityAction.update}" rendered="#{facilityAction.managed}"/>
+
+        <h:commandButton id="delete" value="Delete" action="#{facilityAction.remove}" immediate="true"
                          rendered="#{facilityAction.managed}"/>
 
-        <h:commandButton id="delete"
-                         value="Delete"
-                         action="#{facilityAction.remove}"
-                         immediate="true"
-                         rendered="#{facilityAction.managed}"/>
-
-        <h:commandButton id="cancel"
-                         value="Cancel"
-                         action="/FacilityList.xhtml"
-                         actionListener="#{facilityAction.endConversation}"
-                         immediate="true" />
+        <h:commandButton id="cancel" value="Cancel" action="/FacilityList.xhtml"
+                         actionListener="#{facilityAction.endConversation}" immediate="true"/>
 
     </div>
 </h:form>
@@ -152,12 +140,9 @@
         <h:outputText value="There are no courses associated with this teeSet."
                       rendered="#{empty facilityCourses}"/>
 
-        <rich:dataTable value="#{facilityCourses}"
-                        var="course"
-                        rendered="#{not empty facilityCourses}"
-                        rowClasses="rvgRowOne,rvgRowTwo"
-                        id="coursesTable">
-            <h:column>
+        <rich:dataTable value="#{facilityCourses}" var="course" rendered="#{not empty facilityCourses}"
+                        rowClasses="rvgRowOne,rvgRowTwo" id="coursesTable">
+        <h:column>
                 <f:facet name="header">id</f:facet>
                 <h:outputText value="#{course.id}"/>
             </h:column>
@@ -197,11 +182,8 @@
             </h:column>
             <h:column>
                 <f:facet name="header">action</f:facet>
-                <h:link outcome="/Course.xhtml"
-                        id="selectcourse"
-                        value="View">
-                    <f:param name="courseId"
-                             value="#{course.id}"/>
+                <h:link outcome="/Course.xhtml" id="selectcourse" value="View">
+                    <f:param name="courseId" value="#{course.id}"/>
                 </h:link>
             </h:column>
         </rich:dataTable>

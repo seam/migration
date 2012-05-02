@@ -160,7 +160,7 @@
                       rendered="#{empty courseAction.holes}"/>
 
         <rich:dataTable value="#{courseAction.holes}"
-                        var="teeSet"
+                        var="hole"
                         rendered="#{not empty courseAction.holes}"
                         rowClasses="rvgRowOne,rvgRowTwo"
                         id="holesTable">
@@ -207,11 +207,8 @@
 
     <div class="actionButtons">
         <h:button
-                value="Add teeSet"
+                value="Add Hole"
                 view="/HoleEdit.xhtml">
-            <f:param name="courseId"
-                     value="#{courseAction.course.id}"/>
-            <f:param name="holeFrom" value="Course"/>
         </h:button>
     </div>
 </rich:tab>

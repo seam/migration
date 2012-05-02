@@ -81,11 +81,8 @@
                     <h:outputText value="The teeSet search returned no results."
                                   rendered="#{empty facilitySearch.resultList}"/>
 
-                    <rich:dataTable id="facilityListTable"
-                                    var="_facility"
-                                    value="#{facilitySearch.resultList}"
-                                    rows="10"
-                                    rendered="#{not empty facilitySearch.resultList}">
+                    <rich:dataTable id="facilityListTable" var="_facility" value="#{facilitySearch.resultList}"
+                                    rows="10" rendered="#{not empty facilitySearch.resultList}">
                         <rich:column sortBy="#{_facility.id}">
                             <f:facet name="header">
                                 <a:commandLink styleClass="columnHeader" value="id"/>
@@ -120,10 +117,12 @@
                             <f:facet name="header">
                                 <h:outputText styleClass="columnHeader" value="name"/>
                             </f:facet>
-                            <h:outputLink value="#{_facility.uri}"
-                                          rendered="#{not empty _facility.uri}">#{_facility.name}</h:outputLink>
-                            <h:outputText value="#{_facility.uri}"
-                                          rendered="#{empty _facility.uri}">#{_facility.name}</h:outputText>
+                            <h:outputLink value="#{_facility.uri}" rendered="#{not empty _facility.uri}">
+                                #{_facility.name}
+                            </h:outputLink>
+                            <h:outputText value="#{_facility.uri}" rendered="#{empty _facility.uri}">
+                                #{_facility.name}
+                            </h:outputText>
                         </rich:column>
                         <rich:column sortBy="#{_facility.phone}">
                             <f:facet name="header">
@@ -176,9 +175,7 @@
             </rich:panel>
 
             <div class="actionButtons">
-                <h:button outcome="/FacilityEdit.xhtml"
-                          id="create"
-                          value="Create teeSet">
+                <h:button outcome="/FacilityEdit.xhtml" id="create" value="Create teeSet">
                     <f:param name="cid" value="#{javax.enterprise.context.conversation.id}"/>
                 </h:button>
             </div>

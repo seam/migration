@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -67,5 +68,12 @@ public class HoleSearch implements Serializable {
 
     public void setResultList(List<Hole> resultList) {
         this.resultList = resultList;
+    }
+
+    @Produces
+    @ViewScoped
+    @Named
+    public List<Hole> getAllHoles() {
+        return dao.findAll();
     }
 }

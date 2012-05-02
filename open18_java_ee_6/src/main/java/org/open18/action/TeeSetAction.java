@@ -31,6 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.open18.model.Course;
 import org.open18.model.Tee;
 import org.open18.model.TeeSet;
 import org.open18.model.dao.TeeSetDao;
@@ -131,5 +132,9 @@ public class TeeSetAction implements Serializable {
     @SuppressWarnings("unchecked")
     public List<Tee> getTees() {
         return teeSet.getTees() == null ? Collections.EMPTY_LIST : new ArrayList<Tee>(teeSet.getTees());
+    }
+
+    public void selectCourse(Course course) {
+        this.teeSet.setCourse(course);
     }
 }
