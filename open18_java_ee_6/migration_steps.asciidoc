@@ -58,134 +58,126 @@ actual file
 .pom.xml
 [source, xml]
 ----
-  <?xml version="1.0" encoding="UTF-8"?>
-  <project xmlns="http://maven.apache.org/POM/4.0.0"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-      <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-      <groupId>org.open18</groupId>
-      <artifactId>open18</artifactId>
-      <packaging>war</packaging>
-      <version>2.0.0.Beta-SNAPSHOT</version>
-      <name>Open18 application from Seam in Action</name>
+    <groupId>org.open18</groupId>
+    <artifactId>open18</artifactId>
+    <packaging>war</packaging>
+    <version>2.0.0.Beta-SNAPSHOT</version>
+    <name>Open18 application from Seam in Action</name>
 
-      <properties>
-          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-          <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
-          <richfaces.version>4.1.0.Final</richfaces.version>
-          <apache.shiro.version>1.2.0</apache.shiro.version>
-          <arquillian.version>1.0.0.CR7</arquillian.version>
-          <junit.version>4.10</junit.version>
-      </properties>
+    <!-- It's easier to set versions here thar will / could be used in multiple locations. -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
+        <richfaces.version>4.2.1.Final</richfaces.version>
+    </properties>
 
-      <dependencyManagement>
-          <dependencies>
-              <dependency>
-                  <groupId>org.jboss.spec</groupId>
-                  <artifactId>jboss-javaee6-specs-bom</artifactId>
-                  <version>${jboss.javaee6.version}</version>
-                  <type>pom</type>
-                  <scope>import</scope>
-              </dependency>
-              <dependency>
-                  <groupId>org.richfaces</groupId>
-                  <artifactId>richfaces-bom</artifactId>
-                  <version>${richfaces.version}</version>
-                  <type>pom</type>
-                  <scope>import</scope>
-              </dependency>
-              <dependency>
-                  <groupId>org.jboss.arquillian</groupId>
-                  <artifactId>arquillian-bom</artifactId>
-                  <version>1.0.0.CR7</version>
-                  <type>pom</type>
-                  <scope>import</scope>
-              </dependency>
-          </dependencies>
-      </dependencyManagement>
+    <!--
+      This section pulls in other poms with all the versions set. The bom artifacts
+      use versions of modules that are known to work well together, easing the burden
+      of finding all these on your own
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.spec</groupId>
+                <artifactId>jboss-javaee6-specs-bom</artifactId>
+                <version>${jboss.javaee6.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.richfaces</groupId>
+                <artifactId>richfaces-bom</artifactId>
+                <version>${richfaces.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-      <dependencies>
-          <dependency>
-              <groupId>javax.enterprise</groupId>
-              <artifactId>cdi-api</artifactId>
-              <scope>provided</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.jboss.spec.javax.faces</groupId>
-              <artifactId>jboss-jsf-api_2.1_spec</artifactId>
-              <scope>provided</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.jboss.spec.javax.el</groupId>
-              <artifactId>jboss-el-api_2.2_spec</artifactId>
-              <scope>provided</scope>
-          </dependency>
-          <dependency>
-              <groupId>javax.validation</groupId>
-              <artifactId>validation-api</artifactId>
-              <scope>provided</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.hibernate.javax.persistence</groupId>
-              <artifactId>hibernate-jpa-2.0-api</artifactId>
-              <scope>provided</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.jboss.spec.javax.ejb</groupId>
-              <artifactId>jboss-ejb-api_3.1_spec</artifactId>
-              <scope>provided</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.apache.shiro</groupId>
-              <artifactId>shiro-core</artifactId>
-              <version>${apache.shiro.version}</version>
-              <scope>compile</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.apache.shiro</groupId>
-              <artifactId>shiro-web</artifactId>
-              <version>${apache.shiro.version}</version>
-              <scope>runtime</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.richfaces.ui</groupId>
-              <artifactId>richfaces-components-ui</artifactId>
-              <scope>runtime</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.richfaces.core</groupId>
-              <artifactId>richfaces-core-impl</artifactId>
-              <scope>runtime</scope>
-          </dependency>
-          <dependency>
-              <groupId>junit</groupId>
-              <artifactId>junit</artifactId>
-              <version>${junit.version}</version>
-              <scope>test</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.jboss.arquillian.junit</groupId>
-              <artifactId>arquillian-junit-container</artifactId>
-              <scope>test</scope>
-          </dependency>
-      </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.faces</groupId>
+            <artifactId>jboss-jsf-api_2.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.el</groupId>
+            <artifactId>jboss-el-api_2.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-components-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.ui</groupId>
+            <artifactId>richfaces-components-ui</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.richfaces.core</groupId>
+            <artifactId>richfaces-core-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 
-      <build>
-          <finalName>${project.artifactId}</finalName>
-          <plugins>
-              <plugin>
-                  <artifactId>maven-compiler-plugin</artifactId>
-                  <version>2.3.2</version>
-                  <configuration>
-                      <source>1.6</source>
-                      <target>1.6</target>
-                  </configuration>
-              </plugin>
-          </plugins>
-      </build>
-
-  </project>
+    <!-- Tells Maven this project is to use Java 6, also creates the static meta model for the entities -->
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-rebel-xml</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
 ----
 
 === Migrate to JPA 2.0 ===
@@ -215,17 +207,36 @@ they did using a JPA 1 implementation. The version in persistence.xml should be
 updated to take advantage of new features though. Such features include the type
 safe criteria api, new mappings, and additional methods.
 
+.src/main/resources/META-INF/persistence.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Persistence deployment descriptor for dev profile -->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+   <persistence-unit name="open18" transaction-type="JTA">
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
+      <jta-data-source>jboss/datasources/open18Datasource</jta-data-source>
+      <properties>
+         <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+      </properties>
+   </persistence-unit>
+</persistence>
+----
+
 ==== Metamodel Generation ====
 
 To take full advantage of type saftey, static meta model classes should be
 created or generated. The simplest way of doing this is using an annotation
 processor such as Hibernate's JPA 2 Metamodel Generator. Additional information
-on using this annotation processor can be found in http://docs.jboss.org/hibernate/jpamodelgen/1.1/reference/en-US/html_single/[the documentation].
-
-// TODO: should I actually go through the steps?
-
+on using this annotation processor can be found in http://docs.jboss.org/hibernate/jpamodelgen/1.1/reference/en-US/html_single/[the documentation]. 
 For this migration, the annotation processor was used once and then removed from
 the pom.xml file.
+
+// TODO: should I actually go through the steps?
 
 === Migrate to Bean Validation from Hibernate Validator 3 ===
 
@@ -235,13 +246,54 @@ Java EE 6 contains another specification which standardized validation: JSR 303
 completely different code base and includes all new package, validations and
 ways of interacting with those validations. If the application is only using
 the annotations, these are typically a package change and at times an
-annotation change. For teeSet, the +@org.hibernate.validator.Length+
+annotation change. For Course, the +@org.hibernate.validator.Length+
 validation becomes the +@javax.validation.constraints.Size+ annotation. In
 some cases, such as the GolferValidator in Open18, this can become a custom
 constraint. Information about custom constraints can be found at the
 http://docs.jboss.org/hibernate/validator/4.2/reference/en-US/html/validator-customconstraints.html[Hibernate Validator documentation].
 
 For more information about migrating from Hibernate Validator 3, please see https://docs.jboss.org/author/display/AS71/How+do+I+migrate+my+application+from+AS5+or+AS6+to+AS7#HowdoImigratemyapplicationfromAS5orAS6toAS7-MigratetoHibernate4Validator[the migration documentation].
+
+Below is an excerpt from the Course entity demonstrating some JSR 303 validations
+
+.src/main/java/org/open18/model/Course.java
+[source,java]
+----
+@Column(name = "GREENS", nullable = false, length = 15)
+@NotNull
+@Size(max = 15)
+public String getGreens() {
+    return this.greens;
+}
+
+public void setGreens(String greens) {
+    this.greens = greens;
+}
+
+@Column(name = "YEAR_BUILT")
+@Min(1000)
+@Max(9999)
+public Integer getYearBuilt() {
+    return this.yearBuilt;
+}
+
+public void setYearBuilt(Integer yearBuilt) {
+    this.yearBuilt = yearBuilt;
+}
+
+@Column(name = "NUM_HOLES", nullable = false)
+@NotNull
+@Min(9)
+@Max(18)
+public int getNumHoles() {
+    return this.numHoles;
+}
+----
+
++@NotNull+, +@Size+, +@Min+, and +@Max+ are all standard validations from the 
++javax.validation.constraints+ package. There are other constraints provided 
+by Hibernate Validator, however, to maintain portability only standard
+constraints were used. Other examples can be found in the entities.
 
 === Migrate to CDI ===
 
@@ -274,13 +326,13 @@ beans.xml is used
 .src/main/webapp/WEB-INF/beans.xml
 [source, xml]
 ----
-  <?xml version="1.0" encoding="UTF-8"?>
-  <beans xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="
-                http://java.sun.com/xml/ns/javaee
-                http://docs.jboss.org/cdi/beans_1_0.xsd">
-  </beans>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+              http://java.sun.com/xml/ns/javaee
+              http://docs.jboss.org/cdi/beans_1_0.xsd">
+</beans>
 ----
 
 ==== Substitute Seam 2 annotations for CDI equivalents ====
@@ -306,6 +358,89 @@ Bean). There is, however the +@javax.inject.Named+ annotation. It's main
 purpose is to register an EL name for the bean. If the bean is not going to be
 used in an EL expression, it is not needed.
 
+The CourseComparison class has been modified below to make use of +@Inject+,
++@ConversationScoped+, +@Named+ and also +@Produces+. More detail about these
+annotations can be found below, the JSR 299 specification,  or a CDI 
+implementation's documentation
+
+.src/main/java/org/open18/action/CourseComparison.java
+[source, java]
+----
+package org.open18.action;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.open18.model.Course;
+import org.open18.model.dao.CourseDao;
+
+@Named
+@ConversationScoped
+public class CourseComparison implements Serializable {
+    private static final long serialVersionUID = -4881060214215467731L;
+
+    @Inject
+    private CourseDao courseDao;
+
+    @Inject
+    private transient Conversation conversation;
+
+  private boolean ready = false;
+
+  protected Set<Course> courses = new HashSet<Course>();
+
+  public void mark(Long courseId) {
+    Course course = courseDao.findBy(courseId);
+    if (course == null) {
+      return;
+    }
+    courses.add(course);
+    ready = courses.size() >= 2;
+
+        if (conversation.isTransient()) {
+            conversation.begin();
+        }
+  }
+
+  @Produces
+  @Named("comparedCourses")
+  @ConversationScoped
+  public List<Course> getCourses() {
+      return new ArrayList<Course>(courses);
+  }
+
+  public boolean isMarked(Course course) {
+    return courses.contains(course);
+  }
+
+  public void reset() {
+    courses.clear();
+    ready = false;
+  }
+
+  public String validate() {
+    return ready ? "valid" : "invalid";
+  }
+
+  public boolean isReady() {
+      return ready;
+  }
+
+  public void setReady(boolean ready) {
+      this.ready = ready;
+  }
+}
+---- 
+
 ===== Producing resources =====
 
 Seam 2 had a feature called factories which allowed a resource to be created and
@@ -322,17 +457,38 @@ platforms handle proxies.
 
 Because of the first difference, it, at times can be necessary to to create a
 wrapper around the actual object desired and modify the information as needed.
-For teeSet, the list of new golfers in the Open18 application could be produced
+For the comparedCourses above, the list of new checked courses could be produced
 and scoped as a +@SessionScoped+ resource, but it would never change for that
-session. If the list were wrapped within another object, the internal list could
-be modified if a new golfer registered during the session and the existing
-session could then see the new golfer in the list.
+session. If the list were wrapped within another object (or reproduced when 
+needed, in this case when a new conversation references this list), the internal list could
+be modified without having to reproduce the container object.
 
-In Open18, besides the teeSet mentioned, another resource which must be
+In Open18, besides the comparedCourses mentioned, another resource which must be
 produced which Seam 2 had readily available out of the box is the collection of
 messages. This is really a simple ResourceBundle, but it isn't available out of
 the box. This allows for a combination of messages similar to what Seam 2
 offered, though done in Java code instead of components.xml.
+
+.src/main/java/org/open18/ui/UiProducers.java
+[source, java]
+----
+package org.open18.ui;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.enterprise.inject.Produces;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+
+public class UiProducers {
+    @Produces @Named("messages")
+    public ResourceBundle getBundle() {
+        final Locale requestLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+        return ResourceBundle.getBundle("messages", requestLocale);
+    }
+}
+----
 
 ===== Scopes =====
 
@@ -344,7 +500,8 @@ when using CDI:
 * +@ConversationScoped+
 * +@RequestScoped+
 
-There is no business process scope or method scope however. CDI has one
+There is no business process scope or method scope however, and +@RequestScoped+ 
+is essentially the same as +EVENT+ from Seam 2. CDI has one
 other scope which does not exist in Seam 2: +@DependentScoped+. This scope
 is similar in life as a typical Java object creation. It will last as long
 as the containing object survives. There's also one important difference,
@@ -366,10 +523,19 @@ composition, lack of being able to search for null fields, inability to perform
 joins, etc. Java EE 6 doesn't have anything ready to use to fill this gap.
 Fortunately a little creativity and the JPA Criteria API can go a long way.
 
-In this teeSet a base dao abstract class has been created to keep things DRY. A
+In this migration a base dao abstract class has been created to keep things DRY. A
 similar approach could be done with composition, however, some of the type
 safety would be lost. This base class contains all of the functionality for the
-DAO, including a dynamic search similar to the Seam 2 Query search idea.
+DAO, including a dynamic search similar to the Seam 2 Query search idea. The BaseDao class
+can be found at src/main/java/org/open18/model/dao/BaseDao.
+
+INFO: The BaseDao in this migration has a few shortcuts and will not work in all cases,
+  however, for this migration it served well enough. The BaseDao class makes use of
+  the Criteria API from JPA 2.0, which is beyond the scope of this guide. Please
+  consult the http://jcp.org/en/jsr/detail?id=317[specification] for the best information
+  about the Criteria API and how to use it. More examples of these DAOs can be found
+  in the src/main/java/org/open18/model/dao package. Of particular note is the RoundDao
+  which has an override using a criteria object instead of an example.
 
 To fill the Home object from Seam 2, simple backing beans which manage an
 instance of the entity work nicely, and little code is needed to create a full
@@ -382,17 +548,147 @@ of SFSBs have been enumerated many times throughout the years. These backing
 beans are annotated with one of the scope annotations mentioned earlier and also
 with +@Named+ so they can be used in EL.
 
-WARNING: 
-  It is best not to directly use JPA entities created by CDI, unless
+WARNING: It is best not to directly use JPA entities created by CDI, unless
   they are created by a producer. If CDI manages the life cycle of an entity, JPA
   functionality is lost and the entire object will have to be cloned into a new
   object to be persisted.
 
 // TODO: Many have restrictions, will have to see how to recreate this.
 
-// TODO: Trying to use abstract classes to simplify the searching and make it similar to what was done in Seam 2
+The TeeSetAction class is an example of using composition to recreate something
+similar to the Home class from Seam 2.
 
-// TODO: Expand this section and show some code, explain composition
+.src/main/java/org/open18/action/TeeSetAction.java
+[source, java]
+----
+package org.open18.action;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.open18.model.Course;
+import org.open18.model.Tee;
+import org.open18.model.TeeSet;
+import org.open18.model.dao.TeeSetDao;
+
+/**
+ *
+ */
+@ConversationScoped
+@Named
+@Stateful
+public class TeeSetAction implements Serializable {
+
+    private static final long serialVersionUID = 2281839629956903065L;
+
+    @Inject
+    private TeeSetDao dao;
+
+    @Inject
+    private transient Conversation conversation;
+
+    private Long teeSetId;
+
+    private TeeSet teeSet;
+
+    private boolean managed;
+
+    @Inject
+    private void init() {
+        teeSet = new TeeSet();
+    }
+
+    public void loadTeeSet() {
+        if (this.teeSetId != null && !FacesContext.getCurrentInstance().isPostback()) {
+            this.teeSet = this.dao.findBy(teeSetId);
+            this.managed = true;
+        }
+        beginConversation();
+    }
+
+    public void beginConversation() {
+        if (conversation.isTransient()) {
+            conversation.begin();
+        }
+    }
+
+    public void endConversation() {
+        if (!conversation.isTransient()) {
+            conversation.end();
+        }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public String save() {
+        dao.saveAndFlush(teeSet);
+        endConversation();
+        return "/TeeSetList.xhtml";
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public String update() {
+        dao.saveAndFlush(teeSet);
+        return "/TeeSet.xhtml?teeSetId=" + teeSet.getId();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public String remove() {
+        dao.remove(teeSet);
+        endConversation();
+        return "/TeeSetList.xhtml";
+    }
+
+    public Long getTeeSetId() {
+        return this.teeSetId;
+    }
+
+    public void setTeeSetId(Long newTeeSetId) {
+        if (newTeeSetId != null) {
+            this.teeSetId = newTeeSetId;
+        }
+    }
+
+    public TeeSet getTeeSet() {
+        return teeSet;
+    }
+
+    public void setTeeSet(TeeSet newTee) {
+        teeSet = newTee;
+    }
+
+    public boolean isManaged() {
+        return managed;
+    }
+
+    public void setManaged(boolean newManaged) {
+        managed = newManaged;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Tee> getTees() {
+        return teeSet.getTees() == null ? Collections.EMPTY_LIST : new ArrayList<Tee>(teeSet.getTees());
+    }
+
+    public void selectCourse(Course course) {
+        this.teeSet.setCourse(course);
+    }
+}
+----
+
+All of the Action classes in the migration are EJBs. This brings declarative 
+transaction support among others. The +init()+ method is annotated with +@Inject+ which
+works similarly to +@Create+ from Seam 2, but allows for injection of parameters.
 
 ==== Changes in the conversation model ====
 
@@ -403,13 +699,13 @@ via different browser tabs and also no workspace manager. The conversation,
 until CDI 1.1, is also tied directly to JSF and cannot be used outside of JSF
 and still remain portable. There is also no annotation control over the
 conversation. Instead the conversation must be injected and then managed
-(started, ended, timeout configured, etc.).
+(started, ended, timeout configured, etc.) as was done above in TeeSetAction.
 
 The conversation can still be tracked by using a query parameter for JSF GET
-requests, the name is +conversationId+. However, using a conversation outside
-of JSF will require additional work, and non portable changes to an application,
-unless a new scope is created for the application which behaves like the
-conversation from Seam 2.
+requests, the name is +cid+ and the value is +javax.enterprise.context.conversation.id+. 
+However, using a conversation outside of JSF will require additional work, 
+and non portable changes to an application, unless a new scope is created 
+for the application which behaves like the conversation from Seam 2.
 
 === Migrate to  JSF 2.0 ===
 
@@ -434,12 +730,12 @@ config.xml file.
 
 [source, xml]
 ----
-  <?xml version='1.0' encoding='UTF-8'?>
-  <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
-  </faces-config>
+</faces-config>
 ----
 
 In the Open18 application, there were multiple languages supported. That part
@@ -448,16 +744,18 @@ will need to remain.
 .src/main/webapp/WEB-INF/faces-config.xml excerpt
 [source, xml]
 ----
-    <application>
-        <locale-config>
-            <default-locale>en</default-locale>
-            <supported-locale>bg</supported-locale>
-            <supported-locale>de</supported-locale>
-            <supported-locale>en</supported-locale>
-            <supported-locale>fr</supported-locale>
-            <supported-locale>tr</supported-locale>
-        </locale-config>
-    </application>
+  ...
+  <application>
+      <locale-config>
+          <default-locale>en</default-locale>
+          <supported-locale>bg</supported-locale>
+          <supported-locale>de</supported-locale>
+          <supported-locale>en</supported-locale>
+          <supported-locale>fr</supported-locale>
+          <supported-locale>tr</supported-locale>
+      </locale-config>
+  </application>
+  ...
 ----
 
 The main changes, as listed above in the faces-config.xml are an update for the schema,
@@ -506,7 +804,8 @@ The first step for migrating these tags is to remove the seam namespace from the
 |+s:button+|+h:button+ same conditions as +h:link+
 |+s:decorate+|There is no direct mapping for this, however the same functionality can
        be achieved with the +UIInputContainer+ and a composite container, both of
-       which are in the Open18 migration teeSet.
+       which are in the Open18 migration (src/main/java/org/open18/ui/component/UIInputContainer.java 
+       and src/main/webapp/resources/components/input.xhtml respectively).
 
 |+s:label+|No direct mapping, but +h:outputLabel+ is similar.
 |+s:span+| No direct mapping, but similar output can be achieved by +h:panelGroup+

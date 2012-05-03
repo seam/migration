@@ -15,9 +15,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
         <richfaces.version>4.2.1.Final</richfaces.version>
-        <apache.shiro.version>1.2.0</apache.shiro.version>
-        <arquillian.version>1.0.0.CR7</arquillian.version>
-        <junit.version>4.10</junit.version>
     </properties>
 
     <!--
@@ -38,13 +35,6 @@
                 <groupId>org.richfaces</groupId>
                 <artifactId>richfaces-bom</artifactId>
                 <version>${richfaces.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>1.0.0.CR7</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -83,24 +73,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.spec.javax.transaction</groupId>
-            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- Apache Shiro will be used to replease the security aspects of Seam 2 -->
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-core</artifactId>
-            <version>${apache.shiro.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-web</artifactId>
-            <version>${apache.shiro.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.richfaces.ui</groupId>
             <artifactId>richfaces-components-api</artifactId>
             <scope>compile</scope>
@@ -114,18 +86,6 @@
             <groupId>org.richfaces.core</groupId>
             <artifactId>richfaces-core-impl</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Arquillian will be used for testing instead of SeamTest -->
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

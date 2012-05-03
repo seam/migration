@@ -17,15 +17,15 @@
 
 package org.open18.ui;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class UiProducers {
-    @Produces @Named("messages")
+    @Produces @Named("messages") @ApplicationScoped
     public ResourceBundle getBundle() {
         final Locale requestLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
         return ResourceBundle.getBundle("messages", requestLocale);

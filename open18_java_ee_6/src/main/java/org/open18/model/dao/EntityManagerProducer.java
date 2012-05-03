@@ -30,6 +30,12 @@ import javax.persistence.PersistenceContextType;
 @Stateful
 @RequestScoped
 public class EntityManagerProducer {
+    /*
+    The producer class must be a Stateful session bean to make use of the
+    extended persistence context. However, because it is a CDI managed bean and
+    has a scope, it will be destroyed and recreated with every request, keeping memory
+    down and not allowing the EntityManager to leak.
+     */
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;
 
