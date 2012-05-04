@@ -31,7 +31,13 @@ cp -r gfx $TARGET
 files=`find * -iname \*.asciidoc`
 for file in $files
 do
-    output_filename=$TARGET/${file//.asciidoc/.html}
-    echo "**** Processing $file > ${output_filename}"
-    asciidoc -b xhtml11 -a pygments -o ${output_filename} $file  
+    output_filename_html=$TARGET/${file//.asciidoc/.html}
+    output_filename_docbook=$TARGET/${file//.asciidoc/.pdf}
+    output_filename_epub=$TARGET/${file//.asciidoc/.epub}
+    echo "**** Processing $file > ${output_filename_html}"
+    asciidoc -b html5 -a toc2 -a pygments -o ${output_filename_html} $file  
+    echo "**** Processing $file > ${output_filename_docbook}"
+    a2x --dblatex-opts "-P latex.output.revhistory=0" -D $TARGET $file
+    echo "**** Processing $file > ${output_filename_epub}"
+    a2x -f epub -D $TARGET $file
 done

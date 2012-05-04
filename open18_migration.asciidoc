@@ -1,4 +1,4 @@
-== Seam in Action Open18 to Java EE 6 Migration ==
+= Seam in Action Open18 to Java EE 6 Migration =
 
 This tutorial will walk through converting the Open18 application from Dan
 Allen's [underline]#Seam in Action# from Seam 2 to Java EE 6. It will be as plain Java EE 6
@@ -8,14 +8,14 @@ security. For those two sections CDI Query and Apache Shiro will be used. The
 application will also be upgraded to RichFaces 4.1 (the current release at time
 of writing).
 
-=== Migrate to Maven ===
+== Migrate to Maven ==
 
 Seam 2, prior to 2.3, used Apache Ant as it's build tool of choice. In migrating
 to vanilla Java EE 6 or when using CDI extensions written by others, Apache
 Maven (or similar such as Gradle, Builder, Ant+Ivy, SBT, etc) will be the
 preferred build tool.
 
-==== Setup Maven Structure ====
+=== Setup Maven Structure ===
 
 Apache Maven follows a standard project layout defined below
 
@@ -45,7 +45,7 @@ src/test/java. Additional resources for the application such as persistence.xml
 will be at src/main/resources/META-INF, and lastly, JSF views and other web
 assets such as images, css, javascript, etc. will be under src/main/webapp.
 
-===== Flesh out pom.xml =====
+==== Flesh out pom.xml ====
 
 Below is the contents for the pom.xml file. There's very little there in terms
 of dependencies because the bulk of the dependencies will be provided for the
@@ -70,7 +70,7 @@ actual file
     <version>2.0.0.Beta-SNAPSHOT</version>
     <name>Open18 application from Seam in Action</name>
 
-    <!-- It's easier to set versions here thar will / could be used in multiple locations. -->
+    <!-- It is easier to set versions here thar will / could be used in multiple locations. -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jboss.javaee6.version>2.1.0.Beta1</jboss.javaee6.version>
@@ -180,7 +180,7 @@ actual file
 </project>
 ----
 
-=== Migrate to JPA 2.0 ===
+== Migrate to JPA 2.0 ==
 
 JSR 317, the update to the Java Persistence API includes a number of updates,
 many of which users had been asking for including improved mappings, a criteria
@@ -200,7 +200,7 @@ entities which may have become detached from a previous transaction (or
 request). Also recommended is the use of the +@Version+ annotation and column
 in the entities to allow for optimistic locking.
 
-==== Update persistence.xml to 2.0 ====
+=== Update persistence.xml to 2.0 ===
 
 JPA 2 is backwards compatible with JPA 1. All entities should work correctly as
 they did using a JPA 1 implementation. The version in persistence.xml should be
@@ -227,7 +227,7 @@ safe criteria api, new mappings, and additional methods.
 </persistence>
 ----
 
-==== Metamodel Generation ====
+=== Metamodel Generation ===
 
 To take full advantage of type saftey, static meta model classes should be
 created or generated. The simplest way of doing this is using an annotation
@@ -238,7 +238,7 @@ the pom.xml file.
 
 // TODO: should I actually go through the steps?
 
-=== Migrate to Bean Validation from Hibernate Validator 3 ===
+== Migrate to Bean Validation from Hibernate Validator 3 ==
 
 Java EE 6 contains another specification which standardized validation: JSR 303
 - Bean Validation. http://hibernate.org/subprojects/validator.html[Hibernate Validator 4]
@@ -295,7 +295,7 @@ public int getNumHoles() {
 by Hibernate Validator, however, to maintain portability only standard
 constraints were used. Other examples can be found in the entities.
 
-=== Migrate to CDI ===
+== Migrate to CDI ==
 
 Java EE 6 had a few new additions to the platform, two of them combining to
 formally standardize dependency injection for the Enterprise Edition of Java.
@@ -313,7 +313,7 @@ of the JSF specification. Migration from Seam 2 to Java EE 6 makes sense, and
 isn't terribly difficult (of course this depends on some of the features that
 were used from Seam 2).
 
-==== Activation ====
+=== Activation ===
 
 Seam 2 required the use of the seam.properties file to mark a jar, or WEB-
 INF/classes as containing Seam 2 components. This was mainly an optimization
@@ -335,12 +335,12 @@ beans.xml is used
 </beans>
 ----
 
-==== Substitute Seam 2 annotations for CDI equivalents ====
+=== Substitute Seam 2 annotations for CDI equivalents ===
 
 Nearly all of the annotations that were Seam 2 based have equivalents in Java EE
 6, however, some of them do not or are no longer needed.
 
-===== Injecting resources =====
+==== Injecting resources ====
 
 Because Seam components were typically not managed by the container
 (unless an EJB happened to be a Seam component, such as a SFSB or SLSB)
@@ -441,7 +441,7 @@ public class CourseComparison implements Serializable {
 }
 ---- 
 
-===== Producing resources =====
+==== Producing resources ====
 
 Seam 2 had a feature called factories which allowed a resource to be created and
 outjected. It allowed for a more custom creation than what Seam could do by
@@ -490,7 +490,7 @@ public class UiProducers {
 }
 ----
 
-===== Scopes =====
+==== Scopes ====
 
 Scopes are nothing new when coming from Seam 2. The standard scopes still exist
 when using CDI:
@@ -513,7 +513,7 @@ If the need arises for additional scopes, such as a business process scope, CDI
 allows for additional scopes to be created. Please refer to the JSR 299 spec or
 CDI implementation documentation for defining scopes.
 
-==== Migrate Query  / Home objects ====
+=== Migrate Query  / Home objects ===
 
 The application framework within Seam 2 consisting of Home and Query objects has
 proved to be very powerful for CRUD based sites. When coupled with seam-gen, it
@@ -690,7 +690,7 @@ All of the Action classes in the migration are EJBs. This brings declarative
 transaction support among others. The +init()+ method is annotated with +@Inject+ which
 works similarly to +@Create+ from Seam 2, but allows for injection of parameters.
 
-==== Changes in the conversation model ====
+=== Changes in the conversation model ===
 
 CDI has a conversation state similar to Seam 2, however, there are some major
 differences. The largest being that only one conversation can be active at a
@@ -707,7 +707,7 @@ However, using a conversation outside of JSF will require additional work,
 and non portable changes to an application, unless a new scope is created 
 for the application which behaves like the conversation from Seam 2.
 
-=== Migrate to  JSF 2.0 ===
+== Migrate to  JSF 2.0 ==
 
 Seam 2 contained many enhancements to JSF 1.2. Many of these enhancements made
 it into the official JSF 2 (JSR 314) specification! Some of these enhancements
@@ -722,7 +722,7 @@ actions needed to happen to migrate successfully to JSF 2.
 
 // TODO: Also will need something to replace CourseComparison ProfileAction needs a replacement possibly from Shiro MultiRoundAction needs a Java replacement, or we could just update it CDI RegisterAction needs a replacement, may be part of switching to Shiro
 
-==== Update faces-config.xml to 2.0 ====
+=== Update faces-config.xml to 2.0 ===
 
 Similar to Seam 2, the faces-config.xml file is very sparse, and essentially
 becomes a marker file to include JSF support. Below is a typical JSF 2 faces-
@@ -761,7 +761,7 @@ will need to remain.
 The main changes, as listed above in the faces-config.xml are an update for the schema,
 the version and the removal of the view handler declaration.
 
-==== Migrate to RichFaces 4.2 ====
+=== Migrate to RichFaces 4.2 ===
 
 Migrating to JSF 2 also involves an update to the component library. Open18 made
 use of RichFaces. True JSF 2 support in RichFaces came out with version
@@ -770,7 +770,7 @@ available. For many components the switch is change of JAR files, however, some
 components have not yet been migrated, or others have been combined. Information
 about component migration can be found on the https://community.jboss.org/wiki/RichFacesMigrationGuide33x-4xMigration[RichFaces wiki].
 
-==== Rework Navigation from pages.xml ====
+=== Rework Navigation from pages.xml ===
 
 Two changes in JSF 2 which Seam influenced are in navigation. Navigation
 enhancements include implicit navigation and also conditional navigation,
@@ -787,7 +787,7 @@ participate in conversion and validation, which is more powerful than what Seam
 2 offered in pages.xml. A view action in JSF 2 can be done by creating a
 listener for the +preRenderView+ event within an +f:metadata+ section.
 
-==== Seam Tags and equivalents in JSF and RichFaces ====
+=== Seam Tags and equivalents in JSF and RichFaces ===
 
 Seam 2 introduced some useful JSF components, some which made navigation easier, others which are useful for conversation. The navigation components are simple to migration, while some of the others are a little more difficult and a small collection do not have any replacement.
 
@@ -831,7 +831,7 @@ The first step for migrating these tags is to remove the seam namespace from the
 // TODO: security
 // TODO: AuthenticationManager goes away and uses Shiro, need to figure out how to produce the current golfer The auth package goes away and uses Shiro, need to figure out what to do about captcha
 
-=== Further Information ===
+== Further Information ==
 
 More information about migrating from Seam 2:
 
