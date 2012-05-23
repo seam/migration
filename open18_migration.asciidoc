@@ -2,10 +2,7 @@
 
 This tutorial will walk through converting the Open18 application from Dan
 Allen's [underline]#Seam in Action# from Seam 2 to Java EE 6. It will be as plain Java EE 6
-as possible. However, there are two large gaps in this migration which will
-require projects outside the core of Java EE 6: CRUD scaffolding and application
-security. For those two sections CDI Query and Apache Shiro will be used. The
-application will also be upgraded to RichFaces 4.1 (the current release at time
+as possible. The application will also be upgraded to RichFaces 4.1 (the current release at time
 of writing).
 
 == Migrate to Maven ==
