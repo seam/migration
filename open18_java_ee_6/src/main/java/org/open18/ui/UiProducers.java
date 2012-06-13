@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class UiProducers {
-    @Produces @Named("messages") @ApplicationScoped
+    @Produces @Named("messages")
     public ResourceBundle getBundle() {
         final Locale requestLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
         return ResourceBundle.getBundle("messages", requestLocale);
