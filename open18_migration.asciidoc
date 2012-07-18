@@ -7,7 +7,7 @@ of writing).
 
 == Migrate to Maven ==
 
-Seam 2, prior to 2.3, used Apache Ant as it's build tool of choice. In migrating
+Seam 2, prior to 2.3, used Apache Ant as its build tool of choice. In migrating
 to vanilla Java EE 6 or when using CDI extensions written by others, Apache
 Maven (or similar such as Gradle, Builder, Ant+Ivy, SBT, etc) will be the
 preferred build tool.
@@ -296,7 +296,7 @@ constraints were used. Other examples can be found in the entities.
 
 Java EE 6 had a few new additions to the platform, two of them combining to
 formally standardize dependency injection for the Enterprise Edition of Java.
-These two JSRs are http://jcp.org/en/jsr/summary?id=330[JSR 330], which
+These two JSRs are http://jcp.org/en/jsr/summary?id=330[JSR 330] which
 defines the annotations used for injection, and http://jcp.org/en/jsr/summary?id=299[JSR 299] 
 which defines how dependency resolution and injection works, scopes for the 
 platform similar to what Seam 2 provided, and possibly the most important of 
@@ -351,7 +351,7 @@ There is also a difference in defining what is a bean (or a component in Seam
 annotation. This is no longer the case. Each class (there are some exceptions,
 please refer to JSR 299 or a CDI implementation documentation) with a no-args
 constructor is now a managed bean (not to be confused with the JSF Managed
-Bean). There is, however the +@javax.inject.Named+ annotation. It's main
+Bean). There is, however the +@javax.inject.Named+ annotation. Its main
 purpose is to register an EL name for the bean. If the bean is not going to be
 used in an EL expression, it is not needed.
 
@@ -452,7 +452,7 @@ platforms handle proxies.
 * Factories do not support injection. With a producer, each parameter is an
   injected resource.
 
-Because of the first difference, it, at times can be necessary to to create a
+Because of the first difference, at times can be necessary to to create a
 wrapper around the actual object desired and modify the information as needed.
 For the comparedCourses above, the list of new checked courses could be produced
 and scoped as a +@SessionScoped+ resource, but it would never change for that
@@ -499,7 +499,7 @@ when using CDI:
 
 There is no business process scope or method scope however, and +@RequestScoped+ 
 is essentially the same as +EVENT+ from Seam 2. CDI has one
-other scope which does not exist in Seam 2: +@DependentScoped+. This scope
+other scope which does not exist in Seam 2: +@Dependent+. This scope
 is similar in life as a typical Java object creation. It will last as long
 as the containing object survives. There's also one important difference,
 when injected, the inject object is the actual object not a proxy like the
@@ -524,7 +524,7 @@ In this migration a base dao abstract class has been created to keep things DRY.
 similar approach could be done with composition, however, some of the type
 safety would be lost. This base class contains all of the functionality for the
 DAO, including a dynamic search similar to the Seam 2 Query search idea. The BaseDao class
-can be found at src/main/java/org/open18/model/dao/BaseDao.
+can be found at https://github.com/seam/migration/blob/develop/open18_java_ee_6/src/main/java/org/open18/model/dao/BaseDao.java[src/main/java/org/open18/model/dao/BaseDao].
 
 INFO: The BaseDao in this migration has a few shortcuts and will not work in all cases,
   however, for this migration it served well enough. The BaseDao class makes use of
@@ -579,9 +579,6 @@ import org.open18.model.Tee;
 import org.open18.model.TeeSet;
 import org.open18.model.dao.TeeSetDao;
 
-/**
- *
- */
 @ConversationScoped
 @Named
 @Stateful
