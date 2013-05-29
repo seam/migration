@@ -818,7 +818,7 @@ The first step for migrating these tags is to remove the seam namespace from the
 
 |+s:convertEnum+|No direct mapping. A custom converter is recommended using the standard JSF enum converter as a base.
 |+s:enumItem+|No direct mapping
-|+s:selectItems+|+h:selectItems+
+|+s:selectItems+|+f:selectItems+
 |+s:defaultAction+|No direct mapping
 |====================================================================
 
